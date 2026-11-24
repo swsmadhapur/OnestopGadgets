@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>One Stop Gadgets — Interactive UI/UX Design Prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              red: '#D92035',
+              deepRed: '#AA152B',
+              royalBlue: '#123C91',
+              electricBlue: '#2865DA',
+              navy: '#091B3D',
+              cyan: '#00D2FF',
+              amber: '#FF9900',
+              surface: '#F3F6FC',
+              card: '#FFFFFF',
+              border: '#DCE4F0',
+              textPrimary: '#091B3D',
+              textSecondary: '#52627B',
+            }
+          },
+          fontFamily: {
+            sans: ['Manrope', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Manrope', sans-serif; background-color: #F3F6FC; }
+    .hero-gradient { background: linear-gradient(135deg, #091B3D 0%, #123C91 55%, #D92035 130%); }
+    .card-gradient-vip { background: linear-gradient(135deg, #091B3D 0%, #123C91 100%); }
+    .jackpot-gradient { background: linear-gradient(90deg, #D92035 0%, #FF9900 100%); }
+    .glass-header { background: rgba(9, 27, 61, 0.95); backdrop-filter: blur(12px); }
+  </style>
+</head>
+<body class="text-brand-textPrimary min-h-screen flex flex-col antialiased">
+
+  <!-- Top Prototype Control Switcher Bar -->
+  <div class="bg-brand-navy border-b border-brand-electricBlue/30 text-white px-4 py-2 sticky top-0 z-50 shadow-md">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs">
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="font-bold tracking-wide uppercase text-slate-300">Phase 1 Design Prototype:</span>
+        <span class="bg-brand-royalBlue text-white px-2 py-0.5 rounded font-mono font-semibold">Red & Blue Design System</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-1.5" id="nav-tabs">
+        <button onclick="navigate('storefront')" id="tab-storefront" class="nav-btn bg-brand-red text-white px-3 py-1 rounded font-semibold transition">Storefront</button>
+        <button onclick="navigate('catalog')" id="tab-catalog" class="nav-btn bg-slate-800 text-slate-300 hover:text-white px-3 py-1 rounded font-semibold transition">All Deals</button>
+        <button onclick="navigate('pricing')" id="tab-pricing" class="nav-btn bg-slate-800 text-slate-300 hover:text-white px-3 py-1 rounded font-semibold transition">VIP Pricing</button>
+        <button onclick="navigate('luckydip')" id="tab-luckydip" class="nav-btn bg-slate-800 text-slate-300 hover:text-white px-3 py-1 rounded font-semibold transition">Lucky Dip (Free)</button>
+        <button onclick="navigate('admin')" id="tab-admin" class="nav-btn bg-slate-800 text-amber-300 hover:text-white px-3 py-1 rounded font-semibold transition">Deal Admin [Restricted]</button>
+        <button onclick="navigate('superadmin')" id="tab-superadmin" class="nav-btn bg-slate-800 text-brand-cyan hover:text-white px-3 py-1 rounded font-semibold transition">Super Admin</button>
+        <button onclick="navigate('styleguide')" id="tab-styleguide" class="nav-btn bg-slate-800 text-slate-300 hover:text-white px-3 py-1 rounded font-semibold transition">Style Guide</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Brand Navigation Header -->
+  <header class="glass-header text-white border-b border-slate-800 sticky top-9 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-4 py-2">
+      <!-- Logo + Brand -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('storefront')">
+        <img src="logo.jpg" alt="One Stop Gadgets" class="w-12 h-12 rounded-full ring-2 ring-brand-cyan object-cover shadow-lg hover:scale-105 transition" />
+        <div>
+          <div class="font-extrabold text-xl tracking-tight leading-none flex items-center gap-1">
+            <span class="text-brand-cyan drop-shadow">ONE STOP</span>
+            <span class="text-brand-amber drop-shadow">GADGETS</span>
+          </div>
+          <div class="text-[10px] text-slate-300 tracking-wider uppercase font-semibold mt-0.5">Premium Tech Deals & VIP Club</div>
+        </div>
+      </div>
+
+      <!-- Quick Search Bar -->
+      <div class="hidden md:flex flex-1 max-w-md mx-4">
+        <div class="relative w-full">
+          <input type="text" id="global-search" oninput="handleSearch(this.value)" placeholder="Search iPhone, Sony Audio, Laptops, Smartwatches..." class="w-full bg-slate-900/90 border border-slate-700 rounded-xl pl-10 pr-4 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-brand-electricBlue focus:ring-1 focus:ring-brand-electricBlue transition" />
+          <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </div>
+      </div>
+
+      <!-- Quick Links & Auth CTA -->
+      <div class="flex items-center gap-3">
+        <button onclick="navigate('catalog')" class="hidden lg:block text-xs font-semibold text-slate-200 hover:text-brand-cyan transition">All Deals</button>
+        <button onclick="navigate('pricing')" class="hidden lg:block text-xs font-semibold text-slate-200 hover:text-brand-cyan transition">VIP Perks</button>
+        <button onclick="navigate('luckydip')" class="hidden lg:flex items-center gap-1 text-xs font-semibold text-brand-amber hover:underline transition">
+          <span class="animate-bounce">🎁</span> Lucky Dip
+        </button>
+        <button onclick="openModal('login-modal')" class="text-xs font-semibold px-3 py-1.5 rounded-lg border border-slate-700 text-slate-200 hover:bg-slate-800 transition">Sign In</button>
+        <button onclick="navigate('pricing')" class="text-xs font-bold px-4 py-2 rounded-lg bg-brand-red hover:bg-brand-deepRed text-white shadow-md hover:shadow-brand-red/30 transition">Join VIP</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Notification Banner -->
+  <div class="bg-gradient-to-r from-brand-royalBlue to-brand-electricBlue text-white text-xs py-1.5 px-4 text-center font-medium flex items-center justify-center gap-2 shadow-inner">
+    <span>🔥 <strong>Black November Tech Fest:</strong> Save up to 60% on premium audio, smartwatches & gaming hardware!</span>
+    <button onclick="navigate('catalog')" class="underline font-bold text-brand-cyan hover:text-white">Browse Deals</button>
+  </div>
+
+  <!-- MAIN VIEW CONTAINER -->
+  <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+
+    <!-- ==================== SCREEN 1: STOREFRONT ==================== -->
+    <div id="screen-storefront" class="screen-view space-y-10">
+      
+      <!-- Hero Banner -->
+      <div class="hero-gradient rounded-3xl p-8 sm:p-12 text-white relative overflow-hidden shadow-xl border border-brand-electricBlue/20">
+        <div class="max-w-2xl relative z-10 space-y-4">
+          <div class="inline-flex items-center gap-2 bg-brand-navy/60 border border-brand-cyan/40 px-3 py-1 rounded-full text-xs font-semibold text-brand-cyan">
+            <span>⚡ Certified Daily Tech Deals</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-amber"></span>
+            <span>100% Free Weekly Lucky Dip</span>
+          </div>
+          <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+            Unlock Smarter Tech Deals & Weekly Gadget Giveaways
+          </h1>
+          <p class="text-slate-200 text-sm sm:text-base leading-relaxed">
+            Discover verified price-drops from Amazon, Flipkart, and Apple partners. Join our VIP Club for exclusive member-only cashback and enter our free weekly gadget lucky dip!
+          </p>
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <button onclick="navigate('catalog')" class="px-6 py-3 rounded-xl bg-brand-red hover:bg-brand-deepRed font-bold text-sm text-white shadow-lg shadow-brand-red/40 transition">
+              Explore 500+ Deals →
+            </button>
+            <button onclick="navigate('pricing')" class="px-6 py-3 rounded-xl bg-brand-royalBlue/80 hover:bg-brand-royalBlue border border-brand-cyan/50 font-bold text-sm text-white transition">
+              Join VIP Membership
+            </button>
+          </div>
+        </div>
+
+        <!-- Decorative Circuit & Logo Watermark -->
+        <div class="absolute right-[-40px] top-[-30px] w-96 h-96 opacity-15 pointer-events-none hidden md:block">
+          <img src="logo.jpg" alt="Background Emblem" class="w-full h-full object-cover rounded-full filter blur-[1px]" />
+        </div>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-bold text-brand-textPrimary flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-brand-red"></span> Popular Tech Categories
+          </h2>
+          <span class="text-xs text-brand-textSecondary">Select category to filter</span>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+          <button onclick="filterCategory('smartphones')" class="cat-pill p-3 rounded-2xl bg-white border border-brand-border hover:border-brand-electricBlue hover:shadow-md transition text-center group">
+            <div class="text-2xl mb-1 group-hover:scale-110 transition">📱</div>
+            <div class="font-bold text-xs text-brand-textPrimary">Phones</div>
+            <div class="text-[10px] text-brand-textSecondary">142 Deals</div>
+          </button>
+          <button onclick="filterCategory('audio')" class="cat-pill p-3 rounded-2xl bg-white border border-brand-border hover:border-brand-electricBlue hover:shadow-md transition text-center group">
+            <div class="text-2xl mb-1 group-hover:scale-110 transition">🎧</div>
+            <div class="font-bold text-xs text-brand-textPrimary">Audio</div>
+            <div class="text-[10px] text-brand-textSecondary">98 Deals</div>
+          </button>
+          <button onclick="filterCategory('laptops')" class="cat-pill p-3 rounded-2xl bg-white border border-brand-border hover:border-brand-electricBlue hover:shadow-md transition text-center group">
+            <div class="text-2xl mb-1 group-hover:scale-110 transition">💻</div>
+            <div class="font-bold text-xs text-brand-textPrimary">Laptops</div>
+            <div class="text-[10px] text-brand-textSecondary">75 Deals</div>
+          </button>
+          <button onclick="filterCategory('smartwatches')" class="cat-pill p-3 rounded-2xl bg-white border border-brand-border hover:border-brand-electricBlue hover:shadow-md transition text-center group">
+            <div class="text-2xl mb-1 group-hover:scale-110 transition">⌚</div>
+            <div class="font-bold text-xs text-brand-textPrimary">Watches</div>
+            <div class="text-[10px] text-brand-textSecondary">64 Deals</div>
+          </button>
+          <button onclick="filterCategory('gaming')" class="cat-pill p-3 rounded-2xl bg-white border border-brand-border hover:border-brand-electricBlue hover:shadow-md transition text-center group">
+            <div class="text-2xl mb-1 group-hover:scale-110 transition">🎮</div>
+            <div class="font-bold text-xs text-brand-textPrimary">Gaming</div>
+            <div class="text-[10px] text-brand-textSecondary">51 Deals</div>
+          </button>
+          <button onclick="filterCategory('smarthome')" class="cat-pill p-3 rounded-2xl bg-white border border-brand-border hover:border-brand-electricBlue hover:shadow-md transition text-center group">
+            <div class="text-2xl mb-1 group-hover:scale-110 transition">🏠</div>
+            <div class="font-bold text-xs text-brand-textPrimary">Smart Home</div>
+            <div class="text-[10px] text-brand-textSecondary">39 Deals</div>
+          </button>
+          <button onclick="filterCategory('accessories')" class="cat-pill p-3 rounded-2xl bg-white border border-brand-border hover:border-brand-electricBlue hover:shadow-md transition text-center group">
+            <div class="text-2xl mb-1 group-hover:scale-110 transition">🔌</div>
+            <div class="font-bold text-xs text-brand-textPrimary">Accessories</div>
+            <div class="text-[10px] text-brand-textSecondary">110 Deals</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- SECTION: TODAY'S PUBLIC DEALS -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-xl font-extrabold text-brand-textPrimary">Today's Hot Deals</h2>
+            <p class="text-xs text-brand-textSecondary">Hand-curated, publicly available offers from verified merchants</p>
+          </div>
+          <button onclick="navigate('catalog')" class="text-xs font-bold text-brand-royalBlue hover:text-brand-electricBlue flex items-center gap-1">
+            View All Deals (480+) →
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" id="public-deals-grid">
+          <!-- Deal 1 -->
+          <div class="bg-white rounded-2xl border border-brand-border p-4 shadow-sm hover:shadow-lg transition flex flex-col justify-between">
+            <div>
+              <div class="relative bg-slate-100 rounded-xl p-4 flex items-center justify-center h-40 mb-3">
+                <span class="text-5xl">🎧</span>
+                <span class="absolute top-2 left-2 bg-brand-red text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md uppercase">Save 42%</span>
+                <span class="absolute top-2 right-2 text-[10px] text-slate-500 font-semibold bg-white px-2 py-0.5 rounded shadow-sm">Amazon</span>
+              </div>
+              <div class="text-[11px] text-brand-textSecondary font-semibold uppercase tracking-wider">Audio & Earphones</div>
+              <h3 class="font-bold text-sm text-brand-textPrimary line-clamp-2 mt-0.5">Sony WH-1000XM5 Wireless Active Noise Cancelling Headphones</h3>
+              <div class="mt-2 flex items-baseline gap-2">
+                <span class="text-lg font-extrabold text-brand-navy">₹26,990</span>
+                <span class="text-xs line-through text-slate-400">₹34,990</span>
+              </div>
+              <div class="text-[10px] text-emerald-600 font-semibold mt-1">✓ Lowest price in 30 days</div>
+            </div>
+            <button onclick="triggerOutbound('Sony WH-1000XM5', 'amazon.in', false)" class="mt-4 w-full py-2.5 rounded-xl bg-brand-royalBlue hover:bg-brand-navy text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
+              <span>View Deal at Amazon</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            </button>
+          </div>
+
+          <!-- Deal 2 -->
+          <div class="bg-white rounded-2xl border border-brand-border p-4 shadow-sm hover:shadow-lg transition flex flex-col justify-between">
+            <div>
+              <div class="relative bg-slate-100 rounded-xl p-4 flex items-center justify-center h-40 mb-3">
+                <span class="text-5xl">📱</span>
+                <span class="absolute top-2 left-2 bg-brand-red text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md uppercase">Save 28%</span>
+                <span class="absolute top-2 right-2 text-[10px] text-slate-500 font-semibold bg-white px-2 py-0.5 rounded shadow-sm">Flipkart</span>
+              </div>
+              <div class="text-[11px] text-brand-textSecondary font-semibold uppercase tracking-wider">Smartphones</div>
+              <h3 class="font-bold text-sm text-brand-textPrimary line-clamp-2 mt-0.5">Google Pixel 8 (128GB, Hazel) with AI Camera Suite</h3>
+              <div class="mt-2 flex items-baseline gap-2">
+                <span class="text-lg font-extrabold text-brand-navy">₹54,999</span>
+                <span class="text-xs line-through text-slate-400">₹75,999</span>
+              </div>
+              <div class="text-[10px] text-emerald-600 font-semibold mt-1">✓ Extra ₹4,000 Bank Discount</div>
+            </div>
+            <button onclick="triggerOutbound('Google Pixel 8', 'flipkart.com', false)" class="mt-4 w-full py-2.5 rounded-xl bg-brand-royalBlue hover:bg-brand-navy text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
+              <span>View Deal at Flipkart</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            </button>
+          </div>
+
+          <!-- Deal 3 -->
+          <div class="bg-white rounded-2xl border border-brand-border p-4 shadow-sm hover:shadow-lg transition flex flex-col justify-between">
+            <div>
+              <div class="relative bg-slate-100 rounded-xl p-4 flex items-center justify-center h-40 mb-3">
+                <span class="text-5xl">⌚</span>
+                <span class="absolute top-2 left-2 bg-brand-red text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md uppercase">Save 35%</span>
+                <span class="absolute top-2 right-2 text-[10px] text-slate-500 font-semibold bg-white px-2 py-0.5 rounded shadow-sm">Samsung Store</span>
+              </div>
+              <div class="text-[11px] text-brand-textSecondary font-semibold uppercase tracking-wider">Smartwatches</div>
+              <h3 class="font-bold text-sm text-brand-textPrimary line-clamp-2 mt-0.5">Samsung Galaxy Watch 6 Classic (47mm, Bluetooth, Black)</h3>
+              <div class="mt-2 flex items-baseline gap-2">
+                <span class="text-lg font-extrabold text-brand-navy">₹24,999</span>
+                <span class="text-xs line-through text-slate-400">₹38,999</span>
+              </div>
+              <div class="text-[10px] text-emerald-600 font-semibold mt-1">✓ Includes Wireless Fast Charger</div>
+            </div>
+            <button onclick="triggerOutbound('Samsung Galaxy Watch 6', 'samsung.com/in', false)" class="mt-4 w-full py-2.5 rounded-xl bg-brand-royalBlue hover:bg-brand-navy text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
+              <span>View Deal at Samsung</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            </button>
+          </div>
+
+          <!-- Deal 4 -->
+          <div class="bg-white rounded-2xl border border-brand-border p-4 shadow-sm hover:shadow-lg transition flex flex-col justify-between">
+            <div>
+              <div class="relative bg-slate-100 rounded-xl p-4 flex items-center justify-center h-40 mb-3">
+                <span class="text-5xl">💻</span>
+                <span class="absolute top-2 left-2 bg-brand-red text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md uppercase">Save 22%</span>
+                <span class="absolute top-2 right-2 text-[10px] text-slate-500 font-semibold bg-white px-2 py-0.5 rounded shadow-sm">Amazon</span>
+              </div>
+              <div class="text-[11px] text-brand-textSecondary font-semibold uppercase tracking-wider">Laptops</div>
+              <h3 class="font-bold text-sm text-brand-textPrimary line-clamp-2 mt-0.5">Apple MacBook Air M3 (13.6-inch, 16GB Unified RAM, 512GB)</h3>
+              <div class="mt-2 flex items-baseline gap-2">
+                <span class="text-lg font-extrabold text-brand-navy">₹1,19,900</span>
+                <span class="text-xs line-through text-slate-400">₹1,34,900</span>
+              </div>
+              <div class="text-[10px] text-emerald-600 font-semibold mt-1">✓ No-Cost EMI Available</div>
+            </div>
+            <button onclick="triggerOutbound('MacBook Air M3', 'amazon.in', false)" class="mt-4 w-full py-2.5 rounded-xl bg-brand-royalBlue hover:bg-brand-navy text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
+              <span>View Deal at Amazon</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION: VIP MEMBERS-ONLY LOCKED TEASERS -->
+      <div class="bg-gradient-to-br from-brand-navy via-slate-900 to-brand-royalBlue rounded-3xl p-6 sm:p-8 text-white space-y-6 shadow-xl border border-brand-electricBlue/30">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-700 pb-4">
+          <div>
+            <div class="inline-flex items-center gap-1.5 bg-brand-electricBlue/20 text-brand-cyan text-xs font-bold px-2.5 py-0.5 rounded-full mb-1">
+              <span>🔒 VIP Exclusive Vault</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-white">VIP Club Unlocked Deals</h2>
+            <p class="text-xs text-slate-300">Secret merchant coupons, stacked cashback & priority pricing for active members</p>
+          </div>
+          <button onclick="navigate('pricing')" class="px-5 py-2.5 rounded-xl bg-brand-red hover:bg-brand-deepRed font-bold text-xs text-white shadow-md transition self-start sm:self-auto">
+            Unlock All VIP Deals (From ₹299/mo)
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          <!-- VIP Teaser 1 -->
+          <div class="bg-slate-900/80 rounded-2xl border border-brand-electricBlue/30 p-4 relative overflow-hidden backdrop-blur flex flex-col justify-between">
+            <div class="filter blur-[2px] opacity-60 pointer-events-none select-none">
+              <div class="bg-slate-800 rounded-xl h-36 flex items-center justify-center text-4xl mb-3">📱</div>
+              <div class="font-bold text-sm text-white">Apple iPhone 16 Pro Max 256GB</div>
+              <div class="text-xs text-brand-cyan font-bold mt-1">₹1,24,999 (Secret Coupon + Cashback)</div>
+            </div>
+            <!-- Lock Overlay -->
+            <div class="absolute inset-0 bg-brand-navy/85 flex flex-col items-center justify-center p-4 text-center">
+              <span class="w-10 h-10 rounded-full bg-brand-red/20 text-brand-red flex items-center justify-center text-xl mb-2">🔒</span>
+              <div class="font-extrabold text-sm text-white">Exclusive ₹12,000 Extra Savings</div>
+              <div class="text-[11px] text-slate-300 mb-3">Merchant Voucher code hidden for non-members</div>
+              <button onclick="triggerOutbound('iPhone 16 Pro Max', 'apple.com', true)" class="px-4 py-2 rounded-xl bg-brand-red hover:bg-brand-deepRed text-white text-xs font-bold shadow transition">
+                Unlock with VIP →
+              </button>
+            </div>
+          </div>
+
+          <!-- VIP Teaser 2 -->
+          <div class="bg-slate-900/80 rounded-2xl border border-brand-electricBlue/30 p-4 relative overflow-hidden backdrop-blur flex flex-col justify-between">
+            <div class="filter blur-[2px] opacity-60 pointer-events-none select-none">
+              <div class="bg-slate-800 rounded-xl h-36 flex items-center justify-center text-4xl mb-3">🎮</div>
+              <div class="font-bold text-sm text-white">Sony PlayStation 5 Pro Edition</div>
+              <div class="text-xs text-brand-cyan font-bold mt-1">Flat ₹8,500 Exclusive Member Cashback</div>
+            </div>
+            <!-- Lock Overlay -->
+            <div class="absolute inset-0 bg-brand-navy/85 flex flex-col items-center justify-center p-4 text-center">
+              <span class="w-10 h-10 rounded-full bg-brand-red/20 text-brand-red flex items-center justify-center text-xl mb-2">🔒</span>
+              <div class="font-extrabold text-sm text-white">Member Secret Direct Link</div>
+              <div class="text-[11px] text-slate-300 mb-3">Gated partner inventory allocation</div>
+              <button onclick="triggerOutbound('PS5 Pro Edition', 'sony.co.in', true)" class="px-4 py-2 rounded-xl bg-brand-red hover:bg-brand-deepRed text-white text-xs font-bold shadow transition">
+                Unlock with VIP →
+              </button>
+            </div>
+          </div>
+
+          <!-- VIP Teaser 3 -->
+          <div class="bg-slate-900/80 rounded-2xl border border-brand-electricBlue/30 p-4 relative overflow-hidden backdrop-blur flex flex-col justify-between">
+            <div class="filter blur-[2px] opacity-60 pointer-events-none select-none">
+              <div class="bg-slate-800 rounded-xl h-36 flex items-center justify-center text-4xl mb-3">📷</div>
+              <div class="font-bold text-sm text-white">DJI Mini 4 Pro Fly More Combo</div>
+              <div class="text-xs text-brand-cyan font-bold mt-1">Exclusive ₹15,000 Import Voucher</div>
+            </div>
+            <!-- Lock Overlay -->
+            <div class="absolute inset-0 bg-brand-navy/85 flex flex-col items-center justify-center p-4 text-center">
+              <span class="w-10 h-10 rounded-full bg-brand-red/20 text-brand-red flex items-center justify-center text-xl mb-2">🔒</span>
+              <div class="font-extrabold text-sm text-white">Priority Flash Allocation</div>
+              <div class="text-[11px] text-slate-300 mb-3">Available to VIP Tier Subscribers only</div>
+              <button onclick="triggerOutbound('DJI Mini 4 Pro', 'dji.com', true)" class="px-4 py-2 rounded-xl bg-brand-red hover:bg-brand-deepRed text-white text-xs font-bold shadow transition">
+                Unlock with VIP →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION: WEEKLY LUCKY DIP SPOTLIGHT (COMPLIANCE-FIRST FREE ENTRY) -->
+      <div class="jackpot-gradient rounded-3xl p-1 shadow-xl">
+        <div class="bg-brand-navy rounded-[22px] p-6 sm:p-8 text-white flex flex-col lg:flex-row items-center justify-between gap-8">
+          <div class="space-y-3 max-w-xl">
+            <div class="flex items-center gap-2">
+              <span class="bg-brand-red text-white text-[11px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">Round #42 Active</span>
+              <span class="bg-brand-amber/20 text-brand-amber border border-brand-amber/40 text-[11px] font-bold px-2.5 py-0.5 rounded-full">100% Free Entry • No Purchase Necessary</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white">
+              Weekly Gadget Lucky Dip: Win Apple iPhone 16 Pro (128GB)
+            </h2>
+            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+              Open to all registered and verified Indian residents (18+). No subscription or purchase is ever required to enter or win. Submissions are cryptographically hashed and drawn using provably fair CSPRNG.
+            </p>
+            <div class="flex items-center gap-4 text-xs font-semibold text-slate-300 pt-1">
+              <div>🎁 Prize: <span class="text-white font-bold">iPhone 16 Pro (Black Titanium)</span></div>
+              <div>👥 Entrants: <span class="text-brand-cyan font-bold" id="entrants-count">6,420 Verified</span></div>
+            </div>
+          </div>
+
+          <!-- Countdown & Entry Action -->
+          <div class="bg-slate-900/90 border border-slate-700 rounded-2xl p-6 text-center space-y-4 w-full sm:w-80 shadow-2xl shrink-0">
+            <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Draw Closes In</div>
+            <div class="grid grid-cols-4 gap-2 text-center" id="countdown-timer">
+              <div class="bg-slate-800 p-2 rounded-xl border border-slate-700">
+                <div class="font-extrabold text-xl text-brand-amber font-mono" id="cd-days">04</div>
+                <div class="text-[9px] text-slate-400 uppercase font-semibold">Days</div>
+              </div>
+              <div class="bg-slate-800 p-2 rounded-xl border border-slate-700">
+                <div class="font-extrabold text-xl text-brand-amber font-mono" id="cd-hours">18</div>
+                <div class="text-[9px] text-slate-400 uppercase font-semibold">Hours</div>
+              </div>
+              <div class="bg-slate-800 p-2 rounded-xl border border-slate-700">
+                <div class="font-extrabold text-xl text-brand-amber font-mono" id="cd-mins">32</div>
+                <div class="text-[9px] text-slate-400 uppercase font-semibold">Mins</div>
+              </div>
+              <div class="bg-slate-800 p-2 rounded-xl border border-slate-700">
+                <div class="font-extrabold text-xl text-brand-amber font-mono" id="cd-secs">15</div>
+                <div class="text-[9px] text-slate-400 uppercase font-semibold">Secs</div>
+              </div>
+            </div>
+            <button onclick="navigate('luckydip')" class="w-full py-3 rounded-xl bg-gradient-to-r from-brand-red to-brand-amber hover:opacity-95 font-extrabold text-sm text-white shadow-lg transition">
+              Submit Free Entry Now ➔
+            </button>
+            <div class="text-[10px] text-slate-400">1 entry per verified user per round • DPDP Compliant</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION: RECENT CONSENTED WINNERS -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-bold text-brand-textPrimary flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Recent Verified Winners (Consented Display)
+          </h2>
+          <span class="text-xs text-brand-textSecondary">Draw evidence cryptographically verified</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="bg-white rounded-2xl border border-brand-border p-4 flex items-center gap-3 shadow-sm">
+            <div class="w-12 h-12 rounded-full bg-brand-royalBlue text-white font-extrabold flex items-center justify-center text-lg">RK</div>
+            <div>
+              <div class="font-bold text-sm text-brand-navy">Rahul K. (Bengaluru)</div>
+              <div class="text-xs text-brand-red font-semibold">Won Sony WH-1000XM5</div>
+              <div class="text-[10px] text-slate-400">Round #41 • Drawn Nov 17, 2026</div>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl border border-brand-border p-4 flex items-center gap-3 shadow-sm">
+            <div class="w-12 h-12 rounded-full bg-brand-electricBlue text-white font-extrabold flex items-center justify-center text-lg">PS</div>
+            <div>
+              <div class="font-bold text-sm text-brand-navy">Priya S. (Mumbai)</div>
+              <div class="text-xs text-brand-red font-semibold">Won Apple Watch Series 10</div>
+              <div class="text-[10px] text-slate-400">Round #40 • Drawn Nov 10, 2026</div>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl border border-brand-border p-4 flex items-center gap-3 shadow-sm">
+            <div class="w-12 h-12 rounded-full bg-brand-deepRed text-white font-extrabold flex items-center justify-center text-lg">AV</div>
+            <div>
+              <div class="font-bold text-sm text-brand-navy">Amit V. (Delhi NCR)</div>
+              <div class="text-xs text-brand-red font-semibold">Won iPad Air M2</div>
+              <div class="text-[10px] text-slate-400">Round #39 • Drawn Nov 03, 2026</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN 2: ALL DEALS CATALOG ==================== -->
+    <div id="screen-catalog" class="screen-view hidden space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-4">
+        <div>
+          <h1 class="text-2xl font-extrabold text-brand-textPrimary">Curated Gadget Deals Directory</h1>
+          <p class="text-xs text-brand-textSecondary">Real-time discount tracking across major Indian online electronics retailers</p>
+        </div>
+        <!-- Filter Controls -->
+        <div class="flex flex-wrap items-center gap-2">
+          <select id="filter-store" onchange="applyFilters()" class="text-xs bg-white border border-brand-border rounded-lg px-3 py-2 font-medium focus:outline-none focus:border-brand-electricBlue">
+            <option value="all">All Merchants</option>
+            <option value="amazon">Amazon India</option>
+            <option value="flipkart">Flipkart</option>
+            <option value="samsung">Samsung Store</option>
+          </select>
+          <select id="filter-type" onchange="applyFilters()" class="text-xs bg-white border border-brand-border rounded-lg px-3 py-2 font-medium focus:outline-none focus:border-brand-electricBlue">
+            <option value="all">Public & VIP Deals</option>
+            <option value="public">Free Public Deals Only</option>
+            <option value="premium">VIP Member Exclusives Only</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Catalog Deals Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="catalog-grid">
+        <!-- Catalog Items dynamically loaded / static representations -->
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN 3: VIP MEMBERSHIP PRICING ==================== -->
+    <div id="screen-pricing" class="screen-view hidden space-y-8">
+      <div class="text-center max-w-xl mx-auto space-y-2">
+        <span class="bg-brand-royalBlue text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase">One Stop VIP Club</span>
+        <h1 class="text-3xl font-extrabold text-brand-textPrimary">Simple, Transparent VIP Pricing</h1>
+        <p class="text-xs text-brand-textSecondary">Unlock premium merchant vouchers, secret electronics deals, and direct cash rebates.</p>
+      </div>
+
+      <!-- Pricing Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <!-- Monthly Plan -->
+        <div class="bg-white rounded-3xl border border-brand-border p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+          <div>
+            <div class="font-extrabold text-base text-brand-navy">Monthly Access</div>
+            <div class="text-xs text-brand-textSecondary mt-0.5">Flexible month-to-month access</div>
+            <div class="my-5 flex items-baseline gap-1">
+              <span class="text-3xl font-extrabold text-brand-navy">₹299</span>
+              <span class="text-xs text-slate-500 font-medium">/ month</span>
+            </div>
+            <ul class="text-xs space-y-2.5 text-slate-700">
+              <li class="flex items-center gap-2">✓ Full Access to all VIP Locked Deals</li>
+              <li class="flex items-center gap-2">✓ Exclusive Merchant Voucher Codes</li>
+              <li class="flex items-center gap-2">✓ Instant Telegram / WhatsApp Price Alerts</li>
+              <li class="flex items-center gap-2 text-slate-400">✗ Priority Member Support</li>
+            </ul>
+          </div>
+          <button onclick="startCheckout('Monthly VIP', 299)" class="mt-6 w-full py-3 rounded-xl bg-slate-900 hover:bg-brand-navy text-white text-xs font-bold transition shadow">
+            Subscribe Monthly
+          </button>
+        </div>
+
+        <!-- Quarterly Plan (Featured) -->
+        <div class="bg-brand-navy text-white rounded-3xl border-2 border-brand-electricBlue p-6 shadow-xl relative flex flex-col justify-between scale-105">
+          <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand-red text-white text-[10px] font-extrabold px-3 py-0.5 rounded-full uppercase tracking-wider shadow">Most Popular • Save 22%</span>
+          <div>
+            <div class="font-extrabold text-base text-white">Quarterly Access</div>
+            <div class="text-xs text-slate-300 mt-0.5">Billed quarterly (3 Months)</div>
+            <div class="my-5 flex items-baseline gap-1">
+              <span class="text-3xl font-extrabold text-brand-cyan">₹699</span>
+              <span class="text-xs text-slate-300 font-medium">/ 3 months (₹233/mo)</span>
+            </div>
+            <ul class="text-xs space-y-2.5 text-slate-200">
+              <li class="flex items-center gap-2 text-emerald-400 font-semibold">✓ Full Access to all VIP Locked Deals</li>
+              <li class="flex items-center gap-2 text-emerald-400 font-semibold">✓ Exclusive Merchant Voucher Codes</li>
+              <li class="flex items-center gap-2 text-emerald-400 font-semibold">✓ Instant Telegram / WhatsApp Price Alerts</li>
+              <li class="flex items-center gap-2 text-emerald-400 font-semibold">✓ Stackable Cashback Multipliers</li>
+            </ul>
+          </div>
+          <button onclick="startCheckout('Quarterly VIP', 699)" class="mt-6 w-full py-3 rounded-xl bg-brand-red hover:bg-brand-deepRed text-white text-xs font-bold transition shadow-lg shadow-brand-red/40">
+            Subscribe Quarterly (₹699)
+          </button>
+        </div>
+
+        <!-- Annual Plan -->
+        <div class="bg-white rounded-3xl border border-brand-border p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+          <div>
+            <div class="font-extrabold text-base text-brand-navy">Annual VIP Pass</div>
+            <div class="text-xs text-brand-textSecondary mt-0.5">Best value for tech enthusiasts</div>
+            <div class="my-5 flex items-baseline gap-1">
+              <span class="text-3xl font-extrabold text-brand-navy">₹1,999</span>
+              <span class="text-xs text-slate-500 font-medium">/ year (₹166/mo)</span>
+            </div>
+            <ul class="text-xs space-y-2.5 text-slate-700">
+              <li class="flex items-center gap-2">✓ All Quarterly Perks Included</li>
+              <li class="flex items-center gap-2">✓ Dedicated Personal Deal Concierge</li>
+              <li class="flex items-center gap-2">✓ Early Access to Black Friday Deals</li>
+              <li class="flex items-center gap-2">✓ Save over 44% vs Monthly</li>
+            </ul>
+          </div>
+          <button onclick="startCheckout('Annual VIP', 1999)" class="mt-6 w-full py-3 rounded-xl bg-slate-900 hover:bg-brand-navy text-white text-xs font-bold transition shadow">
+            Subscribe Annual Pass
+          </button>
+        </div>
+      </div>
+
+      <!-- Legal Compliance Note on Subscriptions & Lucky Dip -->
+      <div class="max-w-2xl mx-auto bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 text-xs text-amber-900 space-y-1">
+        <div class="font-bold flex items-center gap-1.5 text-amber-800">
+          <span>⚖️ Important Regulatory Disclosures (PRD § 1 & § 15):</span>
+        </div>
+        <p class="text-[11px] leading-relaxed">
+          VIP Subscriptions unlock curated merchant deals, verified discount codes, and price-tracking services only. <strong>Subscriptions do not provide lottery entries or paid gambling advantages.</strong> In compliance with Indian consumer protection laws, the weekly Lucky Dip is strictly 100% free for all registered users without purchase requirements.
+        </p>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN 4: LUCKY DIP ENTRY & RULES ==================== -->
+    <div id="screen-luckydip" class="screen-view hidden space-y-8">
+      <div class="hero-gradient rounded-3xl p-8 text-white relative overflow-hidden shadow-xl border border-brand-electricBlue/20">
+        <div class="max-w-xl space-y-3 relative z-10">
+          <div class="inline-flex items-center gap-2 bg-brand-red text-white text-xs font-extrabold px-3 py-0.5 rounded-full uppercase">
+            Official Weekly Lucky Dip — Round #42
+          </div>
+          <h1 class="text-3xl font-extrabold">Win a Brand-New Apple iPhone 16 Pro (128GB)</h1>
+          <p class="text-xs text-slate-200 leading-relaxed">
+            Every week, One Stop Gadgets sponsors a flagship gadget giveaway for our community. Completely free to enter for verified users. Provably fair random draw executed via server CSPRNG.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Entry Form (8 Cols) -->
+        <div class="lg:col-span-7 bg-white rounded-3xl border border-brand-border p-6 sm:p-8 shadow-sm space-y-6">
+          <div>
+            <h2 class="text-lg font-extrabold text-brand-navy">Submit Your Free Entry for Round #42</h2>
+            <p class="text-xs text-brand-textSecondary mt-0.5">Please confirm your verified contact details for winner eligibility</p>
+          </div>
+
+          <form id="lucky-dip-form" onsubmit="submitLuckyDip(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Full Legal Name (as per Govt ID) *</label>
+              <input type="text" id="ld-name" required value="Venkata Jagadeesh" class="w-full bg-slate-50 border border-brand-border rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-brand-electricBlue" />
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Registered Email Address *</label>
+                <input type="email" id="ld-email" required value="user@example.com" class="w-full bg-slate-50 border border-brand-border rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-brand-electricBlue" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Mobile Phone (India +91) *</label>
+                <input type="tel" id="ld-phone" required value="+91 98765 43210" class="w-full bg-slate-50 border border-brand-border rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-brand-electricBlue" />
+              </div>
+            </div>
+
+            <div class="space-y-2 pt-2 border-t border-slate-100">
+              <label class="flex items-start gap-2.5 text-xs text-slate-700 cursor-pointer">
+                <input type="checkbox" id="ld-terms" required class="mt-0.5 accent-brand-red rounded" />
+                <span>I confirm I am an Indian resident aged 18+, accept the <a href="#" class="text-brand-royalBlue underline font-bold">Official Lucky Dip Rules (v1.2)</a>, and understand this is a free-entry promotional giveaway with no purchase necessary. *</span>
+              </label>
+
+              <label class="flex items-start gap-2.5 text-xs text-slate-700 cursor-pointer">
+                <input type="checkbox" id="ld-marketing" class="mt-0.5 accent-brand-royalBlue rounded" />
+                <span>(Optional) Send me curated gadget deal alerts and weekly winner announcements via WhatsApp/Email.</span>
+              </label>
+            </div>
+
+            <button type="submit" id="ld-submit-btn" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-red to-brand-amber text-white font-extrabold text-sm shadow-lg hover:opacity-95 transition">
+              Submit Free Entry (Round #42)
+            </button>
+          </form>
+
+          <!-- Result Modal / Card (Hidden by default) -->
+          <div id="ld-success-card" class="hidden bg-emerald-50 border border-emerald-200 rounded-2xl p-5 space-y-3">
+            <div class="flex items-center gap-2 text-emerald-800 font-extrabold text-sm">
+              <span class="text-xl">🎉</span> Entry Successfully Registered!
+            </div>
+            <div class="text-xs text-emerald-900 leading-relaxed">
+              Your free entry has been recorded in the Round #42 participant register. The draw snapshot will be taken automatically on Sunday 23:59 IST.
+            </div>
+            <div class="bg-white border border-emerald-200 rounded-xl p-3 text-xs font-mono text-slate-700 space-y-1">
+              <div>Entry Reference: <strong class="text-brand-navy">#OSG-RD42-994821</strong></div>
+              <div>Cryptographic Hash: <span class="text-slate-500 break-all text-[10px]">e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rules & Provable Fairness Sidebar (5 Cols) -->
+        <div class="lg:col-span-5 space-y-4">
+          <div class="bg-white rounded-3xl border border-brand-border p-6 shadow-sm space-y-4">
+            <h3 class="font-extrabold text-sm text-brand-navy flex items-center gap-2">
+              <span>🛡️</span> Provably Fair Selection Architecture
+            </h3>
+            <ul class="text-xs text-slate-600 space-y-2.5 leading-relaxed">
+              <li><strong>1. Frozen Snapshot:</strong> At round end, an immutable SHA-256 snapshot of all eligible unique entries is frozen into the database.</li>
+              <li><strong>2. Server Entropy:</strong> A cryptographically secure pseudorandom seed (<code class="bg-slate-100 px-1 py-0.5 rounded text-[10px]">random_bytes(32)</code>) determines the winner index.</li>
+              <li><strong>3. Two-Stage Verification:</strong> Super Admin validates legal compliance (age/residence) before public announcement.</li>
+              <li><strong>4. Privacy Preserved:</strong> Contact information is never published. Only consented first name & initial (e.g., "Rahul K.") are displayed.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN 5: DEAL ADMIN DASHBOARD [RESTRICTED] ==================== -->
+    <div id="screen-admin" class="screen-view hidden space-y-6">
+      <!-- Restriction Banner -->
+      <div class="bg-amber-50 border border-amber-200 text-amber-900 p-4 rounded-2xl flex items-center justify-between text-xs">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">⚠️</span>
+          <span><strong>Role Boundary Enforced:</strong> Deal Admin role has strictly scoped access to Deal/Product Links ONLY. Attempts to access users, subscriptions, or winner selection endpoints return <code class="bg-white px-1.5 py-0.5 rounded font-mono font-bold">403 Forbidden</code>.</span>
+        </div>
+        <span class="bg-amber-200 font-bold px-2 py-0.5 rounded text-[10px] uppercase">PRD § 8 Compliant</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+        <!-- Sidebar -->
+        <div class="md:col-span-3 bg-white rounded-3xl border border-brand-border p-4 space-y-2 shadow-sm">
+          <div class="px-3 py-2 text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Permitted Actions</div>
+          <button class="w-full text-left px-3 py-2 rounded-xl bg-brand-royalBlue text-white font-bold text-xs">📋 All Deals (48)</button>
+          <button onclick="alert('Demo: Open Add New Deal Form')" class="w-full text-left px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-100 font-medium text-xs">➕ Add New Deal</button>
+          <button onclick="alert('Demo: Validate Affiliate Link Allowlist')" class="w-full text-left px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-100 font-medium text-xs">🔗 Affiliate Link Validator</button>
+          
+          <div class="pt-4 border-t border-slate-100 px-3 py-2 text-[11px] font-extrabold text-red-500 uppercase tracking-wider">Restricted Areas (403)</div>
+          <button onclick="show403Alert('Lucky Dip Participants')" class="w-full text-left px-3 py-2 rounded-xl text-slate-400 hover:text-red-600 font-medium text-xs flex items-center justify-between">
+            <span>🚫 Lucky Dip Entrants</span>
+            <span class="text-[9px] bg-red-100 text-red-600 px-1 rounded font-bold">403</span>
+          </button>
+          <button onclick="show403Alert('Winner Selection Engine')" class="w-full text-left px-3 py-2 rounded-xl text-slate-400 hover:text-red-600 font-medium text-xs flex items-center justify-between">
+            <span>🚫 Winner Draw Engine</span>
+            <span class="text-[9px] bg-red-100 text-red-600 px-1 rounded font-bold">403</span>
+          </button>
+          <button onclick="show403Alert('Subscription Financials')" class="w-full text-left px-3 py-2 rounded-xl text-slate-400 hover:text-red-600 font-medium text-xs flex items-center justify-between">
+            <span>🚫 Payments & Revenue</span>
+            <span class="text-[9px] bg-red-100 text-red-600 px-1 rounded font-bold">403</span>
+          </button>
+        </div>
+
+        <!-- Main Deals Workspace -->
+        <div class="md:col-span-9 bg-white rounded-3xl border border-brand-border p-6 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-base font-extrabold text-brand-navy">Active Deals & Affiliate Links Repository</h2>
+            <button onclick="alert('Demo: Add New Deal')" class="px-3 py-1.5 rounded-lg bg-brand-red text-white text-xs font-bold shadow hover:bg-brand-deepRed transition">
+              + New Deal
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-slate-700">
+              <thead class="bg-slate-50 text-slate-500 font-bold uppercase text-[10px] border-b border-slate-200">
+                <tr>
+                  <th class="py-2.5 px-3">Deal Title</th>
+                  <th class="py-2.5 px-3">Merchant</th>
+                  <th class="py-2.5 px-3">Visibility</th>
+                  <th class="py-2.5 px-3">Status</th>
+                  <th class="py-2.5 px-3">Clicks</th>
+                  <th class="py-2.5 px-3">Action</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 font-medium">
+                <tr>
+                  <td class="py-3 px-3 font-bold text-brand-navy">Sony WH-1000XM5</td>
+                  <td class="py-3 px-3">amazon.in</td>
+                  <td class="py-3 px-3"><span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[10px] font-bold">Public</span></td>
+                  <td class="py-3 px-3"><span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[10px] font-bold">Published</span></td>
+                  <td class="py-3 px-3 font-mono">1,420</td>
+                  <td class="py-3 px-3"><button class="text-brand-royalBlue hover:underline font-bold">Edit</button></td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-3 font-bold text-brand-navy">iPhone 16 Pro Max 256GB</td>
+                  <td class="py-3 px-3">apple.com</td>
+                  <td class="py-3 px-3"><span class="bg-brand-royalBlue text-white px-2 py-0.5 rounded text-[10px] font-bold">VIP Only</span></td>
+                  <td class="py-3 px-3"><span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[10px] font-bold">Published</span></td>
+                  <td class="py-3 px-3 font-mono">3,890</td>
+                  <td class="py-3 px-3"><button class="text-brand-royalBlue hover:underline font-bold">Edit</button></td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-3 font-bold text-brand-navy">MacBook Air M3</td>
+                  <td class="py-3 px-3">amazon.in</td>
+                  <td class="py-3 px-3"><span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[10px] font-bold">Public</span></td>
+                  <td class="py-3 px-3"><span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[10px] font-bold">Published</span></td>
+                  <td class="py-3 px-3 font-mono">920</td>
+                  <td class="py-3 px-3"><button class="text-brand-royalBlue hover:underline font-bold">Edit</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN 6: SUPER ADMIN COMMAND CENTER ==================== -->
+    <div id="screen-superadmin" class="screen-view hidden space-y-6">
+      <div class="flex items-center justify-between border-b border-brand-border pb-4">
+        <div>
+          <h1 class="text-2xl font-extrabold text-brand-textPrimary">Super Admin Governance & Draw Control</h1>
+          <p class="text-xs text-brand-textSecondary">Full oversight of subscriptions, encrypted participant registries, and provably fair draws</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-800 text-xs px-2.5 py-1 rounded-full font-bold">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> MFA Session Active
+          </span>
+        </div>
+      </div>
+
+      <!-- KPI Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+        <div class="bg-white rounded-2xl border border-brand-border p-4 shadow-sm">
+          <div class="text-[11px] text-slate-500 font-bold uppercase">Active VIP Subscribers</div>
+          <div class="text-2xl font-extrabold text-brand-navy mt-1">1,842</div>
+          <div class="text-[10px] text-emerald-600 font-semibold mt-0.5">↑ 18% this month</div>
+        </div>
+        <div class="bg-white rounded-2xl border border-brand-border p-4 shadow-sm">
+          <div class="text-[11px] text-slate-500 font-bold uppercase">Monthly Recurring Revenue</div>
+          <div class="text-2xl font-extrabold text-brand-navy mt-1">₹4,82,400</div>
+          <div class="text-[10px] text-emerald-600 font-semibold mt-0.5">Razorpay Gateway Synced</div>
+        </div>
+        <div class="bg-white rounded-2xl border border-brand-border p-4 shadow-sm">
+          <div class="text-[11px] text-slate-500 font-bold uppercase">Round #42 Free Entrants</div>
+          <div class="text-2xl font-extrabold text-brand-red mt-1">6,420</div>
+          <div class="text-[10px] text-slate-500 font-semibold mt-0.5">0 Duplicate Violations</div>
+        </div>
+        <div class="bg-white rounded-2xl border border-brand-border p-4 shadow-sm">
+          <div class="text-[11px] text-slate-500 font-bold uppercase">Affiliate Outbound Clicks</div>
+          <div class="text-2xl font-extrabold text-brand-navy mt-1">42,910</div>
+          <div class="text-[10px] text-slate-500 font-semibold mt-0.5">Allowlist strictly validated</div>
+        </div>
+      </div>
+
+      <!-- Provably Fair Draw Simulator Box -->
+      <div class="bg-gradient-to-r from-brand-navy to-slate-900 text-white rounded-3xl p-6 border border-brand-electricBlue/40 space-y-4 shadow-xl">
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="bg-brand-red text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase">Draw Engine Control</span>
+            <h3 class="text-lg font-bold text-white mt-1">Provably Fair Selection Simulator (Round #42)</h3>
+          </div>
+          <button onclick="runFairDrawSimulator()" id="btn-run-draw" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-red to-brand-amber font-extrabold text-xs text-white shadow-lg transition">
+            Execute Verifiable Draw
+          </button>
+        </div>
+
+        <div id="draw-log-box" class="bg-black/60 rounded-xl p-4 font-mono text-xs text-slate-300 space-y-1.5 border border-slate-800">
+          <div>[STATUS]: Round #42 currently ACTIVE with 6,420 verified entrants.</div>
+          <div>[INFO]: Ready to freeze snapshot and execute deterministic CSPRNG draw. Click button above.</div>
+        </div>
+      </div>
+
+      <!-- Participant Register with PII Toggle -->
+      <div class="bg-white rounded-3xl border border-brand-border p-6 shadow-sm space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="font-extrabold text-base text-brand-navy">Round #42 Participant Registry</h3>
+            <p class="text-xs text-brand-textSecondary">Encrypted at rest (AES-256-GCM). Data minimization enforced under DPDP Act 2023.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="toggleMaskPII()" id="btn-mask-toggle" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition">
+              👁️ Reveal Decrypted PII (Logged)
+            </button>
+            <button onclick="alert('Exporting encrypted CSV (Audit Log #88219 Recorded)')" class="px-3 py-1.5 rounded-lg bg-brand-royalBlue text-white text-xs font-bold shadow transition">
+              Export Audit CSV
+            </button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-700">
+            <thead class="bg-slate-50 text-slate-500 font-bold uppercase text-[10px] border-b border-slate-200">
+              <tr>
+                <th class="py-2.5 px-3">Entry ID</th>
+                <th class="py-2.5 px-3">Full Name</th>
+                <th class="py-2.5 px-3">Email</th>
+                <th class="py-2.5 px-3">Phone</th>
+                <th class="py-2.5 px-3">Rules Accepted</th>
+                <th class="py-2.5 px-3">Fraud Check</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium" id="pii-table-body">
+              <tr>
+                <td class="py-3 px-3 font-mono font-bold text-brand-navy">#OSG-42-001</td>
+                <td class="py-3 px-3 pii-name">Venkata J.</td>
+                <td class="py-3 px-3 pii-email font-mono">v***@example.com</td>
+                <td class="py-3 px-3 pii-phone font-mono">+91 98****3210</td>
+                <td class="py-3 px-3 text-emerald-600 font-bold">✓ Accepted</td>
+                <td class="py-3 px-3"><span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[10px] font-bold">Passed</span></td>
+              </tr>
+              <tr>
+                <td class="py-3 px-3 font-mono font-bold text-brand-navy">#OSG-42-002</td>
+                <td class="py-3 px-3 pii-name">Kavitha R.</td>
+                <td class="py-3 px-3 pii-email font-mono">k***@gmail.com</td>
+                <td class="py-3 px-3 pii-phone font-mono">+91 91****1122</td>
+                <td class="py-3 px-3 text-emerald-600 font-bold">✓ Accepted</td>
+                <td class="py-3 px-3"><span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[10px] font-bold">Passed</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN 7: BRAND STYLE GUIDE ==================== -->
+    <div id="screen-styleguide" class="screen-view hidden space-y-6">
+      <div class="border-b border-brand-border pb-4">
+        <h1 class="text-2xl font-extrabold text-brand-textPrimary">Brand Style Guide & Token Inspector</h1>
+        <p class="text-xs text-brand-textSecondary">Color tokens, WCAG 2.2 contrast compliance, typography scale, and reusable UI components</p>
+      </div>
+
+      <!-- Color Swatches Grid -->
+      <div class="space-y-3">
+        <h3 class="font-extrabold text-sm text-brand-navy">Official Red & Blue Color Palette</h3>
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+          <div class="bg-brand-red text-white p-4 rounded-2xl shadow-sm">
+            <div class="font-extrabold text-sm">Primary Red</div>
+            <div class="font-mono text-xs opacity-90">#D92035</div>
+            <div class="text-[10px] mt-2 opacity-80">Primary CTAs, Urgency</div>
+            <div class="text-[10px] font-bold mt-1 bg-black/20 px-1.5 py-0.5 rounded inline-block">4.81:1 (AA)</div>
+          </div>
+          <div class="bg-brand-deepRed text-white p-4 rounded-2xl shadow-sm">
+            <div class="font-extrabold text-sm">Deep Red</div>
+            <div class="font-mono text-xs opacity-90">#AA152B</div>
+            <div class="text-[10px] mt-2 opacity-80">Hover & Active States</div>
+            <div class="text-[10px] font-bold mt-1 bg-black/20 px-1.5 py-0.5 rounded inline-block">7.15:1 (AAA)</div>
+          </div>
+          <div class="bg-brand-royalBlue text-white p-4 rounded-2xl shadow-sm">
+            <div class="font-extrabold text-sm">Royal Blue</div>
+            <div class="font-mono text-xs opacity-90">#123C91</div>
+            <div class="text-[10px] mt-2 opacity-80">Navigation, Trust Badges</div>
+            <div class="text-[10px] font-bold mt-1 bg-black/20 px-1.5 py-0.5 rounded inline-block">8.94:1 (AAA)</div>
+          </div>
+          <div class="bg-brand-electricBlue text-white p-4 rounded-2xl shadow-sm">
+            <div class="font-extrabold text-sm">Electric Blue</div>
+            <div class="font-mono text-xs opacity-90">#2865DA</div>
+            <div class="text-[10px] mt-2 opacity-80">Premium Accents, Links</div>
+            <div class="text-[10px] font-bold mt-1 bg-black/20 px-1.5 py-0.5 rounded inline-block">4.62:1 (AA)</div>
+          </div>
+          <div class="bg-brand-navy text-white p-4 rounded-2xl shadow-sm">
+            <div class="font-extrabold text-sm">Midnight Navy</div>
+            <div class="font-mono text-xs opacity-90">#091B3D</div>
+            <div class="text-[10px] mt-2 opacity-80">Header Base, Headings</div>
+            <div class="text-[10px] font-bold mt-1 bg-black/20 px-1.5 py-0.5 rounded inline-block">14.52:1 (AAA)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="bg-brand-navy text-slate-400 text-xs py-8 border-t border-slate-800 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <img src="logo.jpg" alt="One Stop Gadgets" class="w-8 h-8 rounded-full ring-1 ring-brand-cyan object-cover" />
+          <span class="font-extrabold text-white text-sm tracking-tight">ONE STOP GADGETS</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-4 text-xs">
+          <a href="#" class="hover:text-white transition">Privacy Policy (DPDP)</a>
+          <a href="#" class="hover:text-white transition">Terms of Service</a>
+          <a href="#" class="hover:text-white transition">Affiliate Disclosure</a>
+          <a href="#" class="hover:text-white transition">Official Lucky Dip Rules</a>
+          <a href="#" class="hover:text-white transition">Grievance Officer</a>
+        </div>
+      </div>
+
+      <div class="text-[11px] leading-relaxed border-t border-slate-800 pt-4 text-slate-500">
+        <strong>Mandatory Affiliate & Promotional Disclosure:</strong> One Stop Gadgets is an independent deal curation and affiliate discovery platform. Products featured are sold and fulfilled directly by authorized external merchants (e.g., Amazon, Flipkart, Samsung). Outbound clicks may earn us an affiliate referral commission at no additional cost to you. Weekly Lucky Dip giveaways are 100% free promotional draws conducted without entry fee or purchase requirement in full compliance with the Lotteries Act 1998 and Consumer Protection Act 2019.
+      </div>
+      <div class="text-center text-[10px] text-slate-600">
+        © 2026 One Stop Gadgets. All rights reserved. Built with PHP/Laravel, MySQL & React.
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPT ENGINE -->
+  <script>
+    let piiMasked = true;
+
+    function navigate(screenId) {
+      document.querySelectorAll('.screen-view').forEach(el => el.classList.add('hidden'));
+      const target = document.getElementById('screen-' + screenId);
+      if (target) target.classList.remove('hidden');
+
+      // Update switcher active tab styling
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('bg-brand-red', 'text-white');
+        btn.classList.add('bg-slate-800', 'text-slate-300');
+      });
+      const activeBtn = document.getElementById('tab-' + screenId);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-slate-800', 'text-slate-300');
+        activeBtn.classList.add('bg-brand-red', 'text-white');
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function triggerOutbound(productName, merchantDomain, isVipLocked) {
+      if (isVipLocked) {
+        alert(`🔒 RESTRICTED VIP ACCESS (PRD § 4.1):\n\n"${productName}" is an exclusive member offer.\n\nServer policy blocks destination redirect for non-subscribers. Redirecting you to VIP Membership Plans.`);
+        navigate('pricing');
+      } else {
+        alert(`✓ ENTITLEMENT VALIDATED:\n\n1. Logged click event in deal_clicks\n2. Validated destination host "${merchantDomain}" against approved merchant whitelist\n3. Generating signed short-lived redirect to merchant.`);
+      }
+    }
+
+    function show403Alert(moduleName) {
+      alert(`⛔ HTTP 403 FORBIDDEN (PRD § 8 Access Control Matrix):\n\nDeal Admin accounts are strictly segregated from ${moduleName}.\n\nThis endpoint requires Super Admin privileges.`);
+    }
+
+    function submitLuckyDip(event) {
+      event.preventDefault();
+      const btn = document.getElementById('ld-submit-btn');
+      btn.innerText = "Encrypting & Submitting...";
+      btn.disabled = true;
+
+      setTimeout(() => {
+        document.getElementById('lucky-dip-form').classList.add('hidden');
+        document.getElementById('ld-success-card').classList.remove('hidden');
+      }, 800);
+    }
+
+    function toggleMaskPII() {
+      piiMasked = !piiMasked;
+      const btn = document.getElementById('btn-mask-toggle');
+      if (piiMasked) {
+        btn.innerText = "👁️ Reveal Decrypted PII (Logged)";
+        document.querySelector('.pii-name').innerText = "Venkata J.";
+        document.querySelector('.pii-email').innerText = "v***@example.com";
+        document.querySelector('.pii-phone').innerText = "+91 98****3210";
+      } else {
+        alert("⚠️ AUDIT LOG RECORDED:\n\nSuper Admin accessed decrypted PII under DPDP Act purpose limitation.");
+        btn.innerText = "🔒 Mask Sensitive PII";
+        document.querySelector('.pii-name').innerText = "Venkata Jagadeesh";
+        document.querySelector('.pii-email').innerText = "venkata@example.com";
+        document.querySelector('.pii-phone').innerText = "+91 98765 43210";
+      }
+    }
+
+    function runFairDrawSimulator() {
+      const box = document.getElementById('draw-log-box');
+      const btn = document.getElementById('btn-run-draw');
+      btn.disabled = true;
+      box.innerHTML = `
+        <div class="text-amber-400 font-bold">[STEP 1/4]: Freezing Round #42 participant register at timestamp 2026-11-18T16:00:00Z...</div>
+        <div class="text-slate-400 font-mono text-[10px]">Snapshot Hash: 7b8f9e21ac04de89... (6,420 entries)</div>
+      `;
+
+      setTimeout(() => {
+        box.innerHTML += `
+          <div class="text-brand-cyan font-bold mt-2">[STEP 2/4]: Generating CSPRNG Entropy via random_bytes(32)...</div>
+          <div class="text-slate-400 font-mono text-[10px]">Entropy Commitment: 4f3a71b8... Hashed & committed to lucky_dip_draws.</div>
+        `;
+      }, 1000);
+
+      setTimeout(() => {
+        box.innerHTML += `
+          <div class="text-emerald-400 font-bold mt-2">[STEP 3/4]: Deterministic winner selected at Index #3,812!</div>
+          <div class="text-white bg-slate-800 p-2 rounded mt-1">Candidate Winner: <strong>Rahul K. (Bangalore)</strong> • Entry #OSG-42-3812</div>
+          <div class="text-amber-300 font-bold mt-2">[STEP 4/4]: Status = 'pending_verification'. Waiting for Super Admin manual publish.</div>
+        `;
+        btn.innerText = "✓ Draw Completed";
+      }, 2200);
+    }
+
+    function startCheckout(planName, amount) {
+      alert(`💳 RAZORPAY / CASHFREE HOSTED CHECKOUT SIMULATION:\n\nPlan: ${planName}\nAmount: ₹${amount}\n\n1. Creating pending order in subscription_orders\n2. Opening hosted payment modal\n3. Webhook listener verifies HMAC-SHA256 signature\n4. Idempotently provisions VIP subscription upon payment.captured.`);
+    }
+
+    // Live countdown ticker
+    let sec = 15;
+    setInterval(() => {
+      sec = sec > 0 ? sec - 1 : 59;
+      document.getElementById('cd-secs').innerText = sec < 10 ? '0' + sec : sec;
+    }, 1000);
+  </script>
+</body>
+</html>

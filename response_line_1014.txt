@@ -1,0 +1,5 @@
+The following is a <SYSTEM_MESSAGE> not actually sent by the user. It is provided by the system as important information to pay attention to.
+
+<SYSTEM_MESSAGE>
+Reminder: work efficiently. In this turn, issue in parallel every independent search, read and edit or write you need next. Never one call per turn; never repeat a search or re-read content you already know that hasn't changed. Working efficiently never means skipping checks to save turns; verify in one command after your last edit and don't re-run passing tests or diffs without new edits.
+</SYSTEM_MESSAGE>

@@ -1,0 +1,51 @@
+Created At: 2026-11-20T10:09:47+05:30
+Completed At: 2026-11-20T10:09:47+05:30
+Created At: 2026-11-20T10:09:47+05:30
+Completed At: 2026-11-20T10:09:47+05:30
+Showing lines 2600-2645 of 2986
+2600:       if (catDropdown) {
+2601:         catDropdown.value = catId;
+2602:       }
+2603:       renderCatalogPills(catId);
+2604:       filterCatalog();
+2605:     }
+2606: 
+2607:     // Filter Deals in Catalog
+2608:     function filterCatalog() {
+2609:       const catVal = document.getElementById('cat-filter')?.value || 'all';
+2610:       const storeVal = document.getElementById('store-filter')?.value || 'all';
+2611:       
+2612:       const filtered = DEALS_DATA.filter(d => {
+2613:         const matchCat = (catVal === 'all' || d.category.toLowerCase() === catVal.toLowerCase());
+2614:         const matchStore = (storeVal === 'all' || d.store.toLowerCase().includes(storeVal.toLowerCase()));
+2615:         return matchCat && matchStore;
+2616:       });
+2617: 
+2618:       const catalogContainer = document.getElementById('catalog-deals-grid');
+2619:       if (!catalogContainer) return;
+2620: 
+2621:       if (filtered.length === 0) {
+2622:         catalogContainer.innerHTML = `
+2623:           <div class="col-span-full py-12 text-center bg-white rounded-3xl border border-[#C8A0A0] p-8 space-y-3">
+2624:             <div class="text-4xl">🔍</div>
+2625:             <div class="font-extrabold text-base text-[#141428]">No Deals Found in this Filter</div>
+2626:             <p class="text-xs text-slate-500">We couldn't find active offers matching this exact category and merchant combination.</p>
+2627:             <button onclick="resetFilters()" class="px-5 py-2.5 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-bold shadow transition">
+2628:               Reset Filters
+2629:             </button>
+2630:           </div>
+2631:         `;
+2632:         return;
+2633:       }
+2634: 
+2635:       catalogContainer.innerHTML = filtered.map(makeDealCard).join('');
+2636:     }
+2637: 
+2638:     // Reset All Filters
+2639:     function resetFilters() {
+2640:       const cat = document.getElementById('cat-filter');
+2641:       const store = document.getElementById('store-filter');
+2642:       if (cat) cat.value = 'all';
+2643:       if (store) store.value = 'all';
+2644:       renderCatalogPills('all');
+2645:       filterCatalog();

@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Official Color Hunt Palette: https://colorhunt.co/palette/04156211468fda1212eeeeee */
+  --color-palette-navy: #041562;       /* Deep Navy Blue */
+  --color-palette-royal: #11468F;      /* Royal Blue */
+  --color-palette-red: #DA1212;        /* Vibrant Red */
+  --color-palette-gray: #EEEEEE;       /* Clean Soft Surface Gray */
+  --color-palette-card: #FFFFFF;
+  --color-palette-border: #D8DCE5;
+
+  /* Semantic Mappings */
+  --color-primary-cta: #DA1212;
+  --color-primary-nav: #041562;
+  --color-accent-blue: #11468F;
+  --color-surface-base: #EEEEEE;
+
+  /* Gradients */
+  --gradient-hero: linear-gradient(135deg, #041562 0%, #11468F 60%, #DA1212 140%);
+  --gradient-jackpot: linear-gradient(90deg, #DA1212 0%, #FF9900 100%);
+}
+
+.hero-gradient {
+  background: var(--gradient-hero);
+}
+
+.jackpot-gradient {
+  background: var(--gradient-jackpot);
+}

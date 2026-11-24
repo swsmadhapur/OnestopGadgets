@@ -1,0 +1,53 @@
+Created At: 2026-11-20T10:09:55+05:30
+Completed At: 2026-11-20T10:09:56+05:30
+Created At: 2026-11-20T10:09:55+05:30
+Completed At: 2026-11-20T10:09:56+05:30
+Showing lines 2940-2986 of 2986
+2940:       if (el2) el2.innerText = txt;
+2941:     }, 1000);
+2942:   
+2943:     // ===== DEALS PAGE: Tab switcher =====
+2944:     function selectDealTab(tab) {
+2945:       document.querySelectorAll('.deal-tab').forEach(btn => {
+2946:         btn.classList.remove('bg-[#2563EB]', 'text-white', 'shadow');
+2947:         btn.classList.add('bg-white', 'border', 'border-[#C8A0A0]', 'text-[#141428]');
+2948:       });
+2949:       const active = document.getElementById('tab-' + tab);
+2950:       if (active) {
+2951:         active.classList.remove('bg-white', 'border', 'border-[#C8A0A0]', 'text-[#141428]');
+2952:         active.classList.add('bg-[#FF3C50]', 'text-white', 'shadow');
+2953:       }
+2954:     }
+2955: 
+2956:     // ===== DEALS PAGE: Sidebar category radio =====
+2957:     function sidebarCatFilter(catId) {
+2958:       const catDropdown = document.getElementById('cat-filter');
+2959:       if (catDropdown) catDropdown.value = catId;
+2960:       renderCatalogPills(catId);
+2961:       filterCatalog();
+2962:     }
+2963: 
+2964:     // ===== DEALS PAGE: Sort =====
+2965:     function sortDeals(sortVal) {
+2966:       const container = document.getElementById('catalog-deals-grid');
+2967:       if (!container) return;
+2968:       let data = [...DEALS_DATA];
+2969:       if (sortVal === 'discount') {
+2970:         data.sort((a, b) => {
+2971:           const pct = d => {
+2972:             const p = parseInt((d.price||'').replace(/[^0-9]/g,''));
+2973:             const o = parseInt((d.original||'').replace(/[^0-9]/g,''));
+2974:             return o > 0 ? (1 - p/o) : 0;
+2975:           };
+2976:           return pct(b) - pct(a);
+2977:         });
+2978:       } else if (sortVal === 'priceLow') {
+2979:         data.sort((a, b) => parseInt((a.price||'').replace(/[^0-9]/g,'')) - parseInt((b.price||'').replace(/[^0-9]/g,'')));
+2980:       } else if (sortVal === 'priceHigh') {
+2981:         data.sort((a, b) => parseInt((b.price||'').replace(/[^0-9]/g,'')) - parseInt((a.price||'').replace(/[^0-9]/g,'')));
+2982:       }
+2983:       container.innerHTML = data.map(makeDealCard).join('');
+2984:     }
+2985: 
+2986:   </script>
+(no newline at end of file)

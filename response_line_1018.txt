@@ -1,0 +1,66 @@
+Created At: 2026-11-20T10:10:04+05:30
+Completed At: 2026-11-20T10:10:04+05:30
+Created At: 2026-11-20T10:10:04+05:30
+Completed At: 2026-11-20T10:10:04+05:30
+Showing lines 2460-2520 of 2986
+2460:       { id: 4, title: 'Apple MacBook Air M3 (16GB, 512GB)', category: 'Laptops', store: 'Amazon', price: '₹1,19,900', original: '₹1,34,900', discount: 'Save 22%', icon: '💻', isVip: false },
+2461:       { id: 5, title: 'Apple iPhone 16 Pro Max 256GB (Secret Voucher)', category: 'Phones', store: 'Apple', price: '₹1,24,999', original: '₹1,44,999', discount: 'VIP ₹12k Off', icon: '📱', isVip: true },
+2462:       { id: 6, title: 'Sony PlayStation 5 Pro Edition (VIP Direct Allocation)', category: 'Gaming', store: 'Sony', price: '₹58,990', original: '₹68,990', discount: 'VIP Secret', icon: '🎮', isVip: true },
+2463:       { id: 7, title: 'iPad Air M2 (256GB, Wi-Fi)', category: 'Laptops', store: 'Apple', price: '₹59,900', original: '₹69,900', discount: 'Save 15%', icon: '💻', isVip: false },
+2464:       { id: 8, title: 'Bose QuietComfort Ultra Noise-Cancelling Earbuds', category: 'Audio', store: 'Amazon', price: '₹21,900', original: '₹29,900', discount: 'Save 27%', icon: '🎧', isVip: false },
+2465:       { id: 9, title: 'Samsung Galaxy S24 Ultra (512GB, Titanium Gray)', category: 'Phones', store: 'Samsung', price: '₹1,19,999', original: '₹1,39,999', discount: 'Save 18%', icon: '📱', isVip: false },
+2466:       { id: 10, title: 'Apple Watch Series 10 (GPS, 46mm Jet Black)', category: 'Wearables', store: 'Apple', price: '₹44,900', original: '₹49,900', discount: 'Save 10%', icon: '⌚', isVip: false },
+2467:       { id: 11, title: 'Nintendo Switch OLED Mario Red Edition', category: 'Gaming', store: 'Amazon', price: '₹31,490', original: '₹37,990', discount: 'Save 17%', icon: '🎮', isVip: false },
+2468:       { id: 12, title: 'Amazon Echo Show 10 (3rd Gen HD Smart Display)', category: 'SmartHome', store: 'Amazon', price: '₹19,999', original: '₹24,999', discount: 'Save 20%', icon: '🏠', isVip: false },
+2469:       { id: 13, title: 'Anker Prime 100W GaN 3-Port Fast Wall Charger', category: 'Accessories', store: 'Amazon', price: '₹4,999', original: '₹7,999', discount: 'Save 38%', icon: '🔌', isVip: false },
+2470:       { id: 14, title: 'SanDisk 1TB Extreme Portable SSD (1050MB/s USB-C)', category: 'Accessories', store: 'Flipkart', price: '₹8,499', original: '₹14,999', discount: 'Save 43%', icon: '🔌', isVip: false }
+2471:     ];
+2472: 
+2473:     // Navigation Router (Synchronizes Desktop & Mobile Navigation States)
+2474:     function navigate(screenId) {
+2475:       // If user asks for pricing, show storefront and scroll down to the Home Page VIP Pricing section
+2476:       if (screenId === 'pricing') {
+2477:         navigate('storefront');
+2478:         setTimeout(() => {
+2479:           const el = document.getElementById('vip-pricing-section');
+2480:           if (el) el.scrollIntoView({ behavior: 'smooth' });
+2481:         }, 120);
+2482:         return;
+2483:       }
+2484: 
+2485:       document.querySelectorAll('.screen-view').forEach(el => el.classList.add('hidden'));
+2486:       const target = document.getElementById('screen-' + screenId);
+2487:       if (target) target.classList.remove('hidden');
+2488: 
+2489:       // Update Desktop Nav active link (Image 2 style with blue pill active)
+2490:       document.querySelectorAll('.nav-link').forEach(btn => {
+2491:         btn.classList.remove('text-white', 'bg-[#2563EB]', 'font-extrabold', 'shadow-sm');
+2492:         btn.classList.add('text-slate-200', 'hover:text-white', 'hover:bg-[#641428]/50');
+2493:       });
+2494:       const activeLink = document.getElementById('nav-btn-' + screenId);
+2495:       if (activeLink) {
+2496:         activeLink.classList.remove('text-slate-200', 'hover:bg-[#641428]/50');
+2497:         activeLink.classList.add('text-white', 'bg-[#641428]', 'font-extrabold', 'shadow-sm');
+2498:       }
+2499: 
+2500:       // Update Mobile Nav active link
+2501:       document.querySelectorAll('.nav-link-mobile').forEach(btn => {
+2502:         btn.classList.remove('text-white', 'bg-[#2563EB]', 'font-extrabold');
+2503:         btn.classList.add('text-slate-200', 'hover:bg-[#641428]/50');
+2504:       });
+2505:       const activeMobileLink = document.getElementById('nav-btn-mobile-' + screenId);
+2506:       if (activeMobileLink) {
+2507:         activeMobileLink.classList.remove('text-slate-200', 'hover:bg-[#641428]/50');
+2508:         activeMobileLink.classList.add('text-white', 'bg-[#641428]', 'font-extrabold');
+2509:       }
+2510: 
+2511:       window.scrollTo({ top: 0, behavior: 'smooth' });
+2512:     }
+2513: 
+2514:     // Render Gadget Categories on Home Page (High-Polish UI)
+2515:     function renderCategories() {
+2516:       const container = document.getElementById('categories-grid');
+2517:       if (!container) return;
+2518: 
+2519:       container.innerHTML = CATEGORIES_DATA.map(cat => `
+2520:         <div 
