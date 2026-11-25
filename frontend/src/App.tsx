@@ -929,6 +929,30 @@ export default function App() {
                 </select>
               </div>
 
+              {/* Mobile VIP Membership Portal Link */}
+              <button
+                onClick={() => { setCurrentScreen('membership'); setMobileMenuOpen(false); }}
+                className="w-full text-left py-2 px-3 rounded-lg bg-amber-400/20 border border-amber-400/30 text-amber-300 font-bold text-xs flex items-center justify-between"
+              >
+                <span>👑 My VIP Membership Portal</span>
+                <span>→</span>
+              </button>
+
+              {/* Mobile Search Input */}
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search deals, brands..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    if (currentScreen !== 'catalog') setCurrentScreen('catalog');
+                  }}
+                  className="w-full bg-black/60 border border-white/20 rounded-xl py-2 pl-8 pr-3 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-[#FF304D]"
+                />
+                <span className="absolute left-2.5 top-2.5 text-xs text-white/50">🔍</span>
+              </div>
+
               <nav className="flex flex-col gap-2">
                 <button onClick={() => { setCurrentScreen('storefront'); setMobileMenuOpen(false); }} className="text-left py-2 px-3 rounded-lg hover:bg-white/10 font-bold">🏠 Home</button>
                 <button onClick={() => { setCurrentScreen('catalog'); setMobileMenuOpen(false); }} className="text-left py-2 px-3 rounded-lg hover:bg-white/10 font-bold">🔥 Deals Directory</button>
@@ -945,20 +969,20 @@ export default function App() {
       )}
 
       {/* Navigation Header (Pixel-Perfect Reference Match with VIP User Switcher) */}
-      <header style={{ background: 'linear-gradient(90deg, #350C12 0%, #59121B 50%, #350C12 100%)', minHeight: '96px' }} className="text-white sticky top-0 z-40 shadow-2xl border-b border-[#59121B]/60 flex items-center">
-        <div className="w-full max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between gap-3 lg:gap-4">
+      <header style={{ background: 'linear-gradient(90deg, #350C12 0%, #59121B 50%, #350C12 100%)', minHeight: '80px' }} className="text-white sticky top-0 z-40 shadow-2xl border-b border-[#59121B]/60 flex items-center py-1 sm:py-2">
+        <div className="w-full max-w-[1680px] mx-auto px-2.5 sm:px-4 md:px-6 lg:px-8 flex items-center justify-between gap-1.5 sm:gap-3 lg:gap-4">
           
-          {/* 1. Brand Logo */}
-          <div className="flex items-center gap-3 cursor-pointer shrink-0" onClick={() => setCurrentScreen('storefront')} title="One Stop Gadgets - Home">
-            <div className="relative w-[70px] h-[70px] sm:w-[82px] sm:h-[82px] shrink-0 rounded-full p-1 bg-gradient-to-tr from-cyan-500/30 to-rose-500/30 flex items-center justify-center">
+          {/* 1. Brand Logo & Title */}
+          <div className="flex items-center gap-1.5 sm:gap-3 cursor-pointer shrink min-w-0" onClick={() => setCurrentScreen('storefront')} title="One Stop Gadgets - Home">
+            <div className="relative w-11 h-11 sm:w-16 sm:h-16 lg:w-20 lg:h-20 shrink-0 rounded-full p-0.5 sm:p-1 bg-gradient-to-tr from-cyan-500/30 to-rose-500/30 flex items-center justify-center">
               <img src="/logo.jpg" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=120&auto=format&fit=crop&q=80'; }} alt="One Stop Gadgets" className="w-full h-full rounded-full object-cover shadow-md" />
             </div>
-            <div className="flex flex-col justify-center">
-              <div className="text-lg sm:text-2xl font-black tracking-tight leading-none flex items-center gap-1 font-sans">
-                <span className="text-white">ONE STOP</span>
-                <span className="text-[#FF304D] font-extrabold">GADGETS</span>
+            <div className="flex flex-col justify-center min-w-0">
+              <div className="text-sm sm:text-xl lg:text-2xl font-black tracking-tight leading-tight flex items-center gap-1 font-sans truncate">
+                <span className="text-white whitespace-nowrap">ONE STOP</span>
+                <span className="text-[#FF304D] font-extrabold whitespace-nowrap">GADGETS</span>
               </div>
-              <div className="text-[9px] sm:text-[11px] font-bold text-white/70 tracking-widest uppercase mt-1">
+              <div className="text-[7.5px] sm:text-[10px] lg:text-[11px] font-bold text-white/70 tracking-wider sm:tracking-widest uppercase truncate mt-0.5">
                 DEALS • VIP • LUCKY DIP
               </div>
             </div>
@@ -1006,38 +1030,63 @@ export default function App() {
             </select>
           </div>
 
-          {/* 4. Search Bar & Sign In Button */}
-          <div className="flex items-center gap-3 shrink-0">
-            <div className="relative hidden sm:block w-44 md:w-64 lg:w-72 2xl:w-[380px] h-[44px]">
+          {/* 4. Search Bar, Sign In Button & Mobile Hamburger */}
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+            {/* Tablet/Desktop Search Bar */}
+            <div className="relative hidden md:block w-40 lg:w-64 2xl:w-[360px] h-[38px] sm:h-[44px]">
               <div className="relative h-full flex items-center">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-white">
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-white">
+                  <svg className="h-3.5 sm:h-4 w-3.5 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                   </svg>
                 </div>
                 <input
                   type="text"
-                  placeholder="FiboSearch: iPhone, Sony..."
+                  placeholder="FiboSearch: iPhone..."
                   value={searchQuery}
                   onChange={(e) => { setSearchQuery(e.target.value); if (currentScreen !== 'catalog') setCurrentScreen('catalog'); }}
-                  className="w-full h-full bg-[#000000] border border-white/10 rounded-full pl-10 pr-16 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-[#D91E26] transition shadow-inner font-sans"
+                  className="w-full h-full bg-[#000000] border border-white/10 rounded-full pl-8 sm:pl-9 pr-14 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-[#D91E26] transition shadow-inner font-sans"
                 />
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center gap-1.5">
-                  <span className="text-[9px] bg-[#70152D] text-white px-2 py-0.5 rounded font-mono font-bold tracking-tight uppercase shadow-xs">FIBO</span>
+                <div className="absolute inset-y-0 right-0 pr-2.5 flex items-center gap-1">
+                  <span className="text-[8px] sm:text-[9px] bg-[#70152D] text-white px-1.5 py-0.5 rounded font-mono font-bold tracking-tight uppercase shadow-xs">FIBO</span>
                 </div>
               </div>
             </div>
 
-            <button onClick={() => setCurrentScreen('signin')} className="h-[44px] px-4 sm:px-6 rounded-full bg-[#D91E26] hover:bg-[#c51424] text-[#F5F5F7] font-bold text-xs sm:text-sm shadow-md transition-all flex items-center gap-2 shrink-0">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            {/* Mobile / Small Screen Quick Search Trigger */}
+            <button
+              onClick={() => {
+                if (currentScreen !== 'catalog') setCurrentScreen('catalog');
+                setMobileMenuOpen(true);
+              }}
+              className="md:hidden w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white text-xs sm:text-sm"
+              title="Search Deals"
+              aria-label="Search"
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
               </svg>
-              <span>Sign In</span>
             </button>
 
-            {/* Mobile Hamburger Button */}
-            <button onClick={() => setMobileMenuOpen(true)} className="xl:hidden p-2 rounded-lg bg-white/10 text-white">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {/* Sign In Button */}
+            <button
+              onClick={() => setCurrentScreen('signin')}
+              className="h-[34px] sm:h-[42px] px-2.5 sm:px-4 lg:px-6 rounded-full bg-[#D91E26] hover:bg-[#c51424] text-[#F5F5F7] font-bold text-xs sm:text-sm shadow-md transition-all flex items-center gap-1 sm:gap-2 shrink-0"
+              title="Sign In"
+            >
+              <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              <span className="hidden xs:inline">Sign In</span>
+            </button>
+
+            {/* Mobile & Tablet Hamburger Button */}
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="xl:hidden w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center shrink-0"
+              aria-label="Open menu"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
