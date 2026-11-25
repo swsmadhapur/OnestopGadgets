@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
+import LegalPage, { LegalRoute } from './LegalPage';
 
-type Screen = 'storefront' | 'catalog' | 'pricing' | 'luckydip' | 'about' | 'contact' | 'signin' | 'membership' | 'admin' | 'superadmin';
+type Screen = 'storefront' | 'catalog' | 'pricing' | 'luckydip' | 'about' | 'contact' | 'signin' | 'membership' | 'admin' | 'superadmin' | 'legal';
 type UserRole = 'free' | 'vip' | 'expired';
 type PriceFilter = 'all' | 'under99' | '100-499' | '500-999' | '1000plus';
 type SortOption = 'latest' | 'price-asc' | 'price-desc' | 'discount-desc';
@@ -66,6 +67,49 @@ export default function App() {
   const [showVipPopup, setShowVipPopup] = useState(false);
   const [popupDismissed, setPopupDismissed] = useState(false);
   const [activePolicy, setActivePolicy] = useState<{ title: string; body: string } | null>(null);
+  const [legalRoute, setLegalRoute] = useState<LegalRoute>('privacy-policy');
+
+  // Handle direct browser URL navigation and browser back/forward buttons
+  useEffect(() => {
+    const handleLocationChange = () => {
+      const path = window.location.pathname.replace(/^\//, '');
+      if (path === 'privacy-policy' || path === 'terms-and-conditions' || path === 'returns-and-refunds' || path === 'lucky-dip-rules' || path === 'affiliate-disclosure') {
+        setLegalRoute(path as LegalRoute);
+        setCurrentScreen('legal');
+      } else if (path === 'catalog' || path === 'deals') {
+        setCurrentScreen('catalog');
+      } else if (path === 'about') {
+        setCurrentScreen('about');
+      } else if (path === 'luckydip') {
+        setCurrentScreen('luckydip');
+      } else if (path === 'contact') {
+        setCurrentScreen('contact');
+      } else if (path === 'pricing' || path === 'vip') {
+        setCurrentScreen('pricing');
+      }
+    };
+
+    handleLocationChange();
+    window.addEventListener('popstate', handleLocationChange);
+    return () => window.removeEventListener('popstate', handleLocationChange);
+  }, []);
+
+  const navigateToLegal = (route: LegalRoute) => {
+    setLegalRoute(route);
+    setCurrentScreen('legal');
+    window.history.pushState(null, '', `/${route}`);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const navigateToScreen = (screen: Screen, urlPath?: string) => {
+    setCurrentScreen(screen);
+    if (urlPath) {
+      window.history.pushState(null, '', urlPath);
+    } else if (screen === 'storefront') {
+      window.history.pushState(null, '', '/');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
   
   // Lucky Dip State
   const [luckyDipName, setLuckyDipName] = useState('');
@@ -771,6 +815,15 @@ export default function App() {
                           className="w-full bg-slate-100 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-700 font-bold cursor-not-allowed"
                         />
                       </div>
+                    </div>
+
+                    <div className="text-[10px] text-slate-500 text-center px-2">
+                      By continuing, you agree to our{' '}
+                      <button type="button" onClick={() => { setPurchasingPlan(null); navigateToLegal('terms-and-conditions'); }} className="text-[#1645C4] hover:underline font-bold">Terms &amp; Conditions</button>
+                      ,{' '}
+                      <button type="button" onClick={() => { setPurchasingPlan(null); navigateToLegal('privacy-policy'); }} className="text-[#1645C4] hover:underline font-bold">Privacy Policy</button>
+                      {' '}and{' '}
+                      <button type="button" onClick={() => { setPurchasingPlan(null); navigateToLegal('returns-and-refunds'); }} className="text-[#1645C4] hover:underline font-bold">Returns &amp; Refunds Policy</button>.
                     </div>
 
                     <button
@@ -2193,6 +2246,13 @@ export default function App() {
                       />
                     </div>
 
+                    <div className="text-[10px] text-slate-500 text-center px-1">
+                      Participation subject to{' '}
+                      <button type="button" onClick={() => navigateToLegal('lucky-dip-rules')} className="text-[#1645C4] hover:underline font-bold">Provably Fair Draw Rules</button>
+                      {' '}and{' '}
+                      <button type="button" onClick={() => navigateToLegal('terms-and-conditions')} className="text-[#1645C4] hover:underline font-bold">Terms</button>.
+                    </div>
+
                     <button
                       type="submit"
                       className="w-full mt-2 py-3.5 rounded-2xl bg-gradient-to-r from-[#DC1F32] via-[#E50914] to-[#D4AF37] text-white font-black text-xs uppercase tracking-wider shadow-lg hover:brightness-110 active:scale-[0.98] transition flex items-center justify-center gap-2"
@@ -2826,6 +2886,15 @@ export default function App() {
           </div>
         )}
 
+        {currentScreen === 'legal' && (
+          <LegalPage
+            route={legalRoute}
+            onNavigate={(newRoute) => navigateToLegal(newRoute as LegalRoute)}
+            onBackToHome={() => navigateToScreen('storefront', '/')}
+            onOpenPricing={() => navigateToScreen('pricing', '/pricing')}
+          />
+        )}
+
       </main>
 
       {/* FOOTER */}
@@ -2884,18 +2953,18 @@ export default function App() {
               </ul>
             </div>
 
-            {/* Column 3: Important Links (3 Cols) */}
+            {/* Column 3: Important Links (Dedicated Complete Legal Pages) */}
             <div className="lg:col-span-3 space-y-3.5">
               <div>
                 <h4 className="font-extrabold text-sm text-white tracking-wide">Important Links</h4>
                 <div className="w-10 h-0.5 bg-[#E50914] mt-1"></div>
               </div>
               <ul className="space-y-2 text-xs text-slate-300">
-                <li><button onClick={() => showPolicyModal('privacy')} className="hover:text-[#E50914] flex items-center gap-1.5 transition text-left"><span className="text-[#E50914] font-bold">›</span> Privacy Policy</button></li>
-                <li><button onClick={() => showPolicyModal('terms')} className="hover:text-[#E50914] flex items-center gap-1.5 transition text-left"><span className="text-[#E50914] font-bold">›</span> Terms &amp; Conditions</button></li>
-                <li><button onClick={() => showPolicyModal('returns')} className="hover:text-[#E50914] flex items-center gap-1.5 transition text-left"><span className="text-[#E50914] font-bold">›</span> Returns &amp; Refunds</button></li>
-                <li><button onClick={() => showPolicyModal('provablyFair')} className="hover:text-[#E50914] flex items-center gap-1.5 transition text-left"><span className="text-[#E50914] font-bold">›</span> Provably Fair Draw Rules</button></li>
-                <li><button onClick={() => showPolicyModal('affiliate')} className="hover:text-[#E50914] flex items-center gap-1.5 transition text-left"><span className="text-[#E50914] font-bold">›</span> Affiliate &amp; Merchant Disclosure</button></li>
+                <li><button onClick={() => navigateToLegal('privacy-policy')} className="hover:text-[#E50914] flex items-center gap-1.5 transition text-left cursor-pointer"><span className="text-[#E50914] font-bold">›</span> Privacy Policy</button></li>
+                <li><button onClick={() => navigateToLegal('terms-and-conditions')} className="hover:text-[#E50914] flex items-center gap-1.5 transition text-left cursor-pointer"><span className="text-[#E50914] font-bold">›</span> Terms &amp; Conditions</button></li>
+                <li><button onClick={() => navigateToLegal('returns-and-refunds')} className="hover:text-[#E50914] flex items-center gap-1.5 transition text-left cursor-pointer"><span className="text-[#E50914] font-bold">›</span> Returns &amp; Refunds</button></li>
+                <li><button onClick={() => navigateToLegal('lucky-dip-rules')} className="hover:text-[#E50914] flex items-center gap-1.5 transition text-left cursor-pointer"><span className="text-[#E50914] font-bold">›</span> Provably Fair Draw Rules</button></li>
+                <li><button onClick={() => navigateToLegal('affiliate-disclosure')} className="hover:text-[#E50914] flex items-center gap-1.5 transition text-left cursor-pointer"><span className="text-[#E50914] font-bold">›</span> Affiliate &amp; Merchant Disclosure</button></li>
               </ul>
             </div>
 
