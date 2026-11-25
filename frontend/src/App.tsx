@@ -65,6 +65,7 @@ export default function App() {
   }>>([]);
   const [showVipPopup, setShowVipPopup] = useState(false);
   const [popupDismissed, setPopupDismissed] = useState(false);
+  const [activePolicy, setActivePolicy] = useState<{ title: string; body: string } | null>(null);
   
   // Lucky Dip State
   const [luckyDipName, setLuckyDipName] = useState('');
@@ -108,6 +109,33 @@ export default function App() {
     }
   ]);
   const featuredScrollRef = useRef<HTMLDivElement>(null);
+
+  const POLICIES_CONTENT = {
+    privacy: {
+      title: 'Privacy Policy (DPDP Act 2023 Compliant)',
+      body: 'One Stop Gadgets is committed to protecting your personal data in accordance with the Digital Personal Data Protection Act 2023. We collect minimal personal identifiers strictly necessary for VIP subscription access, deal notifications, and provably fair lucky dip entry verification. We never sell, rent, or share personal contact data with third-party telemarketers. All stored tokens utilize 256-bit encryption.'
+    },
+    terms: {
+      title: 'Terms & Conditions',
+      body: 'Welcome to One Stop Gadgets. By accessing this platform and participating in our curated deals directory or provably fair giveaways, you agree to comply with our platform terms. Deal prices, cashback offers, and merchant allocations are managed in real-time and subject to partner merchant availability (Amazon India, Flipkart, etc.).'
+    },
+    returns: {
+      title: 'Returns & Refunds Policy',
+      body: 'VIP Memberships: We offer a 7-day satisfaction guarantee on 6-Month and Annual VIP Passes if no secret vouchers or gift entries have been redeemed.\n\nPhysical Products: Physical gadgets purchased via partner merchant affiliate links (Amazon, Flipkart) follow the respective merchants official return and replacement policies.'
+    },
+    provablyFair: {
+      title: 'Provably Fair Draw Rules & Cryptographic Auditing',
+      body: 'Our weekly tech giveaways operate on open cryptographic principles using SHA-256 hash generation. Prior to each round, a secure server seed hash is published. Winning ticket selection combines the client seed and block header timestamp, guaranteeing zero administrative manipulation.'
+    },
+    affiliate: {
+      title: 'Affiliate & Merchant Disclosure',
+      body: 'One Stop Gadgets is a participant in verified affiliate associate programs including the Amazon Services LLC Associates Program and Flipkart Affiliate Network. When you purchase deals through verified partner links on our website, we may earn an affiliate commission at no extra cost to you.'
+    }
+  };
+
+  const showPolicyModal = (type: 'privacy' | 'terms' | 'returns' | 'provablyFair' | 'affiliate') => {
+    setActivePolicy(POLICIES_CONTENT[type]);
+  };
 
   // Automatic 5-second VIP Packages popup for non-VIP visitors (once per session)
   useEffect(() => {
@@ -550,6 +578,41 @@ export default function App() {
                 </button>
               </div>
 
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ==================== POLICY & LEGAL MODAL ==================== */}
+      {activePolicy && (
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setActivePolicy(null);
+          }}
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in"
+        >
+          <div className="bg-[#FAF8F5] border-2 border-[#1645C4] rounded-3xl p-6 sm:p-8 max-w-2xl w-full shadow-2xl text-slate-800 relative max-h-[85vh] overflow-y-auto space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+              <h3 className="text-xl font-black text-[#1645C4] flex items-center gap-2">
+                <span>📜</span> {activePolicy.title}
+              </h3>
+              <button
+                onClick={() => setActivePolicy(null)}
+                className="text-slate-400 hover:text-slate-700 text-2xl font-bold transition"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="text-xs sm:text-sm text-slate-700 leading-relaxed whitespace-pre-line space-y-3 font-medium">
+              {activePolicy.body}
+            </div>
+            <div className="pt-4 border-t border-slate-200 flex justify-end">
+              <button
+                onClick={() => setActivePolicy(null)}
+                className="px-6 py-2.5 rounded-xl bg-[#1645C4] hover:bg-[#12389E] text-white font-black text-xs shadow-md transition"
+              >
+                Understood &amp; Close
+              </button>
             </div>
           </div>
         </div>
@@ -2727,11 +2790,11 @@ export default function App() {
                 <div className="w-8 h-0.5 bg-[#E50914] mt-1"></div>
               </div>
               <ul className="space-y-2 text-xs text-slate-300">
-                <li><button onClick={() => setCurrentScreen('storefront')} className="hover:text-[#E50914] flex items-center gap-1.5"><span className="text-[#E50914] font-bold">›</span> Home</button></li>
-                <li><button onClick={() => setCurrentScreen('catalog')} className="hover:text-[#E50914] flex items-center gap-1.5"><span className="text-[#E50914] font-bold">›</span> Deals</button></li>
-                <li><button onClick={() => setCurrentScreen('about')} className="hover:text-[#E50914] flex items-center gap-1.5"><span className="text-[#E50914] font-bold">›</span> About Us</button></li>
-                <li><button onClick={() => setCurrentScreen('luckydip')} className="hover:text-[#E50914] flex items-center gap-1.5"><span className="text-[#E50914] font-bold">›</span> Lucky Dip</button></li>
-                <li><button onClick={() => setCurrentScreen('contact')} className="hover:text-[#E50914] flex items-center gap-1.5"><span className="text-[#E50914] font-bold">›</span> Contact Us</button></li>
+                <li><button onClick={() => { setCurrentScreen('storefront'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-[#E50914] flex items-center gap-1.5 transition"><span className="text-[#E50914] font-bold">›</span> Home</button></li>
+                <li><button onClick={() => { setCurrentScreen('catalog'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-[#E50914] flex items-center gap-1.5 transition"><span className="text-[#E50914] font-bold">›</span> Deals</button></li>
+                <li><button onClick={() => { setCurrentScreen('about'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-[#E50914] flex items-center gap-1.5 transition"><span className="text-[#E50914] font-bold">›</span> About Us</button></li>
+                <li><button onClick={() => { setCurrentScreen('luckydip'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-[#E50914] flex items-center gap-1.5 transition"><span className="text-[#E50914] font-bold">›</span> Lucky Dip</button></li>
+                <li><button onClick={() => { setCurrentScreen('contact'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-[#E50914] flex items-center gap-1.5 transition"><span className="text-[#E50914] font-bold">›</span> Contact Us</button></li>
               </ul>
             </div>
 
@@ -2742,11 +2805,11 @@ export default function App() {
                 <div className="w-10 h-0.5 bg-[#E50914] mt-1"></div>
               </div>
               <ul className="space-y-2 text-xs text-slate-300">
-                <li><button onClick={() => setCurrentScreen('about')} className="hover:text-[#E50914] flex items-center gap-1.5"><span className="text-[#E50914] font-bold">›</span> Privacy Policy</button></li>
-                <li><button onClick={() => setCurrentScreen('about')} className="hover:text-[#E50914] flex items-center gap-1.5"><span className="text-[#E50914] font-bold">›</span> Terms &amp; Conditions</button></li>
-                <li><button onClick={() => setCurrentScreen('about')} className="hover:text-[#E50914] flex items-center gap-1.5"><span className="text-[#E50914] font-bold">›</span> Returns &amp; Refunds</button></li>
-                <li><button onClick={() => setCurrentScreen('luckydip')} className="hover:text-[#E50914] flex items-center gap-1.5"><span className="text-[#E50914] font-bold">›</span> Provably Fair Draw Rules</button></li>
-                <li><button onClick={() => setCurrentScreen('about')} className="hover:text-[#E50914] flex items-center gap-1.5"><span className="text-[#E50914] font-bold">›</span> Affiliate &amp; Merchant Disclosure</button></li>
+                <li><button onClick={() => showPolicyModal('privacy')} className="hover:text-[#E50914] flex items-center gap-1.5 transition text-left"><span className="text-[#E50914] font-bold">›</span> Privacy Policy</button></li>
+                <li><button onClick={() => showPolicyModal('terms')} className="hover:text-[#E50914] flex items-center gap-1.5 transition text-left"><span className="text-[#E50914] font-bold">›</span> Terms &amp; Conditions</button></li>
+                <li><button onClick={() => showPolicyModal('returns')} className="hover:text-[#E50914] flex items-center gap-1.5 transition text-left"><span className="text-[#E50914] font-bold">›</span> Returns &amp; Refunds</button></li>
+                <li><button onClick={() => showPolicyModal('provablyFair')} className="hover:text-[#E50914] flex items-center gap-1.5 transition text-left"><span className="text-[#E50914] font-bold">›</span> Provably Fair Draw Rules</button></li>
+                <li><button onClick={() => showPolicyModal('affiliate')} className="hover:text-[#E50914] flex items-center gap-1.5 transition text-left"><span className="text-[#E50914] font-bold">›</span> Affiliate &amp; Merchant Disclosure</button></li>
               </ul>
             </div>
 
