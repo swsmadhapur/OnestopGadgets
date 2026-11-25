@@ -1095,75 +1095,75 @@ export default function App() {
         </div>
       )}
 
-      {/* Navigation Header (Pixel-Perfect Reference Match with VIP User Switcher) */}
-      <header style={{ background: 'linear-gradient(90deg, #350C12 0%, #59121B 50%, #350C12 100%)', minHeight: '80px' }} className="text-white sticky top-0 z-40 shadow-2xl border-b border-[#59121B]/60 flex items-center py-1 sm:py-2">
-        <div className="w-full max-w-[1680px] mx-auto px-2.5 sm:px-4 md:px-6 lg:px-8 flex items-center justify-between gap-1.5 sm:gap-3 lg:gap-4">
+      {/* Navigation Header (Clean, balanced layout with logo-only branding, spacing, compact role and search) */}
+      <header style={{ background: 'linear-gradient(90deg, #350C12 0%, #59121B 50%, #350C12 100%)', minHeight: '74px' }} className="text-white sticky top-0 z-40 shadow-2xl border-b border-[#59121B]/60 flex items-center py-2">
+        <div className="w-full max-w-[1680px] mx-auto px-3 sm:px-5 md:px-6 lg:px-8 flex items-center justify-between gap-3 md:gap-5">
           
-          {/* 1. Brand Logo & Title */}
-          <div className="flex items-center gap-1.5 sm:gap-3 cursor-pointer shrink min-w-0" onClick={() => setCurrentScreen('storefront')} title="One Stop Gadgets - Home">
-            <div className="relative w-11 h-11 sm:w-16 sm:h-16 lg:w-20 lg:h-20 shrink-0 rounded-full p-0.5 sm:p-1 bg-gradient-to-tr from-cyan-500/30 to-rose-500/30 flex items-center justify-center">
-              <img src="/logo.jpg" onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=120&auto=format&fit=crop&q=80'; }} alt="One Stop Gadgets" className="w-full h-full rounded-full object-cover shadow-md" />
-            </div>
-            <div className="flex flex-col justify-center min-w-0">
-              <div className="text-sm sm:text-xl lg:text-2xl font-black tracking-tight leading-tight flex items-center gap-1 font-sans truncate">
-                <span className="text-white whitespace-nowrap">ONE STOP</span>
-                <span className="text-[#FF304D] font-extrabold whitespace-nowrap">GADGETS</span>
-              </div>
-              <div className="text-[7.5px] sm:text-[10px] lg:text-[11px] font-bold text-white/70 tracking-wider sm:tracking-widest uppercase truncate mt-0.5">
-                DEALS • VIP • LUCKY DIP
-              </div>
+          {/* 1. Brand Logo (Text removed as requested, with comfortable right spacing) */}
+          <div 
+            className="flex items-center cursor-pointer shrink-0 mr-2 sm:mr-4 lg:mr-6" 
+            onClick={() => setCurrentScreen('storefront')} 
+            title="One Stop Gadgets - Home"
+          >
+            <div className="relative w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 shrink-0 rounded-full p-0.5 bg-gradient-to-tr from-cyan-500/40 via-amber-400/30 to-rose-500/40 flex items-center justify-center hover:scale-105 transition-transform shadow-lg">
+              <img 
+                src="/logo.jpg" 
+                onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=120&auto=format&fit=crop&q=80'; }} 
+                alt="One Stop Gadgets" 
+                className="w-full h-full rounded-full object-cover shadow-md" 
+              />
             </div>
           </div>
 
-          {/* 2. Desktop Navigation Menu */}
-          <nav className="hidden xl:flex items-center gap-2 2xl:gap-4 shrink-0 font-sans">
-            <button onClick={() => setCurrentScreen('storefront')} className={`px-5 py-2.5 rounded-full font-bold text-sm transition-all ${currentScreen === 'storefront' ? 'bg-[#D91E26] text-[#F5F5F7] shadow-md' : 'text-[#F5F5F7] hover:text-white hover:bg-white/10'}`}>
+          {/* 2. Desktop Navigation Menu (With generous spacing next to logo) */}
+          <nav className="hidden lg:flex items-center gap-1.5 xl:gap-3 shrink-0 font-sans">
+            <button onClick={() => setCurrentScreen('storefront')} className={`px-4 sm:px-5 py-2 rounded-full font-bold text-xs sm:text-sm transition-all ${currentScreen === 'storefront' ? 'bg-[#D91E26] text-[#F5F5F7] shadow-md' : 'text-[#F5F5F7] hover:text-white hover:bg-white/10'}`}>
               Home
             </button>
-            <button onClick={() => setCurrentScreen('catalog')} className={`px-4 py-2.5 rounded-full font-bold text-sm transition-all ${currentScreen === 'catalog' ? 'bg-[#D91E26] text-[#F5F5F7] shadow-md' : 'text-[#F5F5F7] hover:text-white hover:bg-white/10'}`}>
+            <button onClick={() => setCurrentScreen('catalog')} className={`px-3.5 sm:px-4 py-2 rounded-full font-bold text-xs sm:text-sm transition-all ${currentScreen === 'catalog' ? 'bg-[#D91E26] text-[#F5F5F7] shadow-md' : 'text-[#F5F5F7] hover:text-white hover:bg-white/10'}`}>
               Deals
             </button>
-            <button onClick={() => setCurrentScreen('about')} className={`px-4 py-2.5 rounded-full font-bold text-sm transition-all ${currentScreen === 'about' ? 'bg-[#D91E26] text-[#F5F5F7] shadow-md' : 'text-[#F5F5F7] hover:text-white hover:bg-white/10'}`}>
+            <button onClick={() => setCurrentScreen('about')} className={`px-3.5 sm:px-4 py-2 rounded-full font-bold text-xs sm:text-sm transition-all ${currentScreen === 'about' ? 'bg-[#D91E26] text-[#F5F5F7] shadow-md' : 'text-[#F5F5F7] hover:text-white hover:bg-white/10'}`}>
               About
             </button>
-            <button onClick={() => setCurrentScreen('luckydip')} className={`px-4 py-2.5 rounded-full font-bold text-sm transition-all flex items-center gap-1.5 ${currentScreen === 'luckydip' ? 'bg-[#D91E26] text-[#F5F5F7] shadow-md' : 'text-[#FF304D] hover:text-white hover:bg-white/10'}`}>
+            <button onClick={() => setCurrentScreen('luckydip')} className={`px-3.5 sm:px-4 py-2 rounded-full font-bold text-xs sm:text-sm transition-all flex items-center gap-1.5 ${currentScreen === 'luckydip' ? 'bg-[#D91E26] text-[#F5F5F7] shadow-md' : 'text-[#FF304D] hover:text-white hover:bg-white/10'}`}>
               <span>🎁</span>
               <span>Lucky Dip</span>
             </button>
-            <button onClick={() => setCurrentScreen('contact')} className={`px-4 py-2.5 rounded-full font-bold text-sm transition-all ${currentScreen === 'contact' ? 'bg-[#D91E26] text-[#F5F5F7] shadow-md' : 'text-[#F5F5F7] hover:text-white hover:bg-white/10'}`}>
+            <button onClick={() => setCurrentScreen('contact')} className={`px-3.5 sm:px-4 py-2 rounded-full font-bold text-xs sm:text-sm transition-all ${currentScreen === 'contact' ? 'bg-[#D91E26] text-[#F5F5F7] shadow-md' : 'text-[#F5F5F7] hover:text-white hover:bg-white/10'}`}>
               Contact Us
             </button>
           </nav>
 
-          {/* 3. VIP User Role Selector (Demo Testing Component) */}
-          <div className="hidden lg:flex items-center gap-2 bg-black/40 border border-amber-400/30 px-3 py-1.5 rounded-full shrink-0">
+          {/* 3. VIP User Role Selector (Reduced size, neat pill design) */}
+          <div className="hidden xl:flex items-center gap-1.5 bg-black/40 border border-amber-400/30 px-2.5 py-1 rounded-full shrink-0 text-[11px]">
             <button
               onClick={() => setCurrentScreen('membership')}
-              className="text-[10px] text-amber-300 font-extrabold uppercase hover:underline flex items-center gap-1"
+              className="text-amber-300 font-extrabold hover:underline flex items-center gap-1 text-[10px]"
               title="Open My VIP Membership Dashboard"
             >
               <span>👑 Portal</span>
             </button>
-            <span className="text-white/30">|</span>
-            <span className="text-[10px] text-amber-300/80 font-bold uppercase tracking-wider">Role:</span>
+            <span className="text-white/25">|</span>
+            <span className="text-[9px] text-amber-300/80 font-bold uppercase tracking-wider">Role:</span>
             <select
               value={userRole}
               onChange={(e) => setUserRole(e.target.value as UserRole)}
-              className="bg-transparent text-xs font-bold text-white focus:outline-none cursor-pointer"
+              className="bg-transparent text-[11px] font-bold text-white focus:outline-none cursor-pointer pr-1"
             >
-              <option value="free" className="bg-[#101428] text-white">Free User (&lt; ₹50K)</option>
-              <option value="vip" className="bg-[#101428] text-emerald-400">Active VIP Pass 👑</option>
-              <option value="expired" className="bg-[#101428] text-rose-400">Expired VIP Pass</option>
+              <option value="free" className="bg-[#101428] text-white">Free (&lt; ₹50K)</option>
+              <option value="vip" className="bg-[#101428] text-emerald-400">VIP Pass 👑</option>
+              <option value="expired" className="bg-[#101428] text-rose-400">Expired</option>
             </select>
           </div>
 
           {/* 4. Search Bar, Sign In Button & Mobile Hamburger */}
-          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
-            {/* Tablet/Desktop Search Bar */}
-            <div className="relative hidden md:block w-40 lg:w-64 2xl:w-[360px] h-[38px] sm:h-[44px]">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            {/* Tablet/Desktop Search Bar (Reduced size for optimal proportion) */}
+            <div className="relative hidden md:block w-36 sm:w-44 lg:w-52 xl:w-60 h-[34px] sm:h-[36px]">
               <div className="relative h-full flex items-center">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-white">
-                  <svg className="h-3.5 sm:h-4 w-3.5 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-white/70">
+                  <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                   </svg>
                 </div>
@@ -1172,10 +1172,10 @@ export default function App() {
                   placeholder="FiboSearch: iPhone..."
                   value={searchQuery}
                   onChange={(e) => { setSearchQuery(e.target.value); if (currentScreen !== 'catalog') setCurrentScreen('catalog'); }}
-                  className="w-full h-full bg-[#000000] border border-white/10 rounded-full pl-8 sm:pl-9 pr-14 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-[#D91E26] transition shadow-inner font-sans"
+                  className="w-full h-full bg-[#000000] border border-white/10 rounded-full pl-7 sm:pl-8 pr-12 text-[11px] text-white placeholder-slate-400 focus:outline-none focus:border-[#D91E26] transition shadow-inner font-sans"
                 />
-                <div className="absolute inset-y-0 right-0 pr-2.5 flex items-center gap-1">
-                  <span className="text-[8px] sm:text-[9px] bg-[#70152D] text-white px-1.5 py-0.5 rounded font-mono font-bold tracking-tight uppercase shadow-xs">FIBO</span>
+                <div className="absolute inset-y-0 right-0 pr-2 flex items-center">
+                  <span className="text-[7.5px] bg-[#70152D] text-white px-1.5 py-0.5 rounded font-mono font-bold tracking-tight uppercase shadow-xs">FIBO</span>
                 </div>
               </div>
             </div>
@@ -1186,7 +1186,7 @@ export default function App() {
                 if (currentScreen !== 'catalog') setCurrentScreen('catalog');
                 setMobileMenuOpen(true);
               }}
-              className="md:hidden w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white text-xs sm:text-sm"
+              className="md:hidden w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white text-xs"
               title="Search Deals"
               aria-label="Search"
             >
@@ -1198,19 +1198,19 @@ export default function App() {
             {/* Sign In Button */}
             <button
               onClick={() => setCurrentScreen('signin')}
-              className="h-[34px] sm:h-[42px] px-2.5 sm:px-4 lg:px-6 rounded-full bg-[#D91E26] hover:bg-[#c51424] text-[#F5F5F7] font-bold text-xs sm:text-sm shadow-md transition-all flex items-center gap-1 sm:gap-2 shrink-0"
+              className="h-[32px] sm:h-[36px] px-3 sm:px-4 rounded-full bg-[#D91E26] hover:bg-[#c51424] text-[#F5F5F7] font-bold text-xs shadow-md transition-all flex items-center gap-1.5 shrink-0"
               title="Sign In"
             >
-              <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
-              <span className="hidden xs:inline">Sign In</span>
+              <span className="hidden sm:inline">Sign In</span>
             </button>
 
             {/* Mobile & Tablet Hamburger Button */}
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="xl:hidden w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center shrink-0"
+              className="lg:hidden w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center shrink-0"
               aria-label="Open menu"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
