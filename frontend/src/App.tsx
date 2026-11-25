@@ -172,14 +172,13 @@ export default function App() {
   const [heroIndex, setHeroIndex] = useState(0);
   const [heroPaused, setHeroPaused] = useState(false);
 
-  // Auto rotation every 3.5 seconds
+  // Auto rotation every 2 seconds
   useEffect(() => {
-    if (heroPaused) return;
     const interval = setInterval(() => {
       setHeroIndex(prev => (prev + 1) % heroProducts.length);
-    }, 3500);
+    }, 2000);
     return () => clearInterval(interval);
-  }, [heroPaused, heroProducts.length]);
+  }, [heroProducts.length]);
 
   const POLICIES_CONTENT = {
     privacy: {
@@ -1266,126 +1265,30 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Right Column: Premium 3D Animated Hero Product Showcase (Matching Uploaded Images & Video) */}
-                <div 
-                  className="lg:col-span-5 relative flex flex-col items-center justify-center"
-                  onMouseEnter={() => setHeroPaused(true)}
-                  onMouseLeave={() => setHeroPaused(false)}
-                >
-                  {/* Glowing 3D Pedestal Platform */}
-                  <div className="relative w-full max-w-[420px] aspect-square rounded-full p-4 sm:p-6 flex flex-col items-center justify-center transition-all duration-700">
-                    
-                    {/* Dynamic Ambient Background Aura */}
-                    <div 
-                      className="absolute inset-0 rounded-full blur-3xl opacity-60 transition-all duration-1000 pointer-events-none"
-                      style={{ background: `radial-gradient(circle, ${heroProducts[heroIndex].glow} 0%, rgba(64,11,25,0.7) 60%, transparent 100%)` }}
-                    ></div>
-
-                    {/* Circular Halo Frame */}
-                    <div className="absolute inset-2 sm:inset-4 rounded-full border border-white/20 bg-gradient-to-b from-white/10 via-black/40 to-[#101428]/90 backdrop-blur-md shadow-[0_20px_50px_rgba(0,0,0,0.6)] flex items-center justify-center overflow-hidden">
-                      {/* Subtle concentric rings for depth */}
-                      <div className="absolute w-[80%] h-[80%] rounded-full border border-white/10 animate-pulse"></div>
-                      <div className="absolute w-[60%] h-[60%] rounded-full border border-amber-400/20"></div>
-                    </div>
-
-                    {/* Top Prize Badge Counter */}
-                    <div className="absolute top-2 sm:top-4 z-20 flex items-center gap-2">
-                      <span className="bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 text-slate-900 font-black text-[10px] sm:text-[11px] px-3.5 py-1 rounded-full shadow-lg flex items-center gap-1.5 uppercase tracking-wider">
-                        <span>🏆</span> <span>{heroProducts[heroIndex].prizeNumber}</span>
-                      </span>
-                      <span className="bg-black/60 backdrop-blur-md border border-white/20 text-white font-bold text-[9px] sm:text-[10px] px-2.5 py-1 rounded-full uppercase tracking-wider hidden sm:inline-block">
-                        {heroProducts[heroIndex].badge}
-                      </span>
-                    </div>
-
-                    {/* Central 3D Floating Showcase Image */}
-                    <div className="relative z-10 w-full h-[230px] sm:h-[270px] flex items-center justify-center perspective-1000">
-                      {heroProducts.map((prod, idx) => {
-                        const isActive = idx === heroIndex;
-                        const isPrev = idx === (heroIndex - 1 + heroProducts.length) % heroProducts.length;
-                        const isNext = idx === (heroIndex + 1) % heroProducts.length;
-                        
-                        let transformClass = 'opacity-0 scale-75 translate-y-8 pointer-events-none';
-                        if (isActive) {
-                          transformClass = 'opacity-100 scale-100 translate-y-0 z-20 drop-shadow-[0_20px_35px_rgba(0,0,0,0.8)]';
-                        } else if (isPrev) {
-                          transformClass = 'opacity-25 scale-75 -translate-x-28 translate-y-4 z-10 pointer-events-none blur-[1px] hidden sm:block';
-                        } else if (isNext) {
-                          transformClass = 'opacity-25 scale-75 translate-x-28 translate-y-4 z-10 pointer-events-none blur-[1px] hidden sm:block';
-                        }
-
-                        return (
-                          <div
-                            key={prod.id}
-                            className={`absolute inset-0 flex items-center justify-center transition-all duration-700 ease-out ${transformClass}`}
-                          >
-                            <img
-                              src={prod.image}
-                              alt={prod.title}
-                              className={`max-h-[210px] sm:max-h-[250px] max-w-[85%] object-contain select-none transition-transform duration-700 ${
-                                isActive ? 'animate-float-3d' : ''
-                              }`}
-                            />
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    {/* Product Name & Specs Overlay */}
-                    <div className="relative z-20 text-center space-y-1 mt-1 sm:mt-2 px-3">
-                      <h3 className="text-base sm:text-lg font-black text-white tracking-tight drop-shadow-md">
-                        {heroProducts[heroIndex].title}
-                      </h3>
-                      <p className="text-[10px] sm:text-[11px] text-amber-300 font-semibold tracking-wide">
-                        {heroProducts[heroIndex].tagline}
-                      </p>
-                    </div>
-
-                    {/* Prev / Next & Pause Controls */}
-                    <div className="absolute inset-x-2 top-1/2 -translate-y-1/2 flex items-center justify-between z-30 pointer-events-none px-1">
-                      <button
-                        onClick={() => setHeroIndex(prev => (prev - 1 + heroProducts.length) % heroProducts.length)}
-                        className="w-8 h-8 rounded-full bg-black/60 hover:bg-[#E50914] text-white border border-white/20 flex items-center justify-center text-sm font-black transition pointer-events-auto backdrop-blur-md shadow-lg active:scale-90"
-                        title="Previous Showcase Prize"
-                        aria-label="Previous Prize"
-                      >
-                        ‹
-                      </button>
-                      <button
-                        onClick={() => setHeroIndex(prev => (prev + 1) % heroProducts.length)}
-                        className="w-8 h-8 rounded-full bg-black/60 hover:bg-[#E50914] text-white border border-white/20 flex items-center justify-center text-sm font-black transition pointer-events-auto backdrop-blur-md shadow-lg active:scale-90"
-                        title="Next Showcase Prize"
-                        aria-label="Next Prize"
-                      >
-                        ›
-                      </button>
-                    </div>
-
-                  </div>
-
-                  {/* Thumbnail Selector Dots & Pause Indicator */}
-                  <div className="flex items-center gap-2 mt-4 z-20">
-                    {heroProducts.map((prod, idx) => (
-                      <button
-                        key={prod.id}
-                        onClick={() => setHeroIndex(idx)}
-                        className={`transition-all duration-300 rounded-full flex items-center justify-center ${
-                          idx === heroIndex 
-                            ? 'w-7 sm:w-8 h-2.5 bg-gradient-to-r from-[#E50914] to-amber-400 shadow-md' 
-                            : 'w-2.5 h-2.5 bg-white/30 hover:bg-white/60'
-                        }`}
-                        title={prod.title}
-                        aria-label={`Go to ${prod.title}`}
-                      />
-                    ))}
-
-                    <button
-                      onClick={() => setHeroPaused(p => !p)}
-                      className="ml-2 w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 text-white/80 text-[10px] flex items-center justify-center border border-white/20 transition"
-                      title={heroPaused ? 'Play Carousel' : 'Pause Carousel'}
-                    >
-                      {heroPaused ? '▶' : '⏸'}
-                    </button>
+                {/* Right Column: Clean Animated Hero Product Showcase (2-second rotation, pure floating images) */}
+                <div className="lg:col-span-5 relative flex items-center justify-center min-h-[280px] sm:min-h-[350px]">
+                  <div className="relative w-full max-w-[420px] h-[280px] sm:h-[350px] flex items-center justify-center">
+                    {heroProducts.map((prod, idx) => {
+                      const isActive = idx === heroIndex;
+                      return (
+                        <div
+                          key={prod.id}
+                          className={`absolute inset-0 flex items-center justify-center transition-all duration-700 ease-out ${
+                            isActive
+                              ? 'opacity-100 scale-100 translate-y-0 z-20 drop-shadow-[0_20px_35px_rgba(0,0,0,0.7)]'
+                              : 'opacity-0 scale-90 translate-y-6 pointer-events-none z-10'
+                          }`}
+                        >
+                          <img
+                            src={prod.image}
+                            alt={prod.title}
+                            className={`max-h-[260px] sm:max-h-[320px] max-w-[90%] object-contain select-none transition-transform duration-700 ${
+                              isActive ? 'animate-float-3d' : ''
+                            }`}
+                          />
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
