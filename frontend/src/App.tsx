@@ -110,6 +110,77 @@ export default function App() {
   ]);
   const featuredScrollRef = useRef<HTMLDivElement>(null);
 
+  // Animated 3D Hero Product Showcase with Uploaded Images
+  const heroProducts = [
+    {
+      id: 'iphone',
+      prizeNumber: 'PRIZE 01 / 05',
+      title: 'Apple iPhone 16 Pro',
+      tagline: 'Grade 5 Titanium & A18 Pro Chip',
+      badge: 'WEEKLY FLAGSHIP PRIZE',
+      image: '/assets/hero/iphone16.png',
+      accent: 'from-rose-500/30 via-red-900/40 to-amber-500/20',
+      glow: 'rgba(229, 9, 20, 0.45)',
+      specs: '256GB • Deep Garnet Titanium • 48MP Fusion'
+    },
+    {
+      id: 'ps5',
+      prizeNumber: 'PRIZE 02 / 05',
+      title: 'Sony PlayStation 5 with DualSense',
+      tagline: 'Ultra-High Speed SSD & Ray Tracing',
+      badge: 'HOT GAMING PRIZE',
+      image: '/assets/hero/ps5.png',
+      accent: 'from-blue-600/30 via-indigo-900/40 to-cyan-500/20',
+      glow: 'rgba(37, 99, 235, 0.45)',
+      specs: '1TB SSD • Wireless Controller • 4K 120Hz'
+    },
+    {
+      id: 'voucher',
+      prizeNumber: 'PRIZE 03 / 05',
+      title: 'Amazon ₹50,000 Gift Voucher',
+      tagline: 'Spend on Any Tech & Electronics',
+      badge: 'INSTANT SHOPPING REWARD',
+      image: '/assets/hero/amazon_voucher.png',
+      accent: 'from-amber-500/30 via-yellow-900/40 to-orange-500/20',
+      glow: 'rgba(245, 158, 11, 0.45)',
+      specs: 'Instant Digital Code • 1 Year Validity'
+    },
+    {
+      id: 'dyson',
+      prizeNumber: 'PRIZE 04 / 05',
+      title: 'Dyson Airwrap Multi-Styler Complete',
+      tagline: 'Coanda Air Styling with Zero Heat Damage',
+      badge: 'PREMIUM LIFESTYLE TECH',
+      image: '/assets/hero/dyson.png',
+      accent: 'from-pink-500/30 via-rose-900/40 to-purple-500/20',
+      glow: 'rgba(236, 72, 153, 0.45)',
+      specs: 'Copper/Nickel Edition • 6 Re-engineered Barrels'
+    },
+    {
+      id: 'mystery',
+      prizeNumber: 'PRIZE 05 / 05',
+      title: 'VIP Mystery Flagship Gift Box',
+      tagline: 'Curated Premium Gadget Surprise Box',
+      badge: 'MEMBERS SPECIAL BONUS',
+      image: '/assets/hero/red-gift-box.png',
+      accent: 'from-red-600/30 via-amber-700/40 to-yellow-500/20',
+      glow: 'rgba(212, 175, 55, 0.5)',
+      specs: 'Hand-Selected Luxury Tech • VIP Guaranteed Value'
+    }
+  ];
+
+  const [heroIndex, setHeroIndex] = useState(0);
+  const [heroPaused, setHeroPaused] = useState(false);
+
+  // Auto rotation every 3.5 seconds
+  useEffect(() => {
+    if (heroPaused) return;
+    const interval = setInterval(() => {
+      setHeroIndex(prev => (prev + 1) % heroProducts.length);
+    }, 3500);
+    return () => clearInterval(interval);
+  }, [heroPaused, heroProducts.length]);
+
   const POLICIES_CONTENT = {
     privacy: {
       title: 'Privacy Policy (DPDP Act 2023 Compliant)',
@@ -329,50 +400,44 @@ export default function App() {
 
   // Comprehensive master products catalog (unique, zero duplicate items)
   const masterDeals: Deal[] = [
-    // Smartphones
+    // --- VIP EXCLUSIVE GADGETS (>= ₹50,000) ---
     { id: 1, sku: 'APPL-IP16-PM', title: 'Apple iPhone 16 Pro Max (256 GB)', category: 'Smartphones', categoryId: 'smartphones', brand: 'Apple', store: 'Amazon Verified', storeIcon: '🛒', discount: '-18%', price: '₹1,34,999', numeric_price: 134999, original: '₹1,64,900', icon: '📱', rating: 4.9, description: 'Grade 5 Titanium design, Camera Control button, 4K 120 fps Dolby Vision and A18 Pro chip.', merchantUrl: 'https://www.amazon.in' },
     { id: 2, sku: 'SAMS-S24-ULTRA', title: 'Samsung Galaxy S24 Ultra 5G (512GB)', category: 'Smartphones', categoryId: 'smartphones', brand: 'Samsung', store: 'Amazon Verified', storeIcon: '🛒', discount: '-14%', price: '₹1,19,999', numeric_price: 119999, original: '₹1,39,999', icon: '📱', rating: 4.8, description: 'Galaxy AI with Circle to Search, 200MP Quad Telephoto camera and S-Pen.', merchantUrl: 'https://www.amazon.in' },
-    { id: 3, sku: 'GOOG-PIX8A', title: 'Google Pixel 8a (128GB, Bay Blue)', category: 'Smartphones', categoryId: 'smartphones', brand: 'Google', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-28%', price: '₹37,999', numeric_price: 37999, original: '₹52,999', icon: '📱', rating: 4.6, description: 'Google Tensor G3 chip, stunning Pixel camera, 7 years of OS updates.', merchantUrl: 'https://www.flipkart.com' },
-    { id: 4, sku: 'ONEP-12R', title: 'OnePlus 12R 5G (16GB RAM, 256GB)', category: 'Smartphones', categoryId: 'smartphones', brand: 'OnePlus', store: 'Amazon Verified', storeIcon: '🛒', discount: '-7%', price: '₹42,999', numeric_price: 42999, original: '₹45,999', icon: '📱', rating: 4.7, description: 'Snapdragon 8 Gen 2, 4th Gen LTPO 120Hz display, 5500 mAh battery.', merchantUrl: 'https://www.amazon.in' },
+    { id: 3, sku: 'APPL-MBA-M4', title: 'MacBook Air M4 (13-inch, 16GB)', category: 'Laptops', categoryId: 'laptops', brand: 'Apple', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-22%', price: '₹94,990', numeric_price: 94990, original: '₹1,21,900', icon: '💻', rating: 4.9, description: 'Apple M4 chip with 10-core CPU, up to 18 hours battery life, Liquid Retina display.', merchantUrl: 'https://www.flipkart.com' },
+    { id: 4, sku: 'APPL-MBP-M4PRO', title: 'Apple MacBook Pro 16-inch M4 Pro (24GB)', category: 'Laptops', categoryId: 'laptops', brand: 'Apple', store: 'Amazon Verified', storeIcon: '🛒', discount: '-7%', price: '₹2,49,900', numeric_price: 249900, original: '₹2,69,900', icon: '💻', rating: 5.0, description: 'Liquid Retina XDR display, M4 Pro chip monster performance.', merchantUrl: 'https://www.amazon.in' },
+    { id: 5, sku: 'APPL-WATCH-U2', title: 'Apple Watch Ultra 2 (Titanium GPS+Cellular)', category: 'Smartwatches', categoryId: 'smartwatches', brand: 'Apple', store: 'Amazon Verified', storeIcon: '🛒', discount: '-6%', price: '₹84,900', numeric_price: 84900, original: '₹89,900', icon: '⌚', rating: 4.9, description: 'Rugged titanium case, precision dual-frequency GPS, 3000 nits display.', merchantUrl: 'https://www.amazon.in' },
+    { id: 6, sku: 'SONY-PS5-PRO', title: 'Sony PlayStation 5 Pro Edition (Limited Direct)', category: 'Gaming', categoryId: 'gaming', brand: 'Sony', store: 'Amazon Verified', storeIcon: '🛒', discount: '-15%', price: '₹58,990', numeric_price: 58990, original: '₹68,990', icon: '🎮', rating: 5.0, description: 'PlayStation Spectral Super Resolution (PSSR), 2TB SSD, Ray Tracing GPU.', merchantUrl: 'https://www.amazon.in' },
+    { id: 7, sku: 'CANON-EOS-R50', title: 'Canon EOS R50 Mirrorless Camera (RF-S 18-45mm)', category: 'Cameras', categoryId: 'cameras', brand: 'Canon', store: 'Amazon Verified', storeIcon: '🛒', discount: '-17%', price: '₹56,990', numeric_price: 56990, original: '₹68,995', icon: '📷', rating: 4.8, description: '24.2 MP APS-C sensor, 4K 30p uncropped recording, Dual Pixel CMOS AF II.', merchantUrl: 'https://www.amazon.in' },
+    { id: 8, sku: 'SONY-A7M4-BODY', title: 'Sony Alpha 7 IV Full-Frame Mirrorless Camera (Body Only)', category: 'Cameras', categoryId: 'cameras', brand: 'Sony', store: 'Amazon Verified', storeIcon: '🛒', discount: '-12%', price: '₹1,89,990', numeric_price: 189990, original: '₹2,14,990', icon: '📷', rating: 4.9, description: '33MP Exmor R CMOS sensor, 4K 60p 10-bit 4:2:2, real-time Eye AF.', merchantUrl: 'https://www.amazon.in' },
+    { id: 9, sku: 'DELL-XPS-15', title: 'Dell XPS 15 9530 Intel Core i7 13th Gen OLED (32GB/1TB)', category: 'Laptops', categoryId: 'laptops', brand: 'Dell', store: 'Amazon Verified', storeIcon: '🛒', discount: '-15%', price: '₹1,99,990', numeric_price: 199990, original: '₹2,34,990', icon: '💻', rating: 4.8, description: '3.5K OLED InfinityEdge touch display, RTX 4060 graphics, CNC aluminum.', merchantUrl: 'https://www.amazon.in' },
+    { id: 10, sku: 'ASUS-ROG-G16', title: 'ASUS ROG Zephyrus G16 OLED Gaming Laptop (RTX 4070)', category: 'Gaming', categoryId: 'gaming', brand: 'ASUS', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-18%', price: '₹1,74,990', numeric_price: 174990, original: '₹2,12,990', icon: '🎮', rating: 4.8, description: 'Intel Core Ultra 9, 2.5K 240Hz OLED ROG Nebula display, CNC aluminum chassis.', merchantUrl: 'https://www.flipkart.com' },
+    { id: 11, sku: 'APPL-IPAD-PRO13', title: 'Apple iPad Pro 13-inch M4 Ultra Retina XDR (256GB)', category: 'Smartphones', categoryId: 'smartphones', brand: 'Apple', store: 'Amazon Verified', storeIcon: '🛒', discount: '-8%', price: '₹1,29,900', numeric_price: 129900, original: '₹1,39,900', icon: '📱', rating: 4.9, description: 'Breakthrough thin design, tandem OLED display, Apple M4 chip with hardware-accelerated ray tracing.', merchantUrl: 'https://www.amazon.in' },
+    { id: 12, sku: 'DJI-MAVIC-3PRO', title: 'DJI Mavic 3 Pro Cine Quadcopter Triple-Camera Drone', category: 'Cameras', categoryId: 'cameras', brand: 'DJI', store: 'Amazon Verified', storeIcon: '🛒', discount: '-11%', price: '₹1,84,900', numeric_price: 184900, original: '₹2,08,000', icon: '📷', rating: 5.0, description: 'Hasselblad 4/3 CMOS camera, dual telephoto lenses, 43-min flight time.', merchantUrl: 'https://www.amazon.in' },
+    { id: 13, sku: 'LG-OLED-65G3', title: 'LG 65-inch G3 Series Gallery 4K Smart OLED Evo TV', category: 'Smart Home', categoryId: 'smart-home', brand: 'LG', store: 'Amazon Verified', storeIcon: '🛒', discount: '-32%', price: '₹1,94,990', numeric_price: 194990, original: '₹2,84,990', icon: '🏠', rating: 4.9, description: 'Brightness Booster Max, Alpha 9 AI Processor 4K Gen6, zero-gap wall mount.', merchantUrl: 'https://www.amazon.in' },
 
-    // Laptops
-    { id: 5, sku: 'APPL-MBA-M4', title: 'MacBook Air M4 (13-inch)', category: 'Laptops', categoryId: 'laptops', brand: 'Apple', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-22%', price: '₹94,990', numeric_price: 94990, original: '₹1,21,900', icon: '💻', rating: 4.9, description: 'Apple M4 chip with 10-core CPU, up to 18 hours battery life, Liquid Retina display.', merchantUrl: 'https://www.flipkart.com' },
-    { id: 6, sku: 'APPL-MBP-M4PRO', title: 'Apple MacBook Pro 16-inch M4 Pro (24GB)', category: 'Laptops', categoryId: 'laptops', brand: 'Apple', store: 'Amazon Verified', storeIcon: '🛒', discount: '-7%', price: '₹2,49,900', numeric_price: 249900, original: '₹2,69,900', icon: '💻', rating: 5.0, description: 'Liquid Retina XDR display, M4 Pro chip monster performance.', merchantUrl: 'https://www.amazon.in' },
-    { id: 7, sku: 'ASUS-VIVO-15', title: 'ASUS Vivobook 15 Intel Core i5 13th Gen', category: 'Laptops', categoryId: 'laptops', brand: 'ASUS', store: 'Amazon Verified', storeIcon: '🛒', discount: '-28%', price: '₹47,990', numeric_price: 47990, original: '₹66,990', icon: '💻', rating: 4.5, description: 'Slim lightweight laptop, 15.6 FHD anti-glare display, Windows 11 Home.', merchantUrl: 'https://www.amazon.in' },
-    { id: 8, sku: 'HP-PAV-AERO', title: 'HP Pavilion Aero 13 AMD Ryzen 5 (970g)', category: 'Laptops', categoryId: 'laptops', brand: 'HP', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-31%', price: '₹49,990', numeric_price: 49990, original: '₹72,000', icon: '💻', rating: 4.5, description: 'Ultra-featherweight 970g magnesium body, 400-nit display.', merchantUrl: 'https://www.flipkart.com' },
-
-    // Audio & Wearables
-    { id: 9, sku: 'BOSE-QC-ULTRA', title: 'Bose QuietComfort Ultra Headphones', category: 'Audio & Wearables', categoryId: 'audio-wearables', brand: 'Bose', store: 'Amazon Verified', storeIcon: '🛒', discount: '-35%', price: '₹25,999', numeric_price: 25999, original: '₹39,999', icon: '🎧', rating: 4.8, description: 'World-class spatial audio with Bose Immersive Audio, custom acoustic ANC modes.', merchantUrl: 'https://www.amazon.in' },
-    { id: 10, sku: 'SONY-WH-XM5', title: 'Sony WH-1000XM5 Wireless Noise Cancelling', category: 'Audio & Wearables', categoryId: 'audio-wearables', brand: 'Sony', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-23%', price: '₹26,990', numeric_price: 26990, original: '₹34,990', icon: '🎧', rating: 4.9, description: 'Two processors control 8 microphones for industry-leading ANC.', merchantUrl: 'https://www.flipkart.com' },
-    { id: 11, sku: 'APPL-AIRPODS-P2', title: 'Apple AirPods Pro (2nd Gen with USB-C)', category: 'Audio & Wearables', categoryId: 'audio-wearables', brand: 'Apple', store: 'Amazon Verified', storeIcon: '🛒', discount: '-24%', price: '₹18,990', numeric_price: 18990, original: '₹24,900', icon: '🎧', rating: 4.9, description: 'Up to 2x more Active Noise Cancellation, Adaptive Audio.', merchantUrl: 'https://www.amazon.in' },
-
-    // Smartwatches
-    { id: 12, sku: 'APPL-WATCH-S10', title: 'Apple Watch Series 10 (GPS, 46mm)', category: 'Smartwatches', categoryId: 'smartwatches', brand: 'Apple', store: 'Amazon Verified', storeIcon: '🛒', discount: '-10%', price: '₹44,900', numeric_price: 44900, original: '₹49,900', icon: '⌚', rating: 4.8, description: 'Thinnest Apple Watch ever with wide-angle OLED display, sleep apnea tracking.', merchantUrl: 'https://www.amazon.in' },
-    { id: 13, sku: 'APPL-WATCH-U2', title: 'Apple Watch Ultra 2 (Titanium GPS+Cellular)', category: 'Smartwatches', categoryId: 'smartwatches', brand: 'Apple', store: 'Amazon Verified', storeIcon: '🛒', discount: '-6%', price: '₹84,900', numeric_price: 84900, original: '₹89,900', icon: '⌚', rating: 4.9, description: 'Rugged titanium case, precision dual-frequency GPS, 3000 nits display.', merchantUrl: 'https://www.amazon.in' },
-    { id: 14, sku: 'SAMS-GW6-CL', title: 'Samsung Galaxy Watch 6 Classic (47mm)', category: 'Smartwatches', categoryId: 'smartwatches', brand: 'Samsung', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-36%', price: '₹24,999', numeric_price: 24999, original: '₹38,999', icon: '⌚', rating: 4.7, description: 'Physical rotating bezel, personalized HR zones, Sapphire glass.', merchantUrl: 'https://www.flipkart.com' },
-
-    // Gaming
-    { id: 15, sku: 'SONY-PS5-SLIM', title: 'PlayStation 5 Slim (Disc Edition)', category: 'Gaming', categoryId: 'gaming', brand: 'Sony', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-20%', price: '₹43,990', numeric_price: 43990, original: '₹54,990', icon: '🎮', rating: 4.9, description: 'Slim compact form factor, 1TB high-speed SSD, DualSense haptic feedback.', merchantUrl: 'https://www.flipkart.com' },
-    { id: 16, sku: 'SONY-PS5-PRO', title: 'Sony PlayStation 5 Pro Edition (Limited Direct)', category: 'Gaming', categoryId: 'gaming', brand: 'Sony', store: 'Amazon Verified', storeIcon: '🛒', discount: '-15%', price: '₹58,990', numeric_price: 58990, original: '₹68,990', icon: '🎮', rating: 5.0, description: 'PlayStation Spectral Super Resolution (PSSR), 2TB SSD, Ray Tracing GPU.', merchantUrl: 'https://www.amazon.in' },
-    { id: 17, sku: 'NINT-SWITCH-OLED', title: 'Nintendo Switch OLED Mario Red Edition', category: 'Gaming', categoryId: 'gaming', brand: 'Nintendo', store: 'Amazon Verified', storeIcon: '🛒', discount: '-17%', price: '₹31,490', numeric_price: 31490, original: '₹37,990', icon: '🎮', rating: 4.8, description: 'Vibrant 7-inch OLED panel, wide adjustable tabletop stand, dock with wired LAN.', merchantUrl: 'https://www.amazon.in' },
-
-    // Cameras
-    { id: 18, sku: 'CANON-EOS-R50', title: 'Canon EOS R50 Mirrorless Camera (RF-S 18-45mm)', category: 'Cameras', categoryId: 'cameras', brand: 'Canon', store: 'Amazon Verified', storeIcon: '🛒', discount: '-17%', price: '₹56,990', numeric_price: 56990, original: '₹68,995', icon: '📷', rating: 4.8, description: '24.2 MP APS-C sensor, 4K 30p uncropped recording, Dual Pixel CMOS AF II.', merchantUrl: 'https://www.amazon.in' },
-    { id: 19, sku: 'GOPRO-HERO12', title: 'GoPro HERO12 Black Action Camera', category: 'Cameras', categoryId: 'cameras', brand: 'GoPro', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-27%', price: '₹32,990', numeric_price: 32990, original: '₹45,000', icon: '📷', rating: 4.6, description: '5.3K 60fps video, HyperSmooth 6.0 stabilization, waterproof to 33ft.', merchantUrl: 'https://www.flipkart.com' },
-
-    // Smart Home
-    { id: 20, sku: 'AMZN-ECHO-10', title: 'Amazon Echo Show 10 (3rd Gen HD Smart Display)', category: 'Smart Home', categoryId: 'smart-home', brand: 'Amazon', store: 'Amazon Verified', storeIcon: '🛒', discount: '-20%', price: '₹19,999', numeric_price: 19999, original: '₹24,999', icon: '🏠', rating: 4.6, description: '10.1 inch HD screen that moves with you, 13MP camera, premium sound.', merchantUrl: 'https://www.amazon.in' },
-    { id: 21, sku: 'ECOVACS-N10', title: 'ECOVACS Deebot N10 2-in-1 Robot Vacuum and Mop', category: 'Smart Home', categoryId: 'smart-home', brand: 'ECOVACS', store: 'Amazon Verified', storeIcon: '🛒', discount: '-53%', price: '₹27,900', numeric_price: 27900, original: '₹59,900', icon: '🏠', rating: 4.6, description: '4300Pa suction power, TrueMapping LiDAR navigation, 300-min runtime.', merchantUrl: 'https://www.amazon.in' },
-
-    // Accessories
-    { id: 22, sku: 'ANKR-PRIME-100W', title: 'Anker Prime 100W GaN 3-Port Fast Wall Charger', category: 'Accessories', categoryId: 'accessories', brand: 'Anker', store: 'Amazon Verified', storeIcon: '🛒', discount: '-38%', price: '₹4,999', numeric_price: 4999, original: '₹7,999', icon: '🔌', rating: 4.8, description: '100W GaN charging across 2 USB-C ports and 1 USB-A port with ActiveShield 2.0.', merchantUrl: 'https://www.amazon.in' },
-    { id: 23, sku: 'SAND-EXTREME-1TB', title: 'SanDisk 1TB Extreme Portable SSD (1050MB/s)', category: 'Accessories', categoryId: 'accessories', brand: 'SanDisk', store: 'Amazon Verified', storeIcon: '🛒', discount: '-43%', price: '₹8,499', numeric_price: 8499, original: '₹14,999', icon: '🔌', rating: 4.9, description: 'Rugged IP65 water/dust resistant shell, 1050MB/s NVMe read speeds.', merchantUrl: 'https://www.amazon.in' },
-    { id: 24, sku: 'BOAT-BASSHEADS-100', title: 'boAt BassHeads 100 in-Ear Wired Earphones with Mic', category: 'Audio & Wearables', categoryId: 'audio-wearables', brand: 'boAt', store: 'Amazon Verified', storeIcon: '🛒', discount: '-62%', price: '₹379', numeric_price: 379, original: '₹999', icon: '🎧', rating: 4.3, description: 'Hawk-inspired metallic design, 10mm dynamic drivers, inline microphone.', merchantUrl: 'https://www.amazon.in' },
-    { id: 25, sku: 'PTRO-TANGLE-FREE', title: 'pTron Solero TB301 3A Type-C Fast Charging Cable', category: 'Accessories', categoryId: 'accessories', brand: 'pTron', store: 'Amazon Verified', storeIcon: '🛒', discount: '-82%', price: '₹89', numeric_price: 89, original: '₹499', icon: '🔌', rating: 4.2, description: 'Durable nylon braided 1.2M fast charge cable with 480Mbps data sync.', merchantUrl: 'https://www.amazon.in' },
-    { id: 26, sku: 'AMBR-OTG-ADAPTER', title: 'Ambrane Type-C to USB-A 3.0 Metal OTG Adapter', category: 'Accessories', categoryId: 'accessories', brand: 'Ambrane', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-70%', price: '₹79', numeric_price: 79, original: '₹269', icon: '🔌', rating: 4.4, description: 'Zinc-alloy compact plug and play OTG converter for smartphones and laptops.', merchantUrl: 'https://www.flipkart.com' },
-    { id: 27, sku: 'PORT-MOU-PAD', title: 'Portronics Sublime Ergonomic Anti-Skid Mouse Pad', category: 'Accessories', categoryId: 'accessories', brand: 'Portronics', store: 'Amazon Verified', storeIcon: '🛒', discount: '-60%', price: '₹199', numeric_price: 199, original: '₹499', icon: '🔌', rating: 4.5, description: 'Smooth microfiber cloth surface with non-slip natural rubber base.', merchantUrl: 'https://www.amazon.in' },
-    { id: 28, sku: 'WIPR-SMART-9W', title: 'Wipro Next 9W B22 LED Smart Color Bulb (Alexa & Google)', category: 'Smart Home', categoryId: 'smart-home', brand: 'Wipro', store: 'Amazon Verified', storeIcon: '🛒', discount: '-65%', price: '₹699', numeric_price: 699, original: '₹1,999', icon: '🏠', rating: 4.3, description: '16 million colors with dimming control and voice assistant support.', merchantUrl: 'https://www.amazon.in' },
-    { id: 29, sku: 'MI-POWER-10K', title: 'Mi 10000mAh Power Bank 3i (18W Fast Charging)', category: 'Accessories', categoryId: 'accessories', brand: 'Xiaomi', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-40%', price: '₹899', numeric_price: 899, original: '₹1,499', icon: '🔌', rating: 4.6, description: 'Dual output ports with 12 layers of advanced circuit chip protection.', merchantUrl: 'https://www.flipkart.com' }
+    // --- FREE USER PRODUCTS (< ₹50,000) ---
+    { id: 14, sku: 'GOOG-PIX8A', title: 'Google Pixel 8a (128GB, Bay Blue)', category: 'Smartphones', categoryId: 'smartphones', brand: 'Google', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-28%', price: '₹37,999', numeric_price: 37999, original: '₹52,999', icon: '📱', rating: 4.6, description: 'Google Tensor G3 chip, stunning Pixel camera, 7 years of OS updates.', merchantUrl: 'https://www.flipkart.com' },
+    { id: 15, sku: 'ONEP-12R', title: 'OnePlus 12R 5G (16GB RAM, 256GB)', category: 'Smartphones', categoryId: 'smartphones', brand: 'OnePlus', store: 'Amazon Verified', storeIcon: '🛒', discount: '-7%', price: '₹42,999', numeric_price: 42999, original: '₹45,999', icon: '📱', rating: 4.7, description: 'Snapdragon 8 Gen 2, 4th Gen LTPO 120Hz display, 5500 mAh battery.', merchantUrl: 'https://www.amazon.in' },
+    { id: 16, sku: 'ASUS-VIVO-15', title: 'ASUS Vivobook 15 Intel Core i5 13th Gen', category: 'Laptops', categoryId: 'laptops', brand: 'ASUS', store: 'Amazon Verified', storeIcon: '🛒', discount: '-28%', price: '₹47,990', numeric_price: 47990, original: '₹66,990', icon: '💻', rating: 4.5, description: 'Slim lightweight laptop, 15.6 FHD anti-glare display, Windows 11 Home.', merchantUrl: 'https://www.amazon.in' },
+    { id: 17, sku: 'HP-PAV-AERO', title: 'HP Pavilion Aero 13 AMD Ryzen 5 (970g)', category: 'Laptops', categoryId: 'laptops', brand: 'HP', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-31%', price: '₹49,990', numeric_price: 49990, original: '₹72,000', icon: '💻', rating: 4.5, description: 'Ultra-featherweight 970g magnesium body, 400-nit display.', merchantUrl: 'https://www.flipkart.com' },
+    { id: 18, sku: 'BOSE-QC-ULTRA', title: 'Bose QuietComfort Ultra Headphones', category: 'Audio & Wearables', categoryId: 'audio-wearables', brand: 'Bose', store: 'Amazon Verified', storeIcon: '🛒', discount: '-35%', price: '₹25,999', numeric_price: 25999, original: '₹39,999', icon: '🎧', rating: 4.8, description: 'World-class spatial audio with Bose Immersive Audio, custom acoustic ANC modes.', merchantUrl: 'https://www.amazon.in' },
+    { id: 19, sku: 'SONY-WH-XM5', title: 'Sony WH-1000XM5 Wireless Noise Cancelling', category: 'Audio & Wearables', categoryId: 'audio-wearables', brand: 'Sony', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-23%', price: '₹26,990', numeric_price: 26990, original: '₹34,990', icon: '🎧', rating: 4.9, description: 'Two processors control 8 microphones for industry-leading ANC.', merchantUrl: 'https://www.flipkart.com' },
+    { id: 20, sku: 'APPL-AIRPODS-P2', title: 'Apple AirPods Pro (2nd Gen with USB-C)', category: 'Audio & Wearables', categoryId: 'audio-wearables', brand: 'Apple', store: 'Amazon Verified', storeIcon: '🛒', discount: '-24%', price: '₹18,990', numeric_price: 18990, original: '₹24,900', icon: '🎧', rating: 4.9, description: 'Up to 2x more Active Noise Cancellation, Adaptive Audio.', merchantUrl: 'https://www.amazon.in' },
+    { id: 21, sku: 'APPL-WATCH-S10', title: 'Apple Watch Series 10 (GPS, 46mm)', category: 'Smartwatches', categoryId: 'smartwatches', brand: 'Apple', store: 'Amazon Verified', storeIcon: '🛒', discount: '-10%', price: '₹44,900', numeric_price: 44900, original: '₹49,900', icon: '⌚', rating: 4.8, description: 'Thinnest Apple Watch ever with wide-angle OLED display, sleep apnea tracking.', merchantUrl: 'https://www.amazon.in' },
+    { id: 22, sku: 'SAMS-GW6-CL', title: 'Samsung Galaxy Watch 6 Classic (47mm)', category: 'Smartwatches', categoryId: 'smartwatches', brand: 'Samsung', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-36%', price: '₹24,999', numeric_price: 24999, original: '₹38,999', icon: '⌚', rating: 4.7, description: 'Physical rotating bezel, personalized HR zones, Sapphire glass.', merchantUrl: 'https://www.flipkart.com' },
+    { id: 23, sku: 'SONY-PS5-SLIM', title: 'PlayStation 5 Slim (Disc Edition)', category: 'Gaming', categoryId: 'gaming', brand: 'Sony', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-20%', price: '₹43,990', numeric_price: 43990, original: '₹54,990', icon: '🎮', rating: 4.9, description: 'Slim compact form factor, 1TB high-speed SSD, DualSense haptic feedback.', merchantUrl: 'https://www.flipkart.com' },
+    { id: 24, sku: 'NINT-SWITCH-OLED', title: 'Nintendo Switch OLED Mario Red Edition', category: 'Gaming', categoryId: 'gaming', brand: 'Nintendo', store: 'Amazon Verified', storeIcon: '🛒', discount: '-17%', price: '₹31,490', numeric_price: 31490, original: '₹37,990', icon: '🎮', rating: 4.8, description: 'Vibrant 7-inch OLED panel, wide adjustable tabletop stand, dock with wired LAN.', merchantUrl: 'https://www.amazon.in' },
+    { id: 25, sku: 'GOPRO-HERO12', title: 'GoPro HERO12 Black Action Camera', category: 'Cameras', categoryId: 'cameras', brand: 'GoPro', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-27%', price: '₹32,990', numeric_price: 32990, original: '₹45,000', icon: '📷', rating: 4.6, description: '5.3K 60fps video, HyperSmooth 6.0 stabilization, waterproof to 33ft.', merchantUrl: 'https://www.flipkart.com' },
+    { id: 26, sku: 'AMZN-ECHO-10', title: 'Amazon Echo Show 10 (3rd Gen HD Smart Display)', category: 'Smart Home', categoryId: 'smart-home', brand: 'Amazon', store: 'Amazon Verified', storeIcon: '🛒', discount: '-20%', price: '₹19,999', numeric_price: 19999, original: '₹24,999', icon: '🏠', rating: 4.6, description: '10.1 inch HD screen that moves with you, 13MP camera, premium sound.', merchantUrl: 'https://www.amazon.in' },
+    { id: 27, sku: 'ECOVACS-N10', title: 'ECOVACS Deebot N10 2-in-1 Robot Vacuum and Mop', category: 'Smart Home', categoryId: 'smart-home', brand: 'ECOVACS', store: 'Amazon Verified', storeIcon: '🛒', discount: '-53%', price: '₹27,900', numeric_price: 27900, original: '₹59,900', icon: '🏠', rating: 4.6, description: '4300Pa suction power, TrueMapping LiDAR navigation, 300-min runtime.', merchantUrl: 'https://www.amazon.in' },
+    { id: 28, sku: 'ANKR-PRIME-100W', title: 'Anker Prime 100W GaN 3-Port Fast Wall Charger', category: 'Accessories', categoryId: 'accessories', brand: 'Anker', store: 'Amazon Verified', storeIcon: '🛒', discount: '-38%', price: '₹4,999', numeric_price: 4999, original: '₹7,999', icon: '🔌', rating: 4.8, description: '100W GaN charging across 2 USB-C ports and 1 USB-A port with ActiveShield 2.0.', merchantUrl: 'https://www.amazon.in' },
+    { id: 29, sku: 'SAND-EXTREME-1TB', title: 'SanDisk 1TB Extreme Portable SSD (1050MB/s)', category: 'Accessories', categoryId: 'accessories', brand: 'SanDisk', store: 'Amazon Verified', storeIcon: '🛒', discount: '-43%', price: '₹8,499', numeric_price: 8499, original: '₹14,999', icon: '🔌', rating: 4.9, description: 'Rugged IP65 water/dust resistant shell, 1050MB/s NVMe read speeds.', merchantUrl: 'https://www.amazon.in' },
+    { id: 30, sku: 'BOAT-BASSHEADS-100', title: 'boAt BassHeads 100 in-Ear Wired Earphones with Mic', category: 'Audio & Wearables', categoryId: 'audio-wearables', brand: 'boAt', store: 'Amazon Verified', storeIcon: '🛒', discount: '-62%', price: '₹379', numeric_price: 379, original: '₹999', icon: '🎧', rating: 4.3, description: 'Hawk-inspired metallic design, 10mm dynamic drivers, inline microphone.', merchantUrl: 'https://www.amazon.in' },
+    { id: 31, sku: 'PTRO-TANGLE-FREE', title: 'pTron Solero TB301 3A Type-C Fast Charging Cable', category: 'Accessories', categoryId: 'accessories', brand: 'pTron', store: 'Amazon Verified', storeIcon: '🛒', discount: '-82%', price: '₹89', numeric_price: 89, original: '₹499', icon: '🔌', rating: 4.2, description: 'Durable nylon braided 1.2M fast charge cable with 480Mbps data sync.', merchantUrl: 'https://www.amazon.in' },
+    { id: 32, sku: 'AMBR-OTG-ADAPTER', title: 'Ambrane Type-C to USB-A 3.0 Metal OTG Adapter', category: 'Accessories', categoryId: 'accessories', brand: 'Ambrane', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-70%', price: '₹79', numeric_price: 79, original: '₹269', icon: '🔌', rating: 4.4, description: 'Zinc-alloy compact plug and play OTG converter for smartphones and laptops.', merchantUrl: 'https://www.flipkart.com' },
+    { id: 33, sku: 'PORT-MOU-PAD', title: 'Portronics Sublime Ergonomic Anti-Skid Mouse Pad', category: 'Accessories', categoryId: 'accessories', brand: 'Portronics', store: 'Amazon Verified', storeIcon: '🛒', discount: '-60%', price: '₹199', numeric_price: 199, original: '₹499', icon: '🔌', rating: 4.5, description: 'Smooth microfiber cloth surface with non-slip natural rubber base.', merchantUrl: 'https://www.amazon.in' },
+    { id: 34, sku: 'WIPR-SMART-9W', title: 'Wipro Next 9W B22 LED Smart Color Bulb (Alexa & Google)', category: 'Smart Home', categoryId: 'smart-home', brand: 'Wipro', store: 'Amazon Verified', storeIcon: '🛒', discount: '-65%', price: '₹699', numeric_price: 699, original: '₹1,999', icon: '🏠', rating: 4.3, description: '16 million colors with dimming control and voice assistant support.', merchantUrl: 'https://www.amazon.in' },
+    { id: 35, sku: 'MI-POWER-10K', title: 'Mi 10000mAh Power Bank 3i (18W Fast Charging)', category: 'Accessories', categoryId: 'accessories', brand: 'Xiaomi', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-40%', price: '₹899', numeric_price: 899, original: '₹1,499', icon: '🔌', rating: 4.6, description: 'Dual output ports with 12 layers of advanced circuit chip protection.', merchantUrl: 'https://www.flipkart.com' }
   ];
 
   // Filtered and sorted deals for Deals page
@@ -1201,17 +1266,126 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Right Column: 3D Product Pedestal */}
-                <div className="lg:col-span-5 relative flex items-center justify-center">
-                  <div className="relative w-full max-w-md aspect-square rounded-full bg-gradient-to-tr from-[#E50914]/30 via-purple-600/20 to-blue-500/30 p-8 flex items-center justify-center border border-white/10 shadow-2xl">
-                    <div className="absolute top-2 right-2 bg-gradient-to-r from-amber-400 to-amber-600 text-slate-900 font-black text-[11px] px-3.5 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 uppercase tracking-wider">
-                      <span>🏆</span> <span>UP TO 50% OFF</span>
+                {/* Right Column: Premium 3D Animated Hero Product Showcase (Matching Uploaded Images & Video) */}
+                <div 
+                  className="lg:col-span-5 relative flex flex-col items-center justify-center"
+                  onMouseEnter={() => setHeroPaused(true)}
+                  onMouseLeave={() => setHeroPaused(false)}
+                >
+                  {/* Glowing 3D Pedestal Platform */}
+                  <div className="relative w-full max-w-[420px] aspect-square rounded-full p-4 sm:p-6 flex flex-col items-center justify-center transition-all duration-700">
+                    
+                    {/* Dynamic Ambient Background Aura */}
+                    <div 
+                      className="absolute inset-0 rounded-full blur-3xl opacity-60 transition-all duration-1000 pointer-events-none"
+                      style={{ background: `radial-gradient(circle, ${heroProducts[heroIndex].glow} 0%, rgba(64,11,25,0.7) 60%, transparent 100%)` }}
+                    ></div>
+
+                    {/* Circular Halo Frame */}
+                    <div className="absolute inset-2 sm:inset-4 rounded-full border border-white/20 bg-gradient-to-b from-white/10 via-black/40 to-[#101428]/90 backdrop-blur-md shadow-[0_20px_50px_rgba(0,0,0,0.6)] flex items-center justify-center overflow-hidden">
+                      {/* Subtle concentric rings for depth */}
+                      <div className="absolute w-[80%] h-[80%] rounded-full border border-white/10 animate-pulse"></div>
+                      <div className="absolute w-[60%] h-[60%] rounded-full border border-amber-400/20"></div>
                     </div>
-                    <div className="text-8xl flex items-center justify-center gap-4">
-                      <span className="transform -rotate-6 scale-110 drop-shadow-2xl">📱</span>
-                      <span className="transform rotate-6 drop-shadow-2xl">💻</span>
-                      <span className="transform drop-shadow-2xl">🎧</span>
+
+                    {/* Top Prize Badge Counter */}
+                    <div className="absolute top-2 sm:top-4 z-20 flex items-center gap-2">
+                      <span className="bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 text-slate-900 font-black text-[10px] sm:text-[11px] px-3.5 py-1 rounded-full shadow-lg flex items-center gap-1.5 uppercase tracking-wider">
+                        <span>🏆</span> <span>{heroProducts[heroIndex].prizeNumber}</span>
+                      </span>
+                      <span className="bg-black/60 backdrop-blur-md border border-white/20 text-white font-bold text-[9px] sm:text-[10px] px-2.5 py-1 rounded-full uppercase tracking-wider hidden sm:inline-block">
+                        {heroProducts[heroIndex].badge}
+                      </span>
                     </div>
+
+                    {/* Central 3D Floating Showcase Image */}
+                    <div className="relative z-10 w-full h-[230px] sm:h-[270px] flex items-center justify-center perspective-1000">
+                      {heroProducts.map((prod, idx) => {
+                        const isActive = idx === heroIndex;
+                        const isPrev = idx === (heroIndex - 1 + heroProducts.length) % heroProducts.length;
+                        const isNext = idx === (heroIndex + 1) % heroProducts.length;
+                        
+                        let transformClass = 'opacity-0 scale-75 translate-y-8 pointer-events-none';
+                        if (isActive) {
+                          transformClass = 'opacity-100 scale-100 translate-y-0 z-20 drop-shadow-[0_20px_35px_rgba(0,0,0,0.8)]';
+                        } else if (isPrev) {
+                          transformClass = 'opacity-25 scale-75 -translate-x-28 translate-y-4 z-10 pointer-events-none blur-[1px] hidden sm:block';
+                        } else if (isNext) {
+                          transformClass = 'opacity-25 scale-75 translate-x-28 translate-y-4 z-10 pointer-events-none blur-[1px] hidden sm:block';
+                        }
+
+                        return (
+                          <div
+                            key={prod.id}
+                            className={`absolute inset-0 flex items-center justify-center transition-all duration-700 ease-out ${transformClass}`}
+                          >
+                            <img
+                              src={prod.image}
+                              alt={prod.title}
+                              className={`max-h-[210px] sm:max-h-[250px] max-w-[85%] object-contain select-none transition-transform duration-700 ${
+                                isActive ? 'animate-float-3d' : ''
+                              }`}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Product Name & Specs Overlay */}
+                    <div className="relative z-20 text-center space-y-1 mt-1 sm:mt-2 px-3">
+                      <h3 className="text-base sm:text-lg font-black text-white tracking-tight drop-shadow-md">
+                        {heroProducts[heroIndex].title}
+                      </h3>
+                      <p className="text-[10px] sm:text-[11px] text-amber-300 font-semibold tracking-wide">
+                        {heroProducts[heroIndex].tagline}
+                      </p>
+                    </div>
+
+                    {/* Prev / Next & Pause Controls */}
+                    <div className="absolute inset-x-2 top-1/2 -translate-y-1/2 flex items-center justify-between z-30 pointer-events-none px-1">
+                      <button
+                        onClick={() => setHeroIndex(prev => (prev - 1 + heroProducts.length) % heroProducts.length)}
+                        className="w-8 h-8 rounded-full bg-black/60 hover:bg-[#E50914] text-white border border-white/20 flex items-center justify-center text-sm font-black transition pointer-events-auto backdrop-blur-md shadow-lg active:scale-90"
+                        title="Previous Showcase Prize"
+                        aria-label="Previous Prize"
+                      >
+                        ‹
+                      </button>
+                      <button
+                        onClick={() => setHeroIndex(prev => (prev + 1) % heroProducts.length)}
+                        className="w-8 h-8 rounded-full bg-black/60 hover:bg-[#E50914] text-white border border-white/20 flex items-center justify-center text-sm font-black transition pointer-events-auto backdrop-blur-md shadow-lg active:scale-90"
+                        title="Next Showcase Prize"
+                        aria-label="Next Prize"
+                      >
+                        ›
+                      </button>
+                    </div>
+
+                  </div>
+
+                  {/* Thumbnail Selector Dots & Pause Indicator */}
+                  <div className="flex items-center gap-2 mt-4 z-20">
+                    {heroProducts.map((prod, idx) => (
+                      <button
+                        key={prod.id}
+                        onClick={() => setHeroIndex(idx)}
+                        className={`transition-all duration-300 rounded-full flex items-center justify-center ${
+                          idx === heroIndex 
+                            ? 'w-7 sm:w-8 h-2.5 bg-gradient-to-r from-[#E50914] to-amber-400 shadow-md' 
+                            : 'w-2.5 h-2.5 bg-white/30 hover:bg-white/60'
+                        }`}
+                        title={prod.title}
+                        aria-label={`Go to ${prod.title}`}
+                      />
+                    ))}
+
+                    <button
+                      onClick={() => setHeroPaused(p => !p)}
+                      className="ml-2 w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 text-white/80 text-[10px] flex items-center justify-center border border-white/20 transition"
+                      title={heroPaused ? 'Play Carousel' : 'Pause Carousel'}
+                    >
+                      {heroPaused ? '▶' : '⏸'}
+                    </button>
                   </div>
                 </div>
 
@@ -1756,13 +1930,22 @@ export default function App() {
                               </div>
                               <div className="text-[10px] text-slate-400 line-through">{deal.original}</div>
                             </div>
-                            <button
-                              onClick={(e) => { e.stopPropagation(); setSelectedProduct(deal); }}
-                              className="px-3.5 py-1.5 rounded-xl bg-[#1645C4] hover:bg-[#12389E] text-white font-bold text-xs shadow transition flex items-center gap-1"
-                            >
-                              <span>View Deal</span>
-                              <span>→</span>
-                            </button>
+                            {locked ? (
+                              <button
+                                onClick={(e) => { e.stopPropagation(); setShowVipPopup(true); }}
+                                className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs shadow transition flex items-center gap-1 active:scale-95"
+                              >
+                                <span>🔒 VIP Pass</span>
+                              </button>
+                            ) : (
+                              <button
+                                onClick={(e) => { e.stopPropagation(); setSelectedProduct(deal); }}
+                                className="px-3.5 py-1.5 rounded-xl bg-[#1645C4] hover:bg-[#12389E] text-white font-bold text-xs shadow transition flex items-center gap-1"
+                              >
+                                <span>View Deal</span>
+                                <span>→</span>
+                              </button>
+                            )}
                           </div>
                         </div>
                       );
