@@ -111,12 +111,45 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
-  // Lucky Dip State
+  // Give Away State & 3-Monthly Submission Tracking
   const [luckyDipName, setLuckyDipName] = useState('');
   const [luckyDipEmail, setLuckyDipEmail] = useState('');
   const [luckyDipPhone, setLuckyDipPhone] = useState('');
   const [luckyDipCity, setLuckyDipCity] = useState('');
+  const [selectedGiveawayProduct, setSelectedGiveawayProduct] = useState('iphone16');
+  const [giveawayMonthEntriesCount, setGiveawayMonthEntriesCount] = useState(0);
   const [luckyDipSuccessModal, setLuckyDipSuccessModal] = useState<any | null>(null);
+
+  // 3 Featured Monthly Giveaway Products
+  const monthlyGiveawayProducts = [
+    {
+      id: 'iphone16',
+      title: 'Apple iPhone 16 Pro Max',
+      specs: '256GB • Desert Titanium • Official Apple Warranty',
+      value: '₹1,44,900',
+      badge: 'GRAND PRIZE #1',
+      icon: '📱',
+      image: '/hero-showcase/iphone-16.png'
+    },
+    {
+      id: 'ps5',
+      title: 'Sony PlayStation 5 Console',
+      specs: '1TB SSD • DualSense Wireless Controller • Horizon Bundle',
+      value: '₹54,990',
+      badge: 'GRAND PRIZE #2',
+      icon: '🎮',
+      image: '/hero-showcase/ps5-console.png'
+    },
+    {
+      id: 'dyson',
+      title: 'Dyson Airwrap Multi-Styler Complete',
+      specs: 'Copper/Nickel Edition • Special Storage Case',
+      value: '₹49,900',
+      badge: 'GRAND PRIZE #3',
+      icon: '✨',
+      image: '/hero-showcase/dyson-airwrap.png'
+    }
+  ];
   const [luckyDipEntries, setLuckyDipEntries] = useState([
     {
       ticketNumber: 'OSG-TKT-894120',
@@ -282,7 +315,13 @@ export default function App() {
   const handleLuckyDipSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!luckyDipName.trim() || !luckyDipEmail.trim() || !luckyDipPhone.trim()) {
-      alert('Please fill all required fields to enter the Lucky Dip.');
+      alert('Please fill all required fields to enter the Give Away.');
+      return;
+    }
+
+    // Check monthly submission limit (Strictly maximum 3 entries per month)
+    if (giveawayMonthEntriesCount >= 3) {
+      alert('Monthly Limit Reached: You have already submitted all 3 eligible Give Away entries for this month. New entries unlock next calendar month!');
       return;
     }
 
@@ -293,7 +332,8 @@ export default function App() {
     }
 
     // VIP User: submit entry successfully
-    const ticketNumber = 'OSG-TKT-' + Math.floor(100000 + Math.random() * 900000);
+    const chosenProductObj = monthlyGiveawayProducts.find(p => p.id === selectedGiveawayProduct) || monthlyGiveawayProducts[0];
+    const ticketNumber = 'OSG-GIVE-' + Math.floor(100000 + Math.random() * 900000);
     const hash = 'a' + Math.random().toString(16).substring(2, 8) + '...' + Math.random().toString(16).substring(2, 6);
     const newEntry = {
       ticketNumber,
@@ -301,19 +341,22 @@ export default function App() {
       email: luckyDipEmail,
       phone: luckyDipPhone.slice(0, 7) + ' •••••',
       city: luckyDipCity.trim() || 'India',
-      plan: activeMembership ? activeMembership.plan : 'Active VIP Pass',
+      plan: `${activeMembership ? activeMembership.plan : 'Active VIP Pass'} • For ${chosenProductObj.title}`,
       timestamp: 'Just Now',
       hash,
       isCurrentUser: true
     };
 
     setLuckyDipEntries(prev => [newEntry, ...prev]);
+    setGiveawayMonthEntriesCount(prev => prev + 1);
     setLuckyDipSuccessModal({
       ticketNumber,
       name: luckyDipName,
       email: luckyDipEmail,
       phone: luckyDipPhone,
       city: luckyDipCity || 'India',
+      productName: chosenProductObj.title,
+      entryIndex: giveawayMonthEntriesCount + 1,
       hash
     });
 
@@ -2227,7 +2270,7 @@ export default function App() {
           </div>
         )}
 
-        {/* ==================== SCREEN: LUCKY DIP (FORM + WINNERS + SUBMITTED USERS) ==================== */}
+        {/* ==================== SCREEN: GIVE AWAY (FORM + 3 MONTHLY PRODUCTS + WINNERS + SUBMITTED USERS) ==================== */}
         {currentScreen === 'luckydip' && (
           <div className="w-full space-y-0 text-slate-900">
             
@@ -2239,29 +2282,63 @@ export default function App() {
                 <div className="lg:col-span-7 space-y-5">
                   <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-[#DC1F32] to-[#D4AF37] text-white text-xs font-black uppercase tracking-wider shadow-md">
                     <span>🎁</span>
-                    <span>WEEKLY FLAGSHIP GIVEAWAY</span>
+                    <span>MONTHLY 3-PRODUCT GIVE AWAY</span>
                   </div>
 
                   <h1 className="text-3xl sm:text-5xl font-black text-white leading-tight tracking-tight">
-                    Weekly Flagship Lucky Dip – <span className="text-[#FF304D]">Win Apple iPhone 16 Pro Max!</span>
+                    Exclusive Monthly Give Away – <span className="text-[#FF304D]">Win Top 3 Tech Gadgets!</span>
                   </h1>
 
                   <p className="text-sm sm:text-base text-slate-200/90 leading-relaxed font-normal">
-                    Participate in our certified weekly flagship giveaways powered by transparent cryptographic <strong>SHA-256 Provably Fair</strong> random seed rules. Every eligible entry is timestamped and recorded on the public draw ledger.
+                    Every month, users can enter to win one of our <strong>3 Featured Flagship Products</strong>. You can participate up to <strong>3 times per month</strong> with certified cryptographic <strong>SHA-256 Provably Fair</strong> random draws.
                   </p>
 
-                  <div className="grid grid-cols-3 gap-3 pt-2 text-center">
-                    <div className="p-3.5 rounded-2xl bg-white/10 border border-white/15">
-                      <div className="text-xs text-amber-300 font-bold uppercase">Grand Prize</div>
-                      <div className="text-sm sm:text-base font-black text-white mt-0.5">iPhone 16 Pro Max</div>
+                  {/* 3 Monthly Giveaway Products Cards Showcase */}
+                  <div className="space-y-2 pt-1">
+                    <div className="text-xs font-black uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                      <span>✨</span> 3 Featured Products Available to Win This Month:
                     </div>
-                    <div className="p-3.5 rounded-2xl bg-white/10 border border-white/15">
-                      <div className="text-xs text-amber-300 font-bold uppercase">Draw Frequency</div>
-                      <div className="text-sm sm:text-base font-black text-white mt-0.5">Every Sunday</div>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {monthlyGiveawayProducts.map((prod) => {
+                        const isSelected = selectedGiveawayProduct === prod.id;
+                        return (
+                          <div
+                            key={prod.id}
+                            onClick={() => setSelectedGiveawayProduct(prod.id)}
+                            className={`p-3.5 rounded-2xl cursor-pointer border transition-all text-left relative flex flex-col justify-between ${
+                              isSelected
+                                ? 'bg-white/20 border-amber-300 shadow-lg scale-[1.02]'
+                                : 'bg-white/10 border-white/15 hover:bg-white/15'
+                            }`}
+                          >
+                            <div>
+                              <div className="flex items-center justify-between text-[10px] font-black uppercase mb-1">
+                                <span className="text-amber-300">{prod.badge}</span>
+                                <span>{prod.icon}</span>
+                              </div>
+                              <h4 className="font-extrabold text-xs sm:text-sm text-white line-clamp-1">{prod.title}</h4>
+                              <p className="text-[10px] text-slate-300 mt-0.5 line-clamp-2">{prod.specs}</p>
+                            </div>
+                            <div className="mt-2 pt-2 border-t border-white/10 flex items-center justify-between">
+                              <span className="text-xs font-black text-amber-200">{prod.value}</span>
+                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isSelected ? 'bg-amber-400 text-slate-900 font-black' : 'bg-white/10 text-white'}`}>
+                                {isSelected ? 'Selected ✓' : 'Select'}
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
-                    <div className="p-3.5 rounded-2xl bg-white/10 border border-white/15">
-                      <div className="text-xs text-amber-300 font-bold uppercase">Draw Fairness</div>
-                      <div className="text-sm sm:text-base font-black text-white mt-0.5">SHA-256 Seed</div>
+                  </div>
+
+                  {/* Monthly Limit Status Badge */}
+                  <div className="p-3.5 rounded-2xl bg-white/10 border border-white/15 flex flex-wrap items-center justify-between gap-3 text-xs">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                      <span>Monthly Entry Quota: <strong>{giveawayMonthEntriesCount} of 3 Used</strong></span>
+                    </div>
+                    <div className="text-amber-300 font-bold">
+                      {3 - giveawayMonthEntriesCount > 0 ? `${3 - giveawayMonthEntriesCount} Entries Remaining This Month` : 'Monthly Limit Reached'}
                     </div>
                   </div>
 
@@ -2275,17 +2352,40 @@ export default function App() {
                   )}
                 </div>
 
-                {/* Right: Lucky Dip Ticket Submission Form */}
+                {/* Right: Give Away Ticket Submission Form (Max 3 Entries Per Month) */}
                 <div className="lg:col-span-5 bg-[#FAF7F2] text-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl border-2 border-amber-300/60 relative">
                   <div className="space-y-1 mb-4">
-                    <span className="text-[10px] font-black uppercase text-[#E50914] bg-red-100 px-2 py-0.5 rounded">
-                      DIRECT TICKET ENTRY
-                    </span>
-                    <h3 className="text-xl font-black text-slate-900">Enter Weekly Lucky Dip</h3>
-                    <p className="text-xs text-slate-500">Submit your verified contact details to register your draw entry.</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-black uppercase text-[#E50914] bg-red-100 px-2 py-0.5 rounded">
+                        GIVE AWAY TICKET ENTRY
+                      </span>
+                      <span className="text-[11px] font-bold text-slate-500">
+                        Entry {Math.min(giveawayMonthEntriesCount + 1, 3)} of 3 / month
+                      </span>
+                    </div>
+                    <h3 className="text-xl font-black text-slate-900">Enter Monthly Give Away</h3>
+                    <p className="text-xs text-slate-500">
+                      Select which of the 3 featured products you want to win and enter up to 3 times every month.
+                    </p>
                   </div>
 
                   <form onSubmit={handleLuckyDipSubmit} className="space-y-3.5">
+                    {/* Choose between the 3 monthly giveaway products */}
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 mb-1">Choose Give Away Product (3 Choices) *</label>
+                      <select
+                        value={selectedGiveawayProduct}
+                        onChange={(e) => setSelectedGiveawayProduct(e.target.value)}
+                        className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 font-bold focus:outline-none focus:border-[#E50914] shadow-xs"
+                      >
+                        {monthlyGiveawayProducts.map((p) => (
+                          <option key={p.id} value={p.id}>
+                            {p.icon} {p.title} ({p.value})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
                     <div>
                       <label className="block text-[11px] font-bold text-slate-700 mb-1">Full Name *</label>
                       <input
@@ -2342,14 +2442,19 @@ export default function App() {
 
                     <button
                       type="submit"
-                      className="w-full mt-2 py-3.5 rounded-2xl bg-gradient-to-r from-[#DC1F32] via-[#E50914] to-[#D4AF37] text-white font-black text-xs uppercase tracking-wider shadow-lg hover:brightness-110 active:scale-[0.98] transition flex items-center justify-center gap-2"
+                      disabled={giveawayMonthEntriesCount >= 3}
+                      className={`w-full mt-2 py-3.5 rounded-2xl text-white font-black text-xs uppercase tracking-wider shadow-lg flex items-center justify-center gap-2 transition ${
+                        giveawayMonthEntriesCount >= 3
+                          ? 'bg-slate-400 cursor-not-allowed opacity-70'
+                          : 'bg-gradient-to-r from-[#DC1F32] via-[#E50914] to-[#D4AF37] hover:brightness-110 active:scale-[0.98]'
+                      }`}
                     >
-                      <span>Submit Lucky Dip Entry</span>
+                      <span>{giveawayMonthEntriesCount >= 3 ? 'Monthly Limit Reached (3/3 Used)' : 'Submit Give Away Entry'}</span>
                       <span>🎟️</span>
                     </button>
                     
                     <p className="text-[10px] text-center text-slate-400">
-                      Entries verified against active VIP subscriptions. Free users will be prompted to activate a pass.
+                      Every user can submit up to <strong>3 times per month</strong>. Verified against active VIP status.
                     </p>
                   </form>
                 </div>
@@ -2357,7 +2462,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* 2. REAL WINNERS SECTION (Exact Match from User Specification) */}
+            {/* 2. REAL WINNERS SECTION */}
             <section style={{ background: 'radial-gradient(circle at 50% 30%, rgba(229, 9, 20, 0.25) 0%, #400B19 60%, #101428 100%)' }} className="w-full py-16 px-4 sm:px-6 lg:px-8 text-white text-center border-b border-[#400B19]">
               <div className="max-w-[1680px] mx-auto space-y-6">
                 <div className="space-y-2">
@@ -2395,8 +2500,8 @@ export default function App() {
                     <span className="text-[10px] font-black uppercase tracking-wider bg-blue-100 text-[#1645C4] px-2.5 py-1 rounded">
                       PUBLIC DRAW LEDGER
                     </span>
-                    <h3 className="text-2xl font-black text-slate-900 mt-1">Submitted Lucky Dip Entries</h3>
-                    <p className="text-xs text-slate-500">Live timestamped entries participating in this Sunday's iPhone 16 Pro Max draw.</p>
+                    <h3 className="text-2xl font-black text-slate-900 mt-1">Submitted Give Away Entries</h3>
+                    <p className="text-xs text-slate-500">Live timestamped entries participating in this month's 3 featured Give Away draws.</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">
@@ -2414,7 +2519,7 @@ export default function App() {
                           <th className="py-3.5 px-4">Ticket Number</th>
                           <th className="py-3.5 px-4">Participant Name</th>
                           <th className="py-3.5 px-4">City</th>
-                          <th className="py-3.5 px-4">Plan Status</th>
+                          <th className="py-3.5 px-4">Plan &amp; Target Product</th>
                           <th className="py-3.5 px-4">Timestamp</th>
                           <th className="py-3.5 px-4">SHA-256 Hash</th>
                         </tr>
@@ -2456,7 +2561,7 @@ export default function App() {
               </div>
             </section>
 
-            {/* Lucky Dip Submission Success Modal */}
+            {/* Give Away Submission Success Modal */}
             {luckyDipSuccessModal && (
               <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
                 <div className="bg-[#FAF7F2] text-slate-900 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative space-y-4 border border-emerald-300">
@@ -2468,7 +2573,7 @@ export default function App() {
                     <span className="text-[10px] font-black uppercase text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">
                       SUBMISSION SUCCESSFUL
                     </span>
-                    <h3 className="text-xl font-black text-slate-900">Your Lucky Dip Ticket is Active!</h3>
+                    <h3 className="text-xl font-black text-slate-900">Your Give Away Ticket is Active!</h3>
                     <p className="text-xs text-slate-600">Your entry has been recorded and highlighted on the public draw ledger.</p>
                   </div>
 
@@ -2481,9 +2586,19 @@ export default function App() {
                       <span className="text-slate-500">Participant:</span>
                       <span className="font-bold text-slate-800">{luckyDipSuccessModal.name}</span>
                     </div>
+                    {luckyDipSuccessModal.productName && (
+                      <div className="flex justify-between pb-1 border-b border-slate-100">
+                        <span className="text-slate-500">Give Away Prize:</span>
+                        <span className="font-bold text-amber-700">{luckyDipSuccessModal.productName}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between pb-1 border-b border-slate-100">
+                      <span className="text-slate-500">Monthly Usage:</span>
+                      <span className="font-bold text-slate-800">Entry {luckyDipSuccessModal.entryIndex || 1} of 3 this month</span>
+                    </div>
                     <div className="flex justify-between pb-1 border-b border-slate-100">
                       <span className="text-slate-500">Draw Date:</span>
-                      <span className="font-bold text-slate-800">This Sunday, 8:00 PM IST</span>
+                      <span className="font-bold text-slate-800">Monthly Final Sunday, 8:00 PM IST</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-slate-500">Ledger Hash:</span>
