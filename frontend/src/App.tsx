@@ -3,7 +3,7 @@ import LegalPage, { LegalRoute } from './LegalPage';
 
 type Screen = 'storefront' | 'catalog' | 'pricing' | 'luckydip' | 'about' | 'contact' | 'signin' | 'membership' | 'admin' | 'superadmin' | 'legal';
 type UserRole = 'free' | 'vip' | 'expired';
-type PriceFilter = 'all' | 'under99' | '100-499' | '500-999' | '1000plus';
+type PriceFilter = 'all' | '99' | '199' | '299' | '399' | '499' | '599' | '1000plus';
 type SortOption = 'latest' | 'price-asc' | 'price-desc' | 'discount-desc';
 
 interface Deal {
@@ -523,7 +523,15 @@ export default function App() {
     { id: 32, sku: 'AMBR-OTG-ADAPTER', title: 'Ambrane Type-C to USB-A 3.0 Metal OTG Adapter', category: 'Accessories', categoryId: 'accessories', brand: 'Ambrane', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-70%', price: '₹79', numeric_price: 79, original: '₹269', icon: '🔌', rating: 4.4, description: 'Zinc-alloy compact plug and play OTG converter for smartphones and laptops.', merchantUrl: 'https://www.flipkart.com' },
     { id: 33, sku: 'PORT-MOU-PAD', title: 'Portronics Sublime Ergonomic Anti-Skid Mouse Pad', category: 'Accessories', categoryId: 'accessories', brand: 'Portronics', store: 'Amazon Verified', storeIcon: '🛒', discount: '-60%', price: '₹199', numeric_price: 199, original: '₹499', icon: '🔌', rating: 4.5, description: 'Smooth microfiber cloth surface with non-slip natural rubber base.', merchantUrl: 'https://www.amazon.in' },
     { id: 34, sku: 'WIPR-SMART-9W', title: 'Wipro Next 9W B22 LED Smart Color Bulb (Alexa & Google)', category: 'Smart Home', categoryId: 'smart-home', brand: 'Wipro', store: 'Amazon Verified', storeIcon: '🛒', discount: '-65%', price: '₹699', numeric_price: 699, original: '₹1,999', icon: '🏠', rating: 4.3, description: '16 million colors with dimming control and voice assistant support.', merchantUrl: 'https://www.amazon.in' },
-    { id: 35, sku: 'MI-POWER-10K', title: 'Mi 10000mAh Power Bank 3i (18W Fast Charging)', category: 'Accessories', categoryId: 'accessories', brand: 'Xiaomi', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-40%', price: '₹899', numeric_price: 899, original: '₹1,499', icon: '🔌', rating: 4.6, description: 'Dual output ports with 12 layers of advanced circuit chip protection.', merchantUrl: 'https://www.flipkart.com' }
+    { id: 35, sku: 'MI-POWER-10K', title: 'Mi 10000mAh Power Bank 3i (18W Fast Charging)', category: 'Accessories', categoryId: 'accessories', brand: 'Xiaomi', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-40%', price: '₹899', numeric_price: 899, original: '₹1,499', icon: '🔌', rating: 4.6, description: 'Dual output ports with 12 layers of advanced circuit chip protection.', merchantUrl: 'https://www.flipkart.com' },
+
+    // Dedicated Targeted Price Point Demo Products (₹99, ₹199, ₹299, ₹399, ₹499, ₹599)
+    { id: 36, sku: 'ZEB-MICRO-CABLE', title: 'Zebronics Micro USB High Speed Data & Charging Cable', category: 'Accessories', categoryId: 'accessories', brand: 'Zebronics', store: 'Amazon Verified', storeIcon: '🛒', discount: '-67%', price: '₹99', numeric_price: 99, original: '₹299', icon: '🔌', rating: 4.3, description: 'Tangle-free 1 meter durable cable with 2.4A rapid charging support.', merchantUrl: 'https://www.amazon.in' },
+    { id: 37, sku: 'MIVI-ROAM-CASE', title: 'Mivi Protective Silicone Travel Pouch for Earbuds', category: 'Audio & Wearables', categoryId: 'audio-wearables', brand: 'Mivi', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-60%', price: '₹199', numeric_price: 199, original: '₹499', icon: '🎧', rating: 4.4, description: 'Shockproof silicone protective case with carabiner clip for wireless earbuds.', merchantUrl: 'https://www.flipkart.com' },
+    { id: 38, sku: 'PORT-DESK-STAND', title: 'Portronics Modesk Universal Metallic Smartphone & Tablet Stand', category: 'Accessories', categoryId: 'accessories', brand: 'Portronics', store: 'Amazon Verified', storeIcon: '🛒', discount: '-57%', price: '₹299', numeric_price: 299, original: '₹699', icon: '📱', rating: 4.6, description: 'Heavy-duty aluminum alloy desktop cradle with adjustable angle and cable pass-through.', merchantUrl: 'https://www.amazon.in' },
+    { id: 39, sku: 'BOAT-BASSHEADS-242', title: 'boAt BassHeads 242 Polished In-Ear Sports Earphones', category: 'Audio & Wearables', categoryId: 'audio-wearables', brand: 'boAt', store: 'Amazon Verified', storeIcon: '🛒', discount: '-60%', price: '₹399', numeric_price: 399, original: '₹999', icon: '🎧', rating: 4.4, description: 'IPX4 water/sweat resistant with secure ear hooks and HD sound.', merchantUrl: 'https://www.amazon.in' },
+    { id: 40, sku: 'NOISE-COLORFIT-STRAP', title: 'Noise Premium Breathable Mesh Magnetic Smartwatch Strap (22mm)', category: 'Smartwatches', categoryId: 'smartwatches', brand: 'Noise', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-50%', price: '₹499', numeric_price: 499, original: '₹999', icon: '⌚', rating: 4.5, description: 'Stainless steel milanese loop magnetic clasp band compatible with all standard smartwatches.', merchantUrl: 'https://www.flipkart.com' },
+    { id: 41, sku: 'REDG-LED-MOUSE', title: 'Redgear Dragonwar RGB Backlit Optical Gaming Mouse', category: 'Gaming', categoryId: 'gaming', brand: 'Redgear', store: 'Amazon Verified', storeIcon: '🛒', discount: '-54%', price: '₹599', numeric_price: 599, original: '₹1,299', icon: '🎮', rating: 4.5, description: '3200 DPI on-the-fly switch, 6 programmable gaming buttons with dynamic RGB breathing LED.', merchantUrl: 'https://www.amazon.in' }
   ];
 
   // Filtered and sorted deals for Deals page
@@ -534,14 +542,20 @@ export default function App() {
     // 2. Search query match
     const matchesSearch = !searchQuery || d.title.toLowerCase().includes(searchQuery.toLowerCase()) || d.brand.toLowerCase().includes(searchQuery.toLowerCase());
     
-    // 3. Price range filter (using actual discounted selling price)
+    // 3. Price range filter (exact targeted points: ₹99, ₹199, ₹299, ₹399, ₹499, ₹599)
     let matchesPrice = true;
-    if (activePriceFilter === 'under99') {
-      matchesPrice = d.numeric_price < 99;
-    } else if (activePriceFilter === '100-499') {
-      matchesPrice = d.numeric_price >= 100 && d.numeric_price <= 499;
-    } else if (activePriceFilter === '500-999') {
-      matchesPrice = d.numeric_price >= 500 && d.numeric_price <= 999;
+    if (activePriceFilter === '99') {
+      matchesPrice = d.numeric_price <= 99;
+    } else if (activePriceFilter === '199') {
+      matchesPrice = d.numeric_price > 99 && d.numeric_price <= 199;
+    } else if (activePriceFilter === '299') {
+      matchesPrice = d.numeric_price > 199 && d.numeric_price <= 299;
+    } else if (activePriceFilter === '399') {
+      matchesPrice = d.numeric_price > 299 && d.numeric_price <= 399;
+    } else if (activePriceFilter === '499') {
+      matchesPrice = d.numeric_price > 399 && d.numeric_price <= 499;
+    } else if (activePriceFilter === '599') {
+      matchesPrice = d.numeric_price > 499 && d.numeric_price <= 599;
     } else if (activePriceFilter === '1000plus') {
       matchesPrice = d.numeric_price >= 1000;
     }
@@ -1897,40 +1911,76 @@ export default function App() {
                     All Prices
                   </button>
 
-                  {/* Under ₹99 */}
+                  {/* ₹99 */}
                   <button
-                    onClick={() => setActivePriceFilter('under99')}
+                    onClick={() => setActivePriceFilter('99')}
                     className={`px-3.5 py-1.5 rounded-xl font-extrabold text-xs shrink-0 transition-all duration-200 border ${
-                      activePriceFilter === 'under99'
+                      activePriceFilter === '99'
                         ? 'bg-[#E50914] text-white border-[#E50914] shadow-md scale-105'
                         : 'bg-white/10 text-slate-300 border-white/15 hover:bg-white/20 hover:text-white'
                     }`}
                   >
-                    Under ₹99
+                    ₹99
                   </button>
 
-                  {/* ₹100 – ₹499 */}
+                  {/* ₹199 */}
                   <button
-                    onClick={() => setActivePriceFilter('100-499')}
+                    onClick={() => setActivePriceFilter('199')}
                     className={`px-3.5 py-1.5 rounded-xl font-extrabold text-xs shrink-0 transition-all duration-200 border ${
-                      activePriceFilter === '100-499'
+                      activePriceFilter === '199'
                         ? 'bg-[#E50914] text-white border-[#E50914] shadow-md scale-105'
                         : 'bg-white/10 text-slate-300 border-white/15 hover:bg-white/20 hover:text-white'
                     }`}
                   >
-                    ₹100 – ₹499
+                    ₹199
                   </button>
 
-                  {/* ₹500 – ₹999 */}
+                  {/* ₹299 */}
                   <button
-                    onClick={() => setActivePriceFilter('500-999')}
+                    onClick={() => setActivePriceFilter('299')}
                     className={`px-3.5 py-1.5 rounded-xl font-extrabold text-xs shrink-0 transition-all duration-200 border ${
-                      activePriceFilter === '500-999'
+                      activePriceFilter === '299'
                         ? 'bg-[#E50914] text-white border-[#E50914] shadow-md scale-105'
                         : 'bg-white/10 text-slate-300 border-white/15 hover:bg-white/20 hover:text-white'
                     }`}
                   >
-                    ₹500 – ₹999
+                    ₹299
+                  </button>
+
+                  {/* ₹399 */}
+                  <button
+                    onClick={() => setActivePriceFilter('399')}
+                    className={`px-3.5 py-1.5 rounded-xl font-extrabold text-xs shrink-0 transition-all duration-200 border ${
+                      activePriceFilter === '399'
+                        ? 'bg-[#E50914] text-white border-[#E50914] shadow-md scale-105'
+                        : 'bg-white/10 text-slate-300 border-white/15 hover:bg-white/20 hover:text-white'
+                    }`}
+                  >
+                    ₹399
+                  </button>
+
+                  {/* ₹499 */}
+                  <button
+                    onClick={() => setActivePriceFilter('499')}
+                    className={`px-3.5 py-1.5 rounded-xl font-extrabold text-xs shrink-0 transition-all duration-200 border ${
+                      activePriceFilter === '499'
+                        ? 'bg-[#E50914] text-white border-[#E50914] shadow-md scale-105'
+                        : 'bg-white/10 text-slate-300 border-white/15 hover:bg-white/20 hover:text-white'
+                    }`}
+                  >
+                    ₹499
+                  </button>
+
+                  {/* ₹599 */}
+                  <button
+                    onClick={() => setActivePriceFilter('599')}
+                    className={`px-3.5 py-1.5 rounded-xl font-extrabold text-xs shrink-0 transition-all duration-200 border ${
+                      activePriceFilter === '599'
+                        ? 'bg-[#E50914] text-white border-[#E50914] shadow-md scale-105'
+                        : 'bg-white/10 text-slate-300 border-white/15 hover:bg-white/20 hover:text-white'
+                    }`}
+                  >
+                    ₹599
                   </button>
 
                   {/* ₹1,000 & Above */}
@@ -1942,7 +1992,7 @@ export default function App() {
                         : 'bg-white/10 text-slate-300 border-white/15 hover:bg-white/20 hover:text-white'
                     }`}
                   >
-                    ₹1,000 &amp; Above
+                    ₹1,000+
                   </button>
                 </div>
 
