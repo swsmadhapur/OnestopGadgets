@@ -1171,7 +1171,7 @@ export default function App() {
                 <button onClick={() => { setCurrentScreen('storefront'); setMobileMenuOpen(false); }} className="text-left py-2 px-3 rounded-lg hover:bg-white/10 font-bold">🏠 Home</button>
                 <button onClick={() => { setCurrentScreen('catalog'); setMobileMenuOpen(false); }} className="text-left py-2 px-3 rounded-lg hover:bg-white/10 font-bold">🔥 Deals Directory</button>
                 <button onClick={() => { setCurrentScreen('about'); setMobileMenuOpen(false); }} className="text-left py-2 px-3 rounded-lg hover:bg-white/10 font-bold">ℹ️ About</button>
-                <button onClick={() => { setCurrentScreen('luckydip'); setMobileMenuOpen(false); }} className="text-left py-2 px-3 rounded-lg bg-red-900/30 text-[#FF304D] font-bold">🎁 Lucky Dip</button>
+                <button onClick={() => { setCurrentScreen('luckydip'); setMobileMenuOpen(false); }} className="text-left py-2 px-3 rounded-lg bg-red-900/30 text-[#FF304D] font-bold">🎁 Give Away</button>
                 <button onClick={() => { setCurrentScreen('contact'); setMobileMenuOpen(false); }} className="text-left py-2 px-3 rounded-lg hover:bg-white/10 font-bold">📞 Contact Us</button>
               </nav>
             </div>
@@ -1215,7 +1215,7 @@ export default function App() {
             </button>
             <button onClick={() => setCurrentScreen('luckydip')} className={`px-3.5 sm:px-4 py-2 rounded-full font-bold text-xs sm:text-sm transition-all flex items-center gap-1.5 ${currentScreen === 'luckydip' ? 'bg-[#D91E26] text-[#F5F5F7] shadow-md' : 'text-[#FF304D] hover:text-white hover:bg-white/10'}`}>
               <span>🎁</span>
-              <span>Lucky Dip</span>
+              <span>Give Away</span>
             </button>
             <button onClick={() => setCurrentScreen('contact')} className={`px-3.5 sm:px-4 py-2 rounded-full font-bold text-xs sm:text-sm transition-all ${currentScreen === 'contact' ? 'bg-[#D91E26] text-[#F5F5F7] shadow-md' : 'text-[#F5F5F7] hover:text-white hover:bg-white/10'}`}>
               Contact Us
@@ -1347,7 +1347,7 @@ export default function App() {
                       <span>👑</span> <span>Join VIP Now</span>
                     </button>
                     <button onClick={() => setCurrentScreen('luckydip')} className="px-7 py-3.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white font-black text-xs uppercase tracking-wider transition hover:scale-105 flex items-center gap-2">
-                      <span>🎁</span> <span>Try Lucky Dip</span>
+                      <span>🎁</span> <span>Try Give Away</span>
                     </button>
                   </div>
                 </div>
