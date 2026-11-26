@@ -272,7 +272,7 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [showVipPopup]);
 
-  const handleOpenPayment = (planId: 'monthly' | 'six-month' | 'annual', planName: string, price: string, numericPrice: number, duration: string, days: number, entries: number) => {
+  const handleOpenPayment = (planId: 'one-month' | 'three-month' | 'six-month' | 'annual' | string, planName: string, price: string, numericPrice: number, duration: string, days: number, entries: number) => {
     setPurchasingPlan({ id: planId, name: planName, price, numericPrice, duration, days, entries });
     setCheckoutStep('register');
     setPaymentSuccess(false);
@@ -552,14 +552,14 @@ export default function App() {
           }}
           className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 overflow-y-auto animate-fade-in"
         >
-          <div className="bg-[#FAF7F2] text-slate-900 rounded-3xl p-5 sm:p-8 max-w-4xl w-full shadow-2xl relative space-y-6 border border-amber-300/60 my-auto">
+          <div className="bg-[#FAF7F2] text-slate-900 rounded-3xl p-5 sm:p-7 max-w-5xl w-full shadow-2xl relative space-y-6 border border-amber-300/60 my-auto">
             {/* Close Button */}
             <button
               onClick={() => {
                 setShowVipPopup(false);
                 setPopupDismissed(true);
               }}
-              className="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-200 hover:bg-[#DC1F32] hover:text-white text-slate-700 font-bold flex items-center justify-center transition shadow-sm"
+              className="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-200 hover:bg-[#DC1F32] hover:text-white text-slate-700 font-bold flex items-center justify-center transition shadow-sm z-10"
               title="Close VIP popup"
             >
               ✕
@@ -578,13 +578,13 @@ export default function App() {
               </p>
             </div>
 
-            {/* 3 VIP Packages Cards Grid in Popup */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-5 text-left items-stretch">
+            {/* 4 VIP Packages Cards Grid in Popup */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-left items-stretch">
               
-              {/* 1. Monthly VIP – ₹299/month */}
+              {/* 1. One Month VIP – ₹99 */}
               <div
                 style={{ background: 'linear-gradient(145deg, #400B19 0%, #7A0C1A 50%, #DC1F32 100%)' }}
-                className="rounded-2xl p-5 border border-[#D4AF37]/40 shadow-lg text-white flex flex-col justify-between relative group hover:border-[#D4AF37] transition"
+                className="rounded-2xl p-4 sm:p-5 border border-[#D4AF37]/40 shadow-lg text-white flex flex-col justify-between relative group hover:border-[#D4AF37] transition"
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
@@ -592,8 +592,8 @@ export default function App() {
                     <span className="text-lg">⭐</span>
                   </div>
                   <div>
-                    <h3 className="font-extrabold text-base text-white">Monthly VIP</h3>
-                    <div className="text-2xl font-black text-white mt-1">₹299 <span className="text-xs font-normal text-rose-200">/ month</span></div>
+                    <h3 className="font-extrabold text-base text-white">1 Month VIP</h3>
+                    <div className="text-2xl font-black text-white mt-1">₹99 <span className="text-xs font-normal text-rose-200">/ mo</span></div>
                     <div className="text-[10px] text-amber-300 font-semibold">30 Days Membership</div>
                   </div>
                   <ul className="space-y-1.5 pt-2 border-t border-white/10 text-xs text-white/95">
@@ -607,21 +607,55 @@ export default function App() {
                   onClick={() => {
                     setShowVipPopup(false);
                     setPopupDismissed(true);
-                    handleOpenPayment('monthly', 'Monthly VIP', '₹299', 299, '30 Days', 30, 1);
+                    handleOpenPayment('one-month', '1 Month VIP', '₹99', 99, '30 Days', 30, 1);
                   }}
                   className="mt-5 w-full py-2.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-[#400B19] font-black text-xs uppercase tracking-wider hover:brightness-110 shadow transition"
                 >
-                  Get Monthly Pass
+                  Get 1-Month Pass
                 </button>
               </div>
 
-              {/* 2. 6-Month VIP – ₹1,199 (MOST POPULAR) */}
+              {/* 2. 3 Months VIP – ₹199 */}
+              <div
+                style={{ background: 'linear-gradient(145deg, #450B18 0%, #850E1D 50%, #DC1F32 100%)' }}
+                className="rounded-2xl p-4 sm:p-5 border border-[#D4AF37]/50 shadow-lg text-white flex flex-col justify-between relative group hover:border-[#D4AF37] transition"
+              >
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-black uppercase text-[#D4AF37] bg-black/40 px-2 py-0.5 rounded border border-[#D4AF37]/30">Value Pass</span>
+                    <span className="text-lg">🔥</span>
+                  </div>
+                  <div>
+                    <h3 className="font-extrabold text-base text-white">3 Months VIP</h3>
+                    <div className="text-2xl font-black text-white mt-1">₹199 <span className="text-xs font-normal text-rose-200">/ 3 mo</span></div>
+                    <div className="text-[10px] text-amber-300 font-semibold">90 Days • ~₹66/mo</div>
+                  </div>
+                  <ul className="space-y-1.5 pt-2 border-t border-white/10 text-xs text-white/95">
+                    <li className="flex items-center gap-1.5"><span className="text-[#D4AF37] font-bold">✓</span> Everything in 1 Month VIP</li>
+                    <li className="flex items-center gap-1.5"><span className="text-[#D4AF37] font-bold">✓</span> <strong>2 Lucky Dip entries</strong> / draw</li>
+                    <li className="flex items-center gap-1.5"><span className="text-[#D4AF37] font-bold">✓</span> Early access to flash drops</li>
+                    <li className="flex items-center gap-1.5"><span className="text-[#D4AF37] font-bold">✓</span> Secret partner vouchers</li>
+                  </ul>
+                </div>
+                <button
+                  onClick={() => {
+                    setShowVipPopup(false);
+                    setPopupDismissed(true);
+                    handleOpenPayment('three-month', '3 Months VIP', '₹199', 199, '90 Days', 90, 2);
+                  }}
+                  className="mt-5 w-full py-2.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-[#400B19] font-black text-xs uppercase tracking-wider hover:brightness-110 shadow transition"
+                >
+                  Get 3-Month Pass
+                </button>
+              </div>
+
+              {/* 3. 6 Months VIP – ₹299 (MOST POPULAR) */}
               <div
                 style={{ background: 'linear-gradient(145deg, #500917 0%, #9E1020 40%, #DC1F32 80%, #D4AF37 120%)' }}
-                className="rounded-2xl p-5 border-2 border-[#D4AF37] shadow-[0_8px_30px_rgba(212,175,55,0.4)] text-white flex flex-col justify-between relative group transform md:-translate-y-1"
+                className="rounded-2xl p-4 sm:p-5 border-2 border-[#D4AF37] shadow-[0_8px_30px_rgba(212,175,55,0.4)] text-white flex flex-col justify-between relative group transform lg:-translate-y-1.5"
               >
                 <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#D4AF37] via-amber-200 to-[#D4AF37] text-[#400B19] text-[9px] font-black px-3 py-0.5 rounded-full uppercase tracking-wider shadow whitespace-nowrap">
-                  ★ MOST POPULAR • 33% OFF ★
+                  ★ MOST POPULAR • BEST SELLER ★
                 </span>
                 <div className="space-y-3 pt-1">
                   <div className="flex items-center justify-between">
@@ -629,14 +663,14 @@ export default function App() {
                     <span className="text-lg">👑</span>
                   </div>
                   <div>
-                    <h3 className="font-extrabold text-base text-white">6-Month VIP</h3>
-                    <div className="text-2xl font-black text-amber-200 mt-1">₹1,199 <span className="text-xs font-normal text-rose-200">/ 6 mo</span></div>
-                    <div className="text-[10px] text-amber-300 font-semibold">Equivalent to ₹199/mo</div>
+                    <h3 className="font-extrabold text-base text-white">6 Months VIP</h3>
+                    <div className="text-2xl font-black text-amber-200 mt-1">₹299 <span className="text-xs font-normal text-rose-200">/ 6 mo</span></div>
+                    <div className="text-[10px] text-amber-300 font-semibold">180 Days • ~₹50/mo</div>
                   </div>
                   <ul className="space-y-1.5 pt-2 border-t border-white/15 text-xs text-white">
-                    <li className="flex items-center gap-1.5"><span className="text-[#D4AF37] font-bold">✓</span> Everything in Monthly VIP</li>
-                    <li className="flex items-center gap-1.5"><span className="text-[#D4AF37] font-bold">✓</span> <strong>2 Lucky Dip entries</strong> / draw</li>
-                    <li className="flex items-center gap-1.5"><span className="text-[#D4AF37] font-bold">✓</span> Early access to special offers</li>
+                    <li className="flex items-center gap-1.5"><span className="text-[#D4AF37] font-bold">✓</span> Everything in 3 Months VIP</li>
+                    <li className="flex items-center gap-1.5"><span className="text-[#D4AF37] font-bold">✓</span> <strong>3 Lucky Dip entries</strong> / draw</li>
+                    <li className="flex items-center gap-1.5"><span className="text-[#D4AF37] font-bold">✓</span> Priority Telegram concierge</li>
                     <li className="flex items-center gap-1.5"><span className="text-[#D4AF37] font-bold">✓</span> Exclusive VIP vouchers &amp; alerts</li>
                   </ul>
                 </div>
@@ -644,7 +678,7 @@ export default function App() {
                   onClick={() => {
                     setShowVipPopup(false);
                     setPopupDismissed(true);
-                    handleOpenPayment('six-month', '6-Month VIP (Most Popular)', '₹1,199', 1199, '6 Calendar Months', 180, 2);
+                    handleOpenPayment('six-month', '6 Months VIP (Best Seller)', '₹299', 299, '6 Calendar Months', 180, 3);
                   }}
                   className="mt-5 w-full py-2.5 rounded-xl bg-gradient-to-r from-[#D4AF37] via-amber-300 to-[#D4AF37] text-[#350C12] font-black text-xs uppercase tracking-wider hover:brightness-110 shadow-lg transition"
                 >
@@ -652,10 +686,10 @@ export default function App() {
                 </button>
               </div>
 
-              {/* 3. Annual VIP – ₹1,799 */}
+              {/* 4. 1 Year VIP – ₹399 (MAXIMUM VALUE) */}
               <div
                 style={{ background: 'linear-gradient(145deg, #400B19 0%, #6B0E1B 45%, #DC1F32 85%, #8A6D1C 100%)' }}
-                className="rounded-2xl p-5 border border-[#D4AF37]/50 shadow-lg text-white flex flex-col justify-between relative group hover:border-[#D4AF37] transition"
+                className="rounded-2xl p-4 sm:p-5 border border-[#D4AF37]/50 shadow-lg text-white flex flex-col justify-between relative group hover:border-[#D4AF37] transition"
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
@@ -663,14 +697,14 @@ export default function App() {
                     <span className="text-lg">💎</span>
                   </div>
                   <div>
-                    <h3 className="font-extrabold text-base text-white">Annual VIP</h3>
-                    <div className="text-2xl font-black text-white mt-1">₹1,799 <span className="text-xs font-normal text-rose-200">/ year</span></div>
-                    <div className="text-[10px] text-amber-300 font-semibold">~₹149/mo • Save 50%</div>
+                    <h3 className="font-extrabold text-base text-white">1 Year VIP</h3>
+                    <div className="text-2xl font-black text-white mt-1">₹399 <span className="text-xs font-normal text-rose-200">/ yr</span></div>
+                    <div className="text-[10px] text-amber-300 font-semibold">365 Days • ~₹33/mo • Save 67%</div>
                   </div>
                   <ul className="space-y-1.5 pt-2 border-t border-white/10 text-xs text-white/95">
-                    <li className="flex items-center gap-1.5"><span className="text-[#D4AF37] font-bold">✓</span> Everything in 6-Month VIP</li>
-                    <li className="flex items-center gap-1.5"><span className="text-[#D4AF37] font-bold">✓</span> <strong>3 Lucky Dip entries</strong> / draw</li>
-                    <li className="flex items-center gap-1.5"><span className="text-[#D4AF37] font-bold">✓</span> Exclusive annual member offers</li>
+                    <li className="flex items-center gap-1.5"><span className="text-[#D4AF37] font-bold">✓</span> Everything in 6 Months VIP</li>
+                    <li className="flex items-center gap-1.5"><span className="text-[#D4AF37] font-bold">✓</span> <strong>5 Lucky Dip entries</strong> / draw</li>
+                    <li className="flex items-center gap-1.5"><span className="text-[#D4AF37] font-bold">✓</span> Dedicated WhatsApp concierge</li>
                     <li className="flex items-center gap-1.5"><span className="text-[#D4AF37] font-bold">✓</span> Priority customer support</li>
                   </ul>
                 </div>
@@ -678,11 +712,11 @@ export default function App() {
                   onClick={() => {
                     setShowVipPopup(false);
                     setPopupDismissed(true);
-                    handleOpenPayment('annual', 'Annual VIP', '₹1,799', 1799, '12 Calendar Months', 365, 3);
+                    handleOpenPayment('annual', '1 Year VIP (Maximum Value)', '₹399', 399, '12 Calendar Months', 365, 5);
                   }}
                   className="mt-5 w-full py-2.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-[#400B19] font-black text-xs uppercase tracking-wider hover:brightness-110 shadow transition"
                 >
-                  Get Annual Pass
+                  Get 1-Year Pass
                 </button>
               </div>
 
@@ -1070,7 +1104,7 @@ export default function App() {
               <button
                 onClick={() => {
                   setSelectedProduct(null);
-                  handleOpenPayment('six-month', '6-Month Pass (Unlock ≥ ₹50K)', '₹1,199', 1199, '6 Calendar Months', 180, 2);
+                  handleOpenPayment('six-month', '6 Months Pass (Unlock ≥ ₹50K)', '₹299', 299, '6 Calendar Months', 180, 3);
                 }}
                 className="w-full py-3 rounded-xl bg-[#E50914] hover:bg-[#c51424] text-white font-black text-xs uppercase tracking-wider shadow-lg"
               >
@@ -1489,19 +1523,19 @@ export default function App() {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 text-left items-stretch pt-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-6 text-left items-stretch pt-4">
                   
-                  {/* Card 1: Monthly Access */}
+                  {/* Card 1: 1 Month VIP – ₹99 */}
                   <div
                     style={{
                       background: 'linear-gradient(145deg, #400B19 0%, #7A0C1A 50%, #B51224 100%)',
                     }}
-                    className="rounded-3xl p-7 lg:p-8 border border-[#D4AF37]/40 shadow-xl hover:shadow-2xl hover:border-[#D4AF37] transition-all duration-300 flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1"
+                    className="rounded-3xl p-6 lg:p-7 border border-[#D4AF37]/40 shadow-xl hover:shadow-2xl hover:border-[#D4AF37] transition-all duration-300 flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1"
                   >
                     {/* Subtle gold radial ambient */}
                     <div className="absolute -top-12 -right-12 w-36 h-36 bg-[#D4AF37]/15 rounded-full blur-2xl pointer-events-none group-hover:bg-[#D4AF37]/25 transition-all"></div>
                     
-                    <div className="space-y-5 relative z-10">
+                    <div className="space-y-4 relative z-10">
                       <div className="flex items-center justify-between">
                         <span className="text-[11px] font-black uppercase tracking-wider text-[#D4AF37] bg-black/40 px-3 py-1 rounded-full border border-[#D4AF37]/30">
                           Starter Plan
@@ -1510,19 +1544,19 @@ export default function App() {
                       </div>
                       
                       <div>
-                        <h4 className="font-extrabold text-lg text-white">Monthly Access</h4>
+                        <h4 className="font-extrabold text-lg text-white">1 Month VIP</h4>
                         <p className="text-xs text-rose-100/80 mt-1">Flexible month-to-month access</p>
                       </div>
 
                       <div className="pt-2 border-t border-white/10">
                         <div className="flex items-baseline gap-1.5">
-                          <span className="text-3xl lg:text-4xl font-black text-white tracking-tight">₹299</span>
+                          <span className="text-3xl lg:text-4xl font-black text-white tracking-tight">₹99</span>
                           <span className="text-xs font-semibold text-rose-200">/ month</span>
                         </div>
-                        <p className="text-[11px] text-[#D4AF37] font-semibold mt-1">Billed monthly • Cancel anytime</p>
+                        <p className="text-[11px] text-[#D4AF37] font-semibold mt-1">30 days validity • Cancel anytime</p>
                       </div>
 
-                      {/* Benefits list with checkmark icons */}
+                      {/* Benefits list */}
                       <ul className="space-y-2.5 pt-3 border-t border-white/10 text-xs text-white/95">
                         <li className="flex items-center gap-2">
                           <span className="w-5 h-5 rounded-full bg-[#D4AF37]/25 text-[#D4AF37] flex items-center justify-center text-xs font-black shrink-0 border border-[#D4AF37]/50">✓</span>
@@ -1540,29 +1574,82 @@ export default function App() {
                     </div>
 
                     <button
-                      onClick={() => handleOpenPayment('monthly', 'Monthly Pass', '₹299', 299, '30 Days', 30, 1)}
-                      className="mt-8 w-full py-3 rounded-2xl bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-[#400B19] font-black text-xs uppercase tracking-wider hover:brightness-110 shadow-lg transition active:scale-[0.98] border border-amber-200"
+                      onClick={() => handleOpenPayment('one-month', '1 Month Pass', '₹99', 99, '30 Days', 30, 1)}
+                      className="mt-6 w-full py-3 rounded-2xl bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-[#400B19] font-black text-xs uppercase tracking-wider hover:brightness-110 shadow-lg transition active:scale-[0.98] border border-amber-200"
                     >
-                      Get VIP Pass (Monthly)
+                      Get VIP Pass (1 Month)
                     </button>
                   </div>
 
-                  {/* Card 2: 6-Month Pass (Highlighted with glowing golden border & MOST POPULAR badge) */}
+                  {/* Card 2: 3 Months VIP – ₹199 */}
+                  <div
+                    style={{
+                      background: 'linear-gradient(145deg, #450B18 0%, #850E1D 50%, #B51224 100%)',
+                    }}
+                    className="rounded-3xl p-6 lg:p-7 border border-[#D4AF37]/50 shadow-xl hover:shadow-2xl hover:border-[#D4AF37] transition-all duration-300 flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1"
+                  >
+                    <div className="space-y-4 relative z-10">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-black uppercase tracking-wider text-[#D4AF37] bg-black/40 px-3 py-1 rounded-full border border-[#D4AF37]/30">
+                          Value Pass
+                        </span>
+                        <span className="text-2xl">🔥</span>
+                      </div>
+
+                      <div>
+                        <h4 className="font-extrabold text-lg text-white">3 Months VIP</h4>
+                        <p className="text-xs text-rose-100/80 mt-1">90 days access (~₹66/mo)</p>
+                      </div>
+
+                      <div className="pt-2 border-t border-white/10">
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="text-3xl lg:text-4xl font-black text-white tracking-tight">₹199</span>
+                          <span className="text-xs font-semibold text-rose-200">/ 3 mo</span>
+                        </div>
+                        <p className="text-[11px] text-[#D4AF37] font-semibold mt-1">Save 33% vs monthly plan</p>
+                      </div>
+
+                      {/* Benefits list */}
+                      <ul className="space-y-2.5 pt-3 border-t border-white/10 text-xs text-white/95">
+                        <li className="flex items-center gap-2">
+                          <span className="w-5 h-5 rounded-full bg-[#D4AF37]/25 text-[#D4AF37] flex items-center justify-center text-xs font-black shrink-0 border border-[#D4AF37]/50">✓</span>
+                          <span>Everything in 1 Month plan</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <span className="w-5 h-5 rounded-full bg-[#D4AF37]/25 text-[#D4AF37] flex items-center justify-center text-xs font-black shrink-0 border border-[#D4AF37]/50">✓</span>
+                          <span><strong>2x</strong> Weekly Lucky Dip entries</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <span className="w-5 h-5 rounded-full bg-[#D4AF37]/25 text-[#D4AF37] flex items-center justify-center text-xs font-black shrink-0 border border-[#D4AF37]/50">✓</span>
+                          <span>Early access to flash sales</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <button
+                      onClick={() => handleOpenPayment('three-month', '3 Months Pass', '₹199', 199, '90 Days', 90, 2)}
+                      className="mt-6 w-full py-3 rounded-2xl bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-[#400B19] font-black text-xs uppercase tracking-wider hover:brightness-110 shadow-lg transition active:scale-[0.98] border border-amber-200"
+                    >
+                      Get VIP Pass (3 Months)
+                    </button>
+                  </div>
+
+                  {/* Card 3: 6 Months VIP – ₹299 (MOST POPULAR) */}
                   <div
                     style={{
                       background: 'linear-gradient(145deg, #500917 0%, #9E1020 40%, #B51224 80%, #D4AF37 120%)',
                     }}
-                    className="rounded-3xl p-7 lg:p-8 border-2 border-[#D4AF37] shadow-[0_10px_35px_rgba(212,175,55,0.4)] hover:shadow-[0_15px_45px_rgba(212,175,55,0.55)] transition-all duration-300 flex flex-col justify-between relative overflow-visible transform md:-translate-y-3 z-10 group"
+                    className="rounded-3xl p-6 lg:p-7 border-2 border-[#D4AF37] shadow-[0_10px_35px_rgba(212,175,55,0.4)] hover:shadow-[0_15px_45px_rgba(212,175,55,0.55)] transition-all duration-300 flex flex-col justify-between relative overflow-visible transform md:-translate-y-2 z-10 group"
                   >
                     {/* Glowing Most Popular badge */}
                     <span className="absolute -top-3.5 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-[#D4AF37] via-amber-200 to-[#D4AF37] text-[#400B19] text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-wider shadow-md border border-white/50 shrink-0 whitespace-nowrap">
-                      ★ MOST POPULAR • 33% OFF ★
+                      ★ MOST POPULAR • BEST SELLER ★
                     </span>
 
                     {/* Golden shimmer glow */}
                     <div className="absolute top-0 right-0 w-44 h-44 bg-[#D4AF37]/25 rounded-full blur-3xl pointer-events-none group-hover:bg-[#D4AF37]/35 transition-all"></div>
 
-                    <div className="space-y-5 pt-2 relative z-10">
+                    <div className="space-y-4 pt-2 relative z-10">
                       <div className="flex items-center justify-between">
                         <span className="text-[11px] font-black uppercase tracking-wider text-[#400B19] bg-gradient-to-r from-[#D4AF37] to-[#F5DEB3] px-3 py-1 rounded-full font-bold shadow-sm">
                           Best Seller
@@ -1572,28 +1659,28 @@ export default function App() {
 
                       <div>
                         <h4 className="font-extrabold text-xl text-white flex items-center gap-1.5">
-                          <span>6-Month Pass</span>
+                          <span>6 Months VIP</span>
                         </h4>
-                        <p className="text-xs text-rose-100/90 mt-1">Billed every 6 months (~₹199/mo)</p>
+                        <p className="text-xs text-rose-100/90 mt-1">180 days (~₹50/mo)</p>
                       </div>
 
                       <div className="pt-2 border-t border-white/15">
                         <div className="flex items-baseline gap-1.5">
-                          <span className="text-3xl lg:text-4xl font-black text-amber-200 tracking-tight drop-shadow-sm">₹1,199</span>
+                          <span className="text-3xl lg:text-4xl font-black text-amber-200 tracking-tight drop-shadow-sm">₹299</span>
                           <span className="text-xs font-semibold text-rose-200">/ 6 mo</span>
                         </div>
-                        <p className="text-[11px] text-[#D4AF37] font-bold mt-1">Save ₹595 vs monthly plan</p>
+                        <p className="text-[11px] text-[#D4AF37] font-bold mt-1">Save 50% vs monthly plan</p>
                       </div>
 
                       {/* Benefits list */}
                       <ul className="space-y-2.5 pt-3 border-t border-white/15 text-xs text-white">
                         <li className="flex items-center gap-2">
                           <span className="w-5 h-5 rounded-full bg-[#D4AF37] text-[#400B19] flex items-center justify-center text-xs font-black shrink-0 shadow-sm">✓</span>
-                          <span>Everything in Monthly plan</span>
+                          <span>Everything in 3 Months plan</span>
                         </li>
                         <li className="flex items-center gap-2">
                           <span className="w-5 h-5 rounded-full bg-[#D4AF37] text-[#400B19] flex items-center justify-center text-xs font-black shrink-0 shadow-sm">✓</span>
-                          <span><strong>2x Lucky Dip entries</strong> / draw</span>
+                          <span><strong>3x Lucky Dip entries</strong> / draw</span>
                         </li>
                         <li className="flex items-center gap-2">
                           <span className="w-5 h-5 rounded-full bg-[#D4AF37] text-[#400B19] flex items-center justify-center text-xs font-black shrink-0 shadow-sm">✓</span>
@@ -1601,29 +1688,29 @@ export default function App() {
                         </li>
                         <li className="flex items-center gap-2">
                           <span className="w-5 h-5 rounded-full bg-[#D4AF37] text-[#400B19] flex items-center justify-center text-xs font-black shrink-0 shadow-sm">✓</span>
-                          <span>Early access to flash sales</span>
+                          <span>Priority Telegram concierge</span>
                         </li>
                       </ul>
                     </div>
 
                     <button
-                      onClick={() => handleOpenPayment('six-month', '6-Month Pass (Most Popular)', '₹1,199', 1199, '6 Calendar Months', 180, 2)}
-                      className="mt-8 w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#D4AF37] via-amber-300 to-[#D4AF37] text-[#350C12] font-black text-xs uppercase tracking-wider hover:brightness-110 shadow-[0_4px_20px_rgba(212,175,55,0.4)] transition active:scale-[0.98] border border-white"
+                      onClick={() => handleOpenPayment('six-month', '6 Months Pass (Best Seller)', '₹299', 299, '6 Calendar Months', 180, 3)}
+                      className="mt-6 w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#D4AF37] via-amber-300 to-[#D4AF37] text-[#350C12] font-black text-xs uppercase tracking-wider hover:brightness-110 shadow-[0_4px_20px_rgba(212,175,55,0.4)] transition active:scale-[0.98] border border-white"
                     >
                       Get VIP Pass (6-Month)
                     </button>
                   </div>
 
-                  {/* Card 3: Annual Pass */}
+                  {/* Card 4: 1 Year VIP – ₹399 (MAX VALUE) */}
                   <div
                     style={{
                       background: 'linear-gradient(145deg, #400B19 0%, #6B0E1B 45%, #B51224 85%, #8A6D1C 100%)',
                     }}
-                    className="rounded-3xl p-7 lg:p-8 border border-[#D4AF37]/50 shadow-xl hover:shadow-2xl hover:border-[#D4AF37] transition-all duration-300 flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1"
+                    className="rounded-3xl p-6 lg:p-7 border border-[#D4AF37]/50 shadow-xl hover:shadow-2xl hover:border-[#D4AF37] transition-all duration-300 flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1"
                   >
                     <div className="absolute -top-12 -right-12 w-36 h-36 bg-[#D4AF37]/15 rounded-full blur-2xl pointer-events-none group-hover:bg-[#D4AF37]/25 transition-all"></div>
 
-                    <div className="space-y-5 relative z-10">
+                    <div className="space-y-4 relative z-10">
                       <div className="flex items-center justify-between">
                         <span className="text-[11px] font-black uppercase tracking-wider text-[#D4AF37] bg-black/40 px-3 py-1 rounded-full border border-[#D4AF37]/30">
                           Maximum Value
@@ -1632,27 +1719,27 @@ export default function App() {
                       </div>
 
                       <div>
-                        <h4 className="font-extrabold text-lg text-white">Annual Pass</h4>
-                        <p className="text-xs text-rose-100/80 mt-1">Maximum value for avid shoppers (~₹149/mo)</p>
+                        <h4 className="font-extrabold text-lg text-white">1 Year VIP</h4>
+                        <p className="text-xs text-rose-100/80 mt-1">365 days (~₹33/mo • Save 67%)</p>
                       </div>
 
                       <div className="pt-2 border-t border-white/10">
                         <div className="flex items-baseline gap-1.5">
-                          <span className="text-3xl lg:text-4xl font-black text-white tracking-tight">₹1,799</span>
+                          <span className="text-3xl lg:text-4xl font-black text-white tracking-tight">₹399</span>
                           <span className="text-xs font-semibold text-rose-200">/ year</span>
                         </div>
-                        <p className="text-[11px] text-[#D4AF37] font-semibold mt-1">Save 50% vs monthly</p>
+                        <p className="text-[11px] text-[#D4AF37] font-semibold mt-1">Full 365 Days • Best Value</p>
                       </div>
 
                       {/* Benefits list */}
                       <ul className="space-y-2.5 pt-3 border-t border-white/10 text-xs text-white/95">
                         <li className="flex items-center gap-2">
                           <span className="w-5 h-5 rounded-full bg-[#D4AF37]/25 text-[#D4AF37] flex items-center justify-center text-xs font-black shrink-0 border border-[#D4AF37]/50">✓</span>
-                          <span>Everything in 6-Month plan</span>
+                          <span>Everything in 6 Months plan</span>
                         </li>
                         <li className="flex items-center gap-2">
                           <span className="w-5 h-5 rounded-full bg-[#D4AF37]/25 text-[#D4AF37] flex items-center justify-center text-xs font-black shrink-0 border border-[#D4AF37]/50">✓</span>
-                          <span><strong>3x Lucky Dip entries</strong> / draw</span>
+                          <span><strong>5x Lucky Dip entries</strong> / draw</span>
                         </li>
                         <li className="flex items-center gap-2">
                           <span className="w-5 h-5 rounded-full bg-[#D4AF37]/25 text-[#D4AF37] flex items-center justify-center text-xs font-black shrink-0 border border-[#D4AF37]/50">✓</span>
@@ -1666,10 +1753,10 @@ export default function App() {
                     </div>
 
                     <button
-                      onClick={() => handleOpenPayment('annual', 'Annual Pass', '₹1,799', 1799, '12 Calendar Months', 365, 3)}
-                      className="mt-8 w-full py-3 rounded-2xl bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-[#400B19] font-black text-xs uppercase tracking-wider hover:brightness-110 shadow-lg transition active:scale-[0.98] border border-amber-200"
+                      onClick={() => handleOpenPayment('annual', '1 Year Pass (Max Value)', '₹399', 399, '12 Calendar Months', 365, 5)}
+                      className="mt-6 w-full py-3 rounded-2xl bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-[#400B19] font-black text-xs uppercase tracking-wider hover:brightness-110 shadow-lg transition active:scale-[0.98] border border-amber-200"
                     >
-                      Get VIP Pass (Annual)
+                      Get VIP Pass (1 Year)
                     </button>
                   </div>
 
@@ -2072,7 +2159,7 @@ export default function App() {
                     </div>
                     <h4 className="text-base font-black text-slate-900">Flexible VIP Passes</h4>
                     <p className="text-xs text-slate-600 leading-relaxed">
-                      Transparent membership options with Monthly (₹299), 6-Month (₹1,199), and Annual (₹1,799) passes payable via UPI, Debit, or Credit Card.
+                      Transparent membership options with 1 Month (₹99), 3 Months (₹199), 6 Months (₹299), and 1 Year (₹399) passes payable via UPI, Debit, or Credit Card.
                     </p>
                   </div>
 
@@ -2116,7 +2203,7 @@ export default function App() {
                       Browse Tech Deals
                     </button>
                     <button
-                      onClick={() => handleOpenPayment('six-month', '6-Month Pass (Most Popular)', '₹1,199', 1199, '6 Calendar Months', 180, 2)}
+                      onClick={() => handleOpenPayment('six-month', '6 Months Pass (Best Seller)', '₹299', 299, '6 Calendar Months', 180, 3)}
                       className="px-6 py-3 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-[#400B19] hover:brightness-110 text-xs font-black shadow-lg transition active:scale-95 border border-amber-200"
                     >
                       Unlock VIP Pass Now
@@ -2557,14 +2644,14 @@ export default function App() {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 text-left items-stretch pt-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-6 text-left items-stretch pt-4">
                   
-                  {/* Card 1: Monthly VIP – ₹299 */}
+                  {/* Card 1: 1 Month VIP – ₹99 */}
                   <div
                     style={{ background: 'linear-gradient(145deg, #400B19 0%, #7A0C1A 50%, #DC1F32 100%)' }}
-                    className="rounded-3xl p-7 lg:p-8 border border-[#D4AF37]/40 shadow-xl hover:shadow-2xl hover:border-[#D4AF37] transition-all duration-300 flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 text-white"
+                    className="rounded-3xl p-6 lg:p-7 border border-[#D4AF37]/40 shadow-xl hover:shadow-2xl hover:border-[#D4AF37] transition-all duration-300 flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 text-white"
                   >
-                    <div className="space-y-5 relative z-10">
+                    <div className="space-y-4 relative z-10">
                       <div className="flex items-center justify-between">
                         <span className="text-[11px] font-black uppercase tracking-wider text-[#D4AF37] bg-black/40 px-3 py-1 rounded-full border border-[#D4AF37]/30">
                           Starter Plan
@@ -2572,12 +2659,12 @@ export default function App() {
                         <span className="text-2xl">⭐</span>
                       </div>
                       <div>
-                        <h4 className="font-extrabold text-lg text-white">Monthly VIP</h4>
+                        <h4 className="font-extrabold text-lg text-white">1 Month VIP</h4>
                         <p className="text-xs text-rose-100/80 mt-1">Flexible month-to-month access</p>
                       </div>
                       <div className="pt-2 border-t border-white/10">
                         <div className="flex items-baseline gap-1.5">
-                          <span className="text-3xl lg:text-4xl font-black text-white tracking-tight">₹299</span>
+                          <span className="text-3xl lg:text-4xl font-black text-white tracking-tight">₹99</span>
                           <span className="text-xs font-semibold text-rose-200">/ month</span>
                         </div>
                         <p className="text-[11px] text-[#D4AF37] font-semibold mt-1">30 days validity • Cancel anytime</p>
@@ -2590,87 +2677,123 @@ export default function App() {
                       </ul>
                     </div>
                     <button
-                      onClick={() => handleOpenPayment('monthly', 'Monthly VIP', '₹299', 299, '30 Days', 30, 1)}
-                      className="mt-8 w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-[#400B19] font-black text-xs uppercase tracking-wider hover:brightness-110 shadow-lg transition active:scale-[0.98] border border-amber-200"
+                      onClick={() => handleOpenPayment('one-month', '1 Month VIP', '₹99', 99, '30 Days', 30, 1)}
+                      className="mt-6 w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-[#400B19] font-black text-xs uppercase tracking-wider hover:brightness-110 shadow-lg transition active:scale-[0.98] border border-amber-200"
                     >
-                      Get Monthly Pass
+                      Get 1-Month Pass
                     </button>
                   </div>
 
-                  {/* Card 2: 6-Month VIP – ₹1,199 (MOST POPULAR) */}
+                  {/* Card 2: 3 Months VIP – ₹199 */}
+                  <div
+                    style={{ background: 'linear-gradient(145deg, #450B18 0%, #850E1D 50%, #DC1F32 100%)' }}
+                    className="rounded-3xl p-6 lg:p-7 border border-[#D4AF37]/50 shadow-xl hover:shadow-2xl hover:border-[#D4AF37] transition-all duration-300 flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 text-white"
+                  >
+                    <div className="space-y-4 relative z-10">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-black uppercase tracking-wider text-[#D4AF37] bg-black/40 px-3 py-1 rounded-full border border-[#D4AF37]/30">
+                          Value Pass
+                        </span>
+                        <span className="text-2xl">🔥</span>
+                      </div>
+                      <div>
+                        <h4 className="font-extrabold text-lg text-white">3 Months VIP</h4>
+                        <p className="text-xs text-rose-100/80 mt-1">Quarterly access (~₹66/mo)</p>
+                      </div>
+                      <div className="pt-2 border-t border-white/10">
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="text-3xl lg:text-4xl font-black text-white tracking-tight">₹199</span>
+                          <span className="text-xs font-semibold text-rose-200">/ 3 mo</span>
+                        </div>
+                        <p className="text-[11px] text-[#D4AF37] font-semibold mt-1">90 days validity • Save 33%</p>
+                      </div>
+                      <ul className="space-y-2.5 pt-3 border-t border-white/10 text-xs text-white/95">
+                        <li className="flex items-center gap-2"><span className="w-5 h-5 rounded-full bg-[#D4AF37]/25 text-[#D4AF37] flex items-center justify-center text-xs font-black shrink-0 border border-[#D4AF37]/50">✓</span><span>Everything in 1 Month VIP</span></li>
+                        <li className="flex items-center gap-2"><span className="w-5 h-5 rounded-full bg-[#D4AF37]/25 text-[#D4AF37] flex items-center justify-center text-xs font-black shrink-0 border border-[#D4AF37]/50">✓</span><span><strong>2 Lucky Dip entries</strong> per eligible draw</span></li>
+                        <li className="flex items-center gap-2"><span className="w-5 h-5 rounded-full bg-[#D4AF37]/25 text-[#D4AF37] flex items-center justify-center text-xs font-black shrink-0 border border-[#D4AF37]/50">✓</span><span>Early access to flash deals</span></li>
+                        <li className="flex items-center gap-2"><span className="w-5 h-5 rounded-full bg-[#D4AF37]/25 text-[#D4AF37] flex items-center justify-center text-xs font-black shrink-0 border border-[#D4AF37]/50">✓</span><span>Exclusive partner discount coupons</span></li>
+                      </ul>
+                    </div>
+                    <button
+                      onClick={() => handleOpenPayment('three-month', '3 Months VIP', '₹199', 199, '90 Days', 90, 2)}
+                      className="mt-6 w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-[#400B19] font-black text-xs uppercase tracking-wider hover:brightness-110 shadow-lg transition active:scale-[0.98] border border-amber-200"
+                    >
+                      Get 3-Month Pass
+                    </button>
+                  </div>
+
+                  {/* Card 3: 6 Months VIP – ₹299 (MOST POPULAR) */}
                   <div
                     style={{ background: 'linear-gradient(145deg, #500917 0%, #9E1020 40%, #DC1F32 80%, #D4AF37 120%)' }}
-                    className="rounded-3xl p-7 lg:p-8 border-2 border-[#D4AF37] shadow-[0_10px_35px_rgba(212,175,55,0.4)] hover:shadow-[0_15px_45px_rgba(212,175,55,0.55)] transition-all duration-300 flex flex-col justify-between relative overflow-visible transform md:-translate-y-3 z-10 group text-white"
+                    className="rounded-3xl p-6 lg:p-7 border-2 border-[#D4AF37] shadow-[0_10px_35px_rgba(212,175,55,0.4)] hover:shadow-[0_15px_45px_rgba(212,175,55,0.55)] transition-all duration-300 flex flex-col justify-between relative overflow-visible transform md:-translate-y-2 z-10 group text-white"
                   >
                     <span className="absolute -top-3.5 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-[#D4AF37] via-amber-200 to-[#D4AF37] text-[#400B19] text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-wider shadow-md border border-white/50 shrink-0 whitespace-nowrap">
-                      ★ MOST POPULAR • 33% OFF ★
+                      ★ MOST POPULAR • BEST SELLER ★
                     </span>
-                    <div className="space-y-5 pt-2 relative z-10">
+                    <div className="space-y-4 pt-2 relative z-10">
                       <div className="flex items-center justify-between">
                         <span className="text-[11px] font-black uppercase tracking-wider text-[#400B19] bg-gradient-to-r from-[#D4AF37] to-[#F5DEB3] px-3 py-1 rounded-full font-bold shadow-sm">Best Seller</span>
                         <span className="text-2xl">👑</span>
                       </div>
                       <div>
-                        <h4 className="font-extrabold text-xl text-white">6-Month VIP</h4>
-                        <p className="text-xs text-rose-100/90 mt-1">Billed every 6 months (~₹199/mo)</p>
+                        <h4 className="font-extrabold text-xl text-white">6 Months VIP</h4>
+                        <p className="text-xs text-rose-100/90 mt-1">180 days (~₹50/mo)</p>
                       </div>
                       <div className="pt-2 border-t border-white/15">
                         <div className="flex items-baseline gap-1.5">
-                          <span className="text-3xl lg:text-4xl font-black text-amber-200 tracking-tight drop-shadow-sm">₹1,199</span>
+                          <span className="text-3xl lg:text-4xl font-black text-amber-200 tracking-tight drop-shadow-sm">₹299</span>
                           <span className="text-xs font-semibold text-rose-200">/ 6 mo</span>
                         </div>
-                        <p className="text-[11px] text-[#D4AF37] font-bold mt-1">6 calendar months • Save ₹595</p>
+                        <p className="text-[11px] text-[#D4AF37] font-bold mt-1">6 calendar months • Save 50%</p>
                       </div>
                       <ul className="space-y-2.5 pt-3 border-t border-white/15 text-xs text-white">
-                        <li className="flex items-center gap-2"><span className="w-5 h-5 rounded-full bg-[#D4AF37] text-[#400B19] flex items-center justify-center text-xs font-black shrink-0 shadow-sm">✓</span><span>Everything in Monthly VIP</span></li>
-                        <li className="flex items-center gap-2"><span className="w-5 h-5 rounded-full bg-[#D4AF37] text-[#400B19] flex items-center justify-center text-xs font-black shrink-0 shadow-sm">✓</span><span><strong>2 Lucky Dip entries</strong> per eligible draw</span></li>
+                        <li className="flex items-center gap-2"><span className="w-5 h-5 rounded-full bg-[#D4AF37] text-[#400B19] flex items-center justify-center text-xs font-black shrink-0 shadow-sm">✓</span><span>Everything in 3 Months VIP</span></li>
+                        <li className="flex items-center gap-2"><span className="w-5 h-5 rounded-full bg-[#D4AF37] text-[#400B19] flex items-center justify-center text-xs font-black shrink-0 shadow-sm">✓</span><span><strong>3 Lucky Dip entries</strong> per eligible draw</span></li>
                         <li className="flex items-center gap-2"><span className="w-5 h-5 rounded-full bg-[#D4AF37] text-[#400B19] flex items-center justify-center text-xs font-black shrink-0 shadow-sm">✓</span><span>Early access to special offers</span></li>
                         <li className="flex items-center gap-2"><span className="w-5 h-5 rounded-full bg-[#D4AF37] text-[#400B19] flex items-center justify-center text-xs font-black shrink-0 shadow-sm">✓</span><span>Exclusive VIP vouchers &amp; alerts</span></li>
-                        <li className="flex items-center gap-2"><span className="w-5 h-5 rounded-full bg-[#D4AF37] text-[#400B19] flex items-center justify-center text-xs font-black shrink-0 shadow-sm">✓</span><span>Priority notifications</span></li>
                       </ul>
                     </div>
                     <button
-                      onClick={() => handleOpenPayment('six-month', '6-Month VIP (Most Popular)', '₹1,199', 1199, '6 Calendar Months', 180, 2)}
-                      className="mt-8 w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#D4AF37] via-amber-300 to-[#D4AF37] text-[#350C12] font-black text-xs uppercase tracking-wider hover:brightness-110 shadow-[0_4px_20px_rgba(212,175,55,0.4)] transition active:scale-[0.98] border border-white"
+                      onClick={() => handleOpenPayment('six-month', '6 Months VIP (Best Seller)', '₹299', 299, '6 Calendar Months', 180, 3)}
+                      className="mt-6 w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#D4AF37] via-amber-300 to-[#D4AF37] text-[#350C12] font-black text-xs uppercase tracking-wider hover:brightness-110 shadow-[0_4px_20px_rgba(212,175,55,0.4)] transition active:scale-[0.98] border border-white"
                     >
                       Get 6-Month Pass
                     </button>
                   </div>
 
-                  {/* Card 3: Annual VIP – ₹1,799 */}
+                  {/* Card 4: 1 Year VIP – ₹399 */}
                   <div
                     style={{ background: 'linear-gradient(145deg, #400B19 0%, #6B0E1B 45%, #DC1F32 85%, #8A6D1C 100%)' }}
-                    className="rounded-3xl p-7 lg:p-8 border border-[#D4AF37]/50 shadow-xl hover:shadow-2xl hover:border-[#D4AF37] transition-all duration-300 flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 text-white"
+                    className="rounded-3xl p-6 lg:p-7 border border-[#D4AF37]/50 shadow-xl hover:shadow-2xl hover:border-[#D4AF37] transition-all duration-300 flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 text-white"
                   >
-                    <div className="space-y-5 relative z-10">
+                    <div className="space-y-4 relative z-10">
                       <div className="flex items-center justify-between">
                         <span className="text-[11px] font-black uppercase tracking-wider text-[#D4AF37] bg-black/40 px-3 py-1 rounded-full border border-[#D4AF37]/30">Maximum Value</span>
                         <span className="text-2xl">💎</span>
                       </div>
                       <div>
-                        <h4 className="font-extrabold text-lg text-white">Annual VIP</h4>
-                        <p className="text-xs text-rose-100/80 mt-1">Maximum value for avid shoppers (~₹149/mo)</p>
+                        <h4 className="font-extrabold text-lg text-white">1 Year VIP</h4>
+                        <p className="text-xs text-rose-100/80 mt-1">365 days (~₹33/mo • Save 67%)</p>
                       </div>
                       <div className="pt-2 border-t border-white/10">
                         <div className="flex items-baseline gap-1.5">
-                          <span className="text-3xl lg:text-4xl font-black text-white tracking-tight">₹1,799</span>
+                          <span className="text-3xl lg:text-4xl font-black text-white tracking-tight">₹399</span>
                           <span className="text-xs font-semibold text-rose-200">/ year</span>
                         </div>
-                        <p className="text-[11px] text-[#D4AF37] font-semibold mt-1">12 calendar months • Save 50% vs monthly</p>
+                        <p className="text-[11px] text-[#D4AF37] font-semibold mt-1">12 calendar months • Best Value</p>
                       </div>
                       <ul className="space-y-2.5 pt-3 border-t border-white/10 text-xs text-white/95">
-                        <li className="flex items-center gap-2"><span className="w-5 h-5 rounded-full bg-[#D4AF37]/25 text-[#D4AF37] flex items-center justify-center text-xs font-black shrink-0 border border-[#D4AF37]/50">✓</span><span>Everything in 6-Month VIP</span></li>
-                        <li className="flex items-center gap-2"><span className="w-5 h-5 rounded-full bg-[#D4AF37]/25 text-[#D4AF37] flex items-center justify-center text-xs font-black shrink-0 border border-[#D4AF37]/50">✓</span><span><strong>3 Lucky Dip entries</strong> per eligible draw</span></li>
-                        <li className="flex items-center gap-2"><span className="w-5 h-5 rounded-full bg-[#D4AF37]/25 text-[#D4AF37] flex items-center justify-center text-xs font-black shrink-0 border border-[#D4AF37]/50">✓</span><span>Exclusive annual member offers</span></li>
+                        <li className="flex items-center gap-2"><span className="w-5 h-5 rounded-full bg-[#D4AF37]/25 text-[#D4AF37] flex items-center justify-center text-xs font-black shrink-0 border border-[#D4AF37]/50">✓</span><span>Everything in 6 Months VIP</span></li>
+                        <li className="flex items-center gap-2"><span className="w-5 h-5 rounded-full bg-[#D4AF37]/25 text-[#D4AF37] flex items-center justify-center text-xs font-black shrink-0 border border-[#D4AF37]/50">✓</span><span><strong>5 Lucky Dip entries</strong> per eligible draw</span></li>
+                        <li className="flex items-center gap-2"><span className="w-5 h-5 rounded-full bg-[#D4AF37]/25 text-[#D4AF37] flex items-center justify-center text-xs font-black shrink-0 border border-[#D4AF37]/50">✓</span><span>Dedicated WhatsApp concierge</span></li>
                         <li className="flex items-center gap-2"><span className="w-5 h-5 rounded-full bg-[#D4AF37]/25 text-[#D4AF37] flex items-center justify-center text-xs font-black shrink-0 border border-[#D4AF37]/50">✓</span><span>Priority customer support</span></li>
-                        <li className="flex items-center gap-2"><span className="w-5 h-5 rounded-full bg-[#D4AF37]/25 text-[#D4AF37] flex items-center justify-center text-xs font-black shrink-0 border border-[#D4AF37]/50">✓</span><span>Premium discount notifications</span></li>
                       </ul>
                     </div>
                     <button
-                      onClick={() => handleOpenPayment('annual', 'Annual VIP', '₹1,799', 1799, '12 Calendar Months', 365, 3)}
-                      className="mt-8 w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-[#400B19] font-black text-xs uppercase tracking-wider hover:brightness-110 shadow-lg transition active:scale-[0.98] border border-amber-200"
+                      onClick={() => handleOpenPayment('annual', '1 Year VIP (Maximum Value)', '₹399', 399, '12 Calendar Months', 365, 5)}
+                      className="mt-6 w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-[#400B19] font-black text-xs uppercase tracking-wider hover:brightness-110 shadow-lg transition active:scale-[0.98] border border-amber-200"
                     >
-                      Get Annual Pass
+                      Get 1-Year Pass
                     </button>
                   </div>
 
@@ -2773,14 +2896,14 @@ export default function App() {
                   <div className="flex items-center gap-3 w-full md:w-auto">
                     {userRole === 'vip' ? (
                       <button
-                        onClick={() => handleOpenPayment('annual', 'Annual Pass (Upgrade / Extend)', '₹1,799', 1799, '12 Calendar Months', 365, 3)}
+                        onClick={() => handleOpenPayment('annual', '1 Year Pass (Upgrade / Extend)', '₹399', 399, '12 Calendar Months', 365, 5)}
                         className="w-full md:w-auto px-6 py-3 rounded-2xl bg-[#1645C4] hover:bg-[#12389E] text-white text-xs font-black shadow-md transition"
                       >
                         Upgrade / Extend Pass
                       </button>
                     ) : (
                       <button
-                        onClick={() => handleOpenPayment('six-month', '6-Month Pass (Most Popular)', '₹1,199', 1199, '6 Calendar Months', 180, 2)}
+                        onClick={() => handleOpenPayment('six-month', '6 Months Pass (Best Seller)', '₹299', 299, '6 Calendar Months', 180, 3)}
                         className="w-full md:w-auto px-6 py-3 rounded-2xl bg-[#E50914] hover:bg-[#C51424] text-white text-xs font-black shadow-md transition"
                       >
                         {userRole === 'expired' ? 'Renew VIP Pass' : 'Get VIP Pass Now'}

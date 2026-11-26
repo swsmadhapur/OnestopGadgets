@@ -84,14 +84,14 @@ foreach ($categories as $c) {
 }
 echo "✓ Seeded Categories\n";
 
-// 4. Seed VIP Subscription Plans
+// 4. Seed VIP Subscription Plans (4 Tiers: ₹99, ₹199, ₹299, ₹399)
 $plans = [
     [
         'id' => 1,
-        'plan_code' => 'monthly',
-        'name' => 'Monthly Pass',
-        'price' => 299.00,
-        'original_price' => 499.00,
+        'plan_code' => 'one-month',
+        'name' => '1 Month Pass',
+        'price' => 99.00,
+        'original_price' => 199.00,
         'duration_days' => 30,
         'lucky_dip_entries_per_draw' => 1,
         'badge' => null,
@@ -104,35 +104,51 @@ $plans = [
     ],
     [
         'id' => 2,
-        'plan_code' => 'six-month',
-        'name' => '6-Month Pass',
-        'price' => 1199.00,
-        'original_price' => 1799.00,
-        'duration_days' => 180,
+        'plan_code' => 'three-month',
+        'name' => '3 Months Pass',
+        'price' => 199.00,
+        'original_price' => 299.00,
+        'duration_days' => 90,
         'lucky_dip_entries_per_draw' => 2,
-        'badge' => 'MOST POPULAR · 33% OFF',
+        'badge' => 'VALUE PASS',
         'features_json' => json_encode([
-            'Everything in Monthly VIP',
+            'Everything in 1 Month VIP',
             '2 Lucky Dip entries per eligible draw',
+            'Early access to flash sales',
+            'Secret partner vouchers'
+        ])
+    ],
+    [
+        'id' => 3,
+        'plan_code' => 'six-month',
+        'name' => '6 Months Pass',
+        'price' => 299.00,
+        'original_price' => 599.00,
+        'duration_days' => 180,
+        'lucky_dip_entries_per_draw' => 3,
+        'badge' => 'MOST POPULAR • BEST SELLER',
+        'features_json' => json_encode([
+            'Everything in 3 Months VIP',
+            '3 Lucky Dip entries per eligible draw',
             'Early access to special offers',
             'Exclusive VIP vouchers',
             'Priority notifications'
         ])
     ],
     [
-        'id' => 3,
+        'id' => 4,
         'plan_code' => 'annual',
-        'name' => 'Annual VIP Pass',
-        'price' => 1799.00,
-        'original_price' => 2999.00,
+        'name' => '1 Year VIP Pass',
+        'price' => 399.00,
+        'original_price' => 1199.00,
         'duration_days' => 365,
-        'lucky_dip_entries_per_draw' => 3,
-        'badge' => 'BEST VALUE · 40% OFF',
+        'lucky_dip_entries_per_draw' => 5,
+        'badge' => 'MAXIMUM VALUE • SAVE 67%',
         'features_json' => json_encode([
-            'Everything in 6-Month VIP',
-            '3 Lucky Dip entries per eligible draw',
+            'Everything in 6 Months VIP',
+            '5 Lucky Dip entries per eligible draw',
             'VIP Gold Member badge',
-            'Dedicated customer assistance'
+            'Dedicated WhatsApp assistance'
         ])
     ]
 ];

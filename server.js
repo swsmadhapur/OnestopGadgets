@@ -29,37 +29,47 @@ const CATEGORIES = [
   { id: 'gadget-accessories', name: 'Gadget Accessories', icon: '🔌', count: '120 Deals', badge: 'Best Value' }
 ];
 
-// Master Subscription Plans
+// Master Subscription Plans (4 Transparent Tiers)
 const PLANS = [
   {
-    id: 'monthly',
-    name: 'Monthly Pass',
-    price: 299,
-    original: 499,
+    id: 'one-month',
+    name: '1 Month Pass',
+    price: 99,
+    original: 199,
     period: '/ month',
     billing: 'Billed monthly, cancel anytime',
     features: ['Full VIP Secret Deals access', '1x Provably Fair Lucky Dip ticket / draw', 'Instant Telegram deal notifications', 'Verified partner discount coupons'],
     popular: false
   },
   {
+    id: 'three-month',
+    name: '3 Months Pass',
+    price: 199,
+    original: 299,
+    period: '/ 3 months',
+    billing: 'Equivalent to ~₹66/mo',
+    features: ['Everything in 1 Month Pass', '2x Lucky Dip entries per weekly draw', 'Early access to flash sales', 'Secret partner vouchers'],
+    popular: false
+  },
+  {
     id: 'six-month',
-    name: '6-Month Pass',
-    price: 1199,
-    original: 1799,
+    name: '6 Months Pass',
+    price: 299,
+    original: 599,
     period: '/ 6 months',
-    badge: 'MOST POPULAR · 33% OFF',
-    billing: 'Equivalent to ₹199/mo',
-    features: ['Everything in Monthly Pass', '2x Lucky Dip entries per weekly draw', 'VIP-only secret voucher links', 'Early 30-min access to flash sales', 'Dedicated Telegram concierge'],
+    badge: 'MOST POPULAR • BEST SELLER',
+    billing: 'Equivalent to ~₹50/mo',
+    features: ['Everything in 3 Months Pass', '3x Lucky Dip entries per weekly draw', 'VIP-only secret voucher links', 'Early 30-min access to flash sales', 'Dedicated Telegram concierge'],
     popular: true
   },
   {
     id: 'annual',
-    name: 'Annual Pass',
-    price: 1799,
-    original: 3599,
+    name: '1 Year Pass',
+    price: 399,
+    original: 1199,
     period: '/ year',
-    billing: 'Equivalent to ₹149/mo · Best Value',
-    features: ['Everything in 6-Month Pass', '3x Lucky Dip entries per weekly draw', 'Dedicated WhatsApp concierge', 'Price drop guarantee alerts', '1 Free Tech Mystery Box entry'],
+    billing: 'Equivalent to ~₹33/mo · Best Value',
+    features: ['Everything in 6 Months Pass', '5x Lucky Dip entries per weekly draw', 'Dedicated WhatsApp concierge', 'Price drop guarantee alerts', '1 Free Tech Mystery Box entry'],
     popular: false
   }
 ];
@@ -376,7 +386,7 @@ const server = http.createServer(async (req, res) => {
         res.end(JSON.stringify({
           error: 'VIP_PASS_REQUIRED',
           message: 'Participation in the Provably Fair Lucky Dip requires an active VIP Subscription Pass.',
-          cta: 'Please select a VIP plan (Monthly ₹299, 6-Month ₹1,199, or Annual ₹1,799) to submit your Lucky Dip entry.'
+          cta: 'Please select a VIP plan (1 Month ₹99, 3 Months ₹199, 6 Months ₹299, or 1 Year ₹399) to submit your Lucky Dip entry.'
         }));
         return;
       }
@@ -439,9 +449,12 @@ const server = http.createServer(async (req, res) => {
       }
 
       const planMap = {
-        'monthly': { id: 'monthly', name: 'Monthly Pass', price: 299, days: 30, entries: 1 },
-        'six-month': { id: 'six-month', name: '6-Month Pass', price: 1199, days: 180, entries: 2 },
-        'annual': { id: 'annual', name: 'Annual Pass', price: 1799, days: 365, entries: 3 }
+        'one-month': { id: 'one-month', name: '1 Month Pass', price: 99, days: 30, entries: 1 },
+        'three-month': { id: 'three-month', name: '3 Months Pass', price: 199, days: 90, entries: 2 },
+        'six-month': { id: 'six-month', name: '6 Months Pass', price: 299, days: 180, entries: 3 },
+        'annual': { id: 'annual', name: '1 Year Pass', price: 399, days: 365, entries: 5 },
+        // Backwards compatibility aliases
+        'monthly': { id: 'one-month', name: '1 Month Pass', price: 99, days: 30, entries: 1 }
       };
 
       const selected = planMap[planId] || planMap['six-month'];
@@ -476,9 +489,12 @@ const server = http.createServer(async (req, res) => {
       }
 
       const planMap = {
-        'monthly': { id: 'monthly', name: 'Monthly Pass', price: 299, days: 30, entries: 1 },
-        'six-month': { id: 'six-month', name: '6-Month Pass', price: 1199, days: 180, entries: 2 },
-        'annual': { id: 'annual', name: 'Annual Pass', price: 1799, days: 365, entries: 3 }
+        'one-month': { id: 'one-month', name: '1 Month Pass', price: 99, days: 30, entries: 1 },
+        'three-month': { id: 'three-month', name: '3 Months Pass', price: 199, days: 90, entries: 2 },
+        'six-month': { id: 'six-month', name: '6 Months Pass', price: 299, days: 180, entries: 3 },
+        'annual': { id: 'annual', name: '1 Year Pass', price: 399, days: 365, entries: 5 },
+        // Backwards compatibility aliases
+        'monthly': { id: 'one-month', name: '1 Month Pass', price: 99, days: 30, entries: 1 }
       };
 
       const plan = planMap[planId] || planMap['six-month'];
