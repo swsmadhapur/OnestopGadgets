@@ -461,69 +461,87 @@
     // --- 1. SUBMISSIONS & APPROVAL WORKFLOW ---
     async function loadSubmissions() {
       const container = document.getElementById('submissions-table-container');
+      if (!container) return;
       try {
         const res = await fetch('/api/v1/admin/submissions');
         const data = await res.json();
         const pending = (data.data || []).filter(s => s.status === 'pending');
-        document.getElementById('badge-pending-count').innerText = pending.length;
-        document.getElementById('stat-pending-count').innerText = pending.length;
+        
+        const badge = document.getElementById('badge-pending-count');
+        const stat = document.getElementById('stat-pending-count');
+        if (badge) badge.innerText = pending.length;
+        if (stat) stat.innerText = pending.length;
 
         if (pending.length > 0) {
           container.innerHTML = `
-            <table class="w-full text-left text-sm text-slate-300">
-              <thead class="text-xs uppercase text-slate-500 border-b border-slate-800">
-                <tr>
-                  <th class="py-3 px-4">Image Preview</th>
-                  <th class="py-3 px-4">Product Details</th>
-                  <th class="py-3 px-4">Category</th>
-                  <th class="py-3 px-4">Price</th>
-                  <th class="py-3 px-4">Affiliate Destination Link</th>
-                  <th class="py-3 px-4">Submission Date</th>
-                  <th class="py-3 px-4">Status</th>
-                  <th class="py-3 px-4 text-right">Approval Actions</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-800">
-                ${pending.map(item => `
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-sm text-slate-300 min-w-[700px]">
+                <thead class="text-xs uppercase text-slate-400 border-b border-slate-800 bg-[#070b13]">
                   <tr>
-                    <td class="py-3 px-4">
-                      <img src="${item.image_path}" class="w-14 h-14 rounded-xl object-cover bg-slate-900 border border-slate-800" onerror="this.src='/logo.jpg'">
-                    </td>
-                    <td class="py-3 px-4 font-bold text-white max-w-xs">
-                      ${item.title || 'Product Deal'}
-                    </td>
-                    <td class="py-3 px-4 text-xs text-slate-400">
-                      <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">${item.category || 'Gadget'}</span>
-                    </td>
-                    <td class="py-3 px-4 font-mono font-bold text-emerald-400">
-                      ${item.price || ('₹' + (item.numeric_price || ''))}
-                    </td>
-                    <td class="py-3 px-4 max-w-xs">
-                      <a href="${item.affiliate_url}" target="_blank" class="text-blue-400 hover:underline font-mono text-xs truncate block">${item.affiliate_url}</a>
-                    </td>
-                    <td class="py-3 px-4 text-xs text-slate-400">${new Date(item.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
-                    <td class="py-3 px-4">
-                      <span class="px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold">Pending Review</span>
-                    </td>
-                    <td class="py-3 px-4 text-right space-x-2 whitespace-nowrap">
-                      <button onclick="approveSubmission(${item.id})" class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-xl text-xs font-bold shadow-md shadow-emerald-600/20 transition">
-                        ✓ Approve & Publish
-                      </button>
-                      <button onclick="rejectSubmission(${item.id})" class="px-3 py-2 bg-red-600/10 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/20 rounded-xl text-xs font-bold transition">
-                        Reject
-                      </button>
-                    </td>
+                    <th class="py-3.5 px-4">Image</th>
+                    <th class="py-3.5 px-4">Product Name</th>
+                    <th class="py-3.5 px-4">Category</th>
+                    <th class="py-3.5 px-4">Price</th>
+                    <th class="py-3.5 px-4">Affiliate Destination</th>
+                    <th class="py-3.5 px-4">Date</th>
+                    <th class="py-3.5 px-4 text-center">Approval Actions</th>
                   </tr>
-                `).join('')}
-              </tbody>
-            </table>
+                </thead>
+                <tbody class="divide-y divide-slate-800">
+                  ${pending.map(item => {
+                    const priceDisplay = item.price || ('₹' + (item.numeric_price || ''));
+                    const titleDisplay = item.title || 'Product Deal';
+                    const catDisplay = item.category || 'General';
+                    const dateDisplay = item.created_at ? new Date(item.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Recently';
+                    const imgSrc = item.image_path || '/logo.jpg';
+                    return `
+                      <tr class="hover:bg-slate-800/30 transition">
+                        <td class="py-3.5 px-4">
+                          <img src="${imgSrc}" class="w-16 h-16 rounded-xl object-cover bg-slate-900 border border-slate-700 shrink-0" onerror="this.src='/logo.jpg'">
+                        </td>
+                        <td class="py-3.5 px-4 max-w-[220px]">
+                          <div class="font-bold text-white text-sm line-clamp-2">${titleDisplay}</div>
+                          <div class="text-[11px] text-amber-400 font-semibold mt-0.5">● Pending SuperAdmin Review</div>
+                        </td>
+                        <td class="py-3.5 px-4">
+                          <span class="inline-block px-2.5 py-1 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-300 text-xs font-semibold whitespace-nowrap">
+                            ${catDisplay}
+                          </span>
+                        </td>
+                        <td class="py-3.5 px-4 font-mono font-extrabold text-emerald-400 text-base whitespace-nowrap">
+                          ${priceDisplay}
+                        </td>
+                        <td class="py-3.5 px-4 max-w-[200px]">
+                          <a href="${item.affiliate_url}" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 underline font-mono text-xs truncate block" title="${item.affiliate_url}">
+                            ${item.affiliate_url} ↗
+                          </a>
+                        </td>
+                        <td class="py-3.5 px-4 text-xs text-slate-400 whitespace-nowrap">
+                          ${dateDisplay}
+                        </td>
+                        <td class="py-3.5 px-4 text-center whitespace-nowrap">
+                          <div class="flex items-center justify-center gap-2">
+                            <button onclick="approveSubmission(${item.id})" class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-xl text-xs font-bold shadow-lg shadow-emerald-600/30 transition cursor-pointer">
+                              ✓ Approve
+                            </button>
+                            <button onclick="rejectSubmission(${item.id})" class="px-3.5 py-2 bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/30 rounded-xl text-xs font-bold transition cursor-pointer">
+                              Reject
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    `;
+                  }).join('')}
+                </tbody>
+              </table>
+            </div>
           `;
         } else {
           container.innerHTML = `
             <div class="text-center py-16">
-              <div class="text-4xl mb-3">✅</div>
-              <div class="text-base font-bold text-white">No Pending Submissions</div>
-              <div class="text-xs text-slate-500 mt-1">All catalog submissions from admins have been reviewed and approved!</div>
+              <div class="text-5xl mb-3">✅</div>
+              <div class="text-lg font-bold text-white">No Pending Submissions</div>
+              <div class="text-xs text-slate-400 mt-1">All catalog submissions from admins have been reviewed and approved!</div>
             </div>
           `;
         }
@@ -531,6 +549,7 @@
         container.innerHTML = '<div class="text-center py-12 text-red-400">Failed to load submissions: ' + (err.message || err) + '</div>';
       }
     }
+
 
 
     async function approveSubmission(id) {
