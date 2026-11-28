@@ -230,22 +230,28 @@
               </div>
             </div>
 
-            <div class="flex gap-4">
-              <select id="category-filter-select" onchange="filterProducts()" class="px-4 py-2.5 bg-[#070b13] border border-slate-800 rounded-xl text-xs font-semibold text-slate-300 focus:outline-none focus:border-red-500">
-                <option value="all">All Categories</option>
-                <option value="Smartphones">Smartphones</option>
-                <option value="Laptops & Computers">Laptops & Computers</option>
-                <option value="Smartwatches">Smartwatches</option>
-                <option value="Headphones & Earbuds">Headphones & Earbuds</option>
-                <option value="Gaming & Consoles">Gaming & Consoles</option>
-                <option value="Tablets">Tablets</option>
-                <option value="Cameras & Accessories">Cameras & Accessories</option>
-                <option value="Smart TVs">Smart TVs</option>
-                <option value="Home Appliances">Home Appliances</option>
-                <option value="Gadget Accessories">Gadget Accessories</option>
-              </select>
+            <div class="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
+              <div class="flex gap-2 items-center">
+                <select id="category-filter-select" onchange="filterProducts()" class="px-4 py-2.5 bg-[#070b13] border border-slate-800 rounded-xl text-xs font-semibold text-slate-300 focus:outline-none focus:border-red-500">
+                  <option value="all">All Categories</option>
+                  <option value="Smartphones">Smartphones</option>
+                  <option value="Laptops & Computers">Laptops & Computers</option>
+                  <option value="Smartwatches">Smartwatches</option>
+                  <option value="Headphones & Earbuds">Headphones & Earbuds</option>
+                  <option value="Gaming & Consoles">Gaming & Consoles</option>
+                  <option value="Tablets">Tablets</option>
+                  <option value="Cameras & Accessories">Cameras & Accessories</option>
+                  <option value="Smart TVs">Smart TVs</option>
+                  <option value="Home Appliances">Home Appliances</option>
+                  <option value="Gadget Accessories">Gadget Accessories</option>
+                </select>
+                <button type="button" onclick="openSuperAdminAddCategory()" class="px-3 py-2.5 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-600 text-white rounded-xl text-xs font-bold transition shadow-md shadow-red-600/20 whitespace-nowrap">
+                  + Add Category
+                </button>
+              </div>
               <input type="text" id="product-search-input" oninput="filterProducts()" placeholder="Search product title, brand or store..." class="flex-1 px-4 py-2.5 bg-[#070b13] border border-slate-800 rounded-xl text-xs text-white placeholder-slate-600 focus:outline-none focus:border-red-500">
             </div>
+
           </div>
 
           <div id="products-table-container">
@@ -364,12 +370,56 @@
       }
     }
 
+    async function loadDynamicCategories() {
+      try {
+        const res = await fetch('/api/v1/categories');
+        const data = await res.json();
+        if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+          const select = document.getElementById('category-filter-select');
+          const currentVal = select.value;
+          select.innerHTML = '<option value="all">All Categories</option>' + data.data.map(c => `
+            <option value="${c.name}">${c.icon || '📦'} ${c.name}</option>
+          `).join('');
+          select.value = currentVal;
+        }
+      } catch (err) {}
+    }
+
+    function openSuperAdminAddCategory() {
+      const name = prompt('Enter new Category Name (e.g., Drone Tech, Gaming Accessories, Smart Wearables):');
+      if (!name || !name.trim()) return;
+      const icon = prompt('Enter an emoji icon for this category (e.g. 🛸, 🎮, ⌚):', '⚡') || '⚡';
+      createCategory(name.trim(), icon.trim());
+    }
+
+    async function createCategory(name, icon) {
+      try {
+        const res = await fetch('/api/v1/categories', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, icon })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert('✓ ' + data.message);
+          await loadDynamicCategories();
+        } else {
+          alert(data.message || 'Error creating category.');
+        }
+      } catch (e) {
+        alert('Failed to connect to server.');
+      }
+    }
+
     function showSuperAdminDashboard() {
       document.getElementById('sa-login-view').classList.add('hidden');
       document.getElementById('sa-dashboard-view').classList.remove('hidden');
       loadSubmissions();
+      loadProducts();
+      loadDynamicCategories();
       initCharts();
     }
+
 
     function showSuperAdminLogin() {
       document.getElementById('sa-dashboard-view').classList.add('hidden');
@@ -424,6 +474,9 @@
               <thead class="text-xs uppercase text-slate-500 border-b border-slate-800">
                 <tr>
                   <th class="py-3 px-4">Image Preview</th>
+                  <th class="py-3 px-4">Product Details</th>
+                  <th class="py-3 px-4">Category</th>
+                  <th class="py-3 px-4">Price</th>
                   <th class="py-3 px-4">Affiliate Destination Link</th>
                   <th class="py-3 px-4">Submission Date</th>
                   <th class="py-3 px-4">Status</th>
@@ -434,7 +487,16 @@
                 ${pending.map(item => `
                   <tr>
                     <td class="py-3 px-4">
-                      <img src="${item.image_path}" class="w-14 h-14 rounded-xl object-cover bg-slate-900 border border-slate-800">
+                      <img src="${item.image_path}" class="w-14 h-14 rounded-xl object-cover bg-slate-900 border border-slate-800" onerror="this.src='/logo.jpg'">
+                    </td>
+                    <td class="py-3 px-4 font-bold text-white max-w-xs">
+                      ${item.title || 'Product Deal'}
+                    </td>
+                    <td class="py-3 px-4 text-xs text-slate-400">
+                      <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">${item.category || 'Gadget'}</span>
+                    </td>
+                    <td class="py-3 px-4 font-mono font-bold text-emerald-400">
+                      ${item.price || ('₹' + (item.numeric_price || ''))}
                     </td>
                     <td class="py-3 px-4 max-w-xs">
                       <a href="${item.affiliate_url}" target="_blank" class="text-blue-400 hover:underline font-mono text-xs truncate block">${item.affiliate_url}</a>
@@ -443,7 +505,7 @@
                     <td class="py-3 px-4">
                       <span class="px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold">Pending Review</span>
                     </td>
-                    <td class="py-3 px-4 text-right space-x-2">
+                    <td class="py-3 px-4 text-right space-x-2 whitespace-nowrap">
                       <button onclick="approveSubmission(${item.id})" class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-xl text-xs font-bold shadow-md shadow-emerald-600/20 transition">
                         ✓ Approve & Publish
                       </button>
@@ -466,9 +528,10 @@
           `;
         }
       } catch (err) {
-        container.innerHTML = '<div class="text-center py-12 text-red-400">Failed to load submissions.</div>';
+        container.innerHTML = '<div class="text-center py-12 text-red-400">Failed to load submissions: ' + (err.message || err) + '</div>';
       }
     }
+
 
     async function approveSubmission(id) {
       if (!confirm('Approve this submission? The product will immediately become LIVE on the customer website.')) return;

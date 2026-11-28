@@ -142,7 +142,38 @@ function initializeDatabase(PDO $pdo): void {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     ");
 
-    // Check if deals table is seeded; if not, seed from all_deals.json
+    // 5. Categories table
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS `custom_categories` (
+            `id` INT AUTO_INCREMENT PRIMARY KEY,
+            `name` VARCHAR(100) NOT NULL UNIQUE,
+            `slug` VARCHAR(100) NOT NULL UNIQUE,
+            `icon` VARCHAR(50) DEFAULT '🔌',
+            `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    ");
+
+    // Seed default categories if empty
+    $checkCat = $pdo->query("SELECT COUNT(*) as cnt FROM `custom_categories`")->fetch();
+    if ((int)($checkCat['cnt'] ?? 0) === 0) {
+        $defaultCats = [
+            ['Smartphones', 'smartphones', '📱'],
+            ['Laptops & Computers', 'laptops-computers', '💻'],
+            ['Smartwatches', 'smartwatches', '⌚'],
+            ['Headphones & Earbuds', 'headphones-earbuds', '🎧'],
+            ['Gaming & Consoles', 'gaming-consoles', '🎮'],
+            ['Tablets', 'tablets', '📱'],
+            ['Cameras & Accessories', 'cameras-accessories', '📷'],
+            ['Smart TVs', 'smart-tvs', '📺'],
+            ['Home Appliances', 'home-appliances', '🏠'],
+            ['Gadget Accessories', 'gadget-accessories', '🔌']
+        ];
+        $catStmt = $pdo->prepare("INSERT IGNORE INTO `custom_categories` (`name`, `slug`, `icon`) VALUES (?, ?, ?)");
+        foreach ($defaultCats as $dc) {
+            $catStmt->execute($dc);
+        }
+    }
+
     $check = $pdo->query("SELECT COUNT(*) as cnt FROM `deals`")->fetch();
     if ((int)($check['cnt'] ?? 0) === 0) {
         seedInitialDeals($pdo);
@@ -224,9 +255,56 @@ if ($requestUri === '/api/v1/products' && $method === 'GET') {
         return $p;
     }, $deals);
 
-    echo json_encode($sanitized);
+    echo json_encode([
+        'success' => true,
+        'data' => $sanitized
+    ]);
     exit;
 }
+
+// 2.1 CATEGORIES API: GET /api/v1/categories and POST /api/v1/categories (Add new category)
+if ($requestUri === '/api/v1/categories') {
+    header('Content-Type: application/json');
+
+    if ($method === 'GET') {
+        $cats = [];
+        if ($pdo) {
+            $cats = $pdo->query("SELECT * FROM `custom_categories` ORDER BY `id` ASC")->fetchAll();
+        }
+        echo json_encode(['success' => true, 'data' => $cats]);
+        exit;
+    }
+
+    if ($method === 'POST') {
+        $body = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+        $name = trim($body['name'] ?? '');
+        $icon = trim($body['icon'] ?? '⚡');
+
+        if (empty($name)) {
+            echo json_encode(['success' => false, 'message' => 'Category name is required.']);
+            exit;
+        }
+
+        $slug = strtolower(preg_replace('/[^a-z0-9]/i', '-', $name));
+        $slug = trim(preg_replace('/-+/', '-', $slug), '-');
+
+        if ($pdo) {
+            $stmt = $pdo->prepare("INSERT INTO `custom_categories` (`name`, `slug`, `icon`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `icon`=VALUES(`icon`)");
+            $stmt->execute([$name, $slug, $icon]);
+            $newId = (int)$pdo->lastInsertId();
+            echo json_encode([
+                'success' => true,
+                'message' => "Category '{$name}' added successfully!",
+                'data' => ['id' => $newId, 'name' => $name, 'slug' => $slug, 'icon' => $icon]
+            ]);
+            exit;
+        }
+
+        echo json_encode(['success' => false, 'message' => 'Database unavailable.']);
+        exit;
+    }
+}
+
 
 
 // 3. ADMIN SUBMISSIONS: GET / POST / DELETE /api/v1/admin/submissions
