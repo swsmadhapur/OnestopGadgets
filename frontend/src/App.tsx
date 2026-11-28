@@ -480,8 +480,10 @@ export default function App() {
 
   // Filtered and sorted deals for Deals page
   const filteredDeals = allCombinedDeals.filter(d => {
-    // 1. Gadget category match
-    const matchesCat = activeCategoryFilter === 'all' || d.categoryId === activeCategoryFilter;
+    // 1. Gadget category match (match either category name or slug)
+    const matchesCat = activeCategoryFilter === 'all' || 
+      d.categoryId === activeCategoryFilter || 
+      d.category.toLowerCase() === activeCategoryFilter.toLowerCase();
     
     // 2. Search query match
     const matchesSearch = !searchQuery || d.title.toLowerCase().includes(searchQuery.toLowerCase()) || d.brand.toLowerCase().includes(searchQuery.toLowerCase());
@@ -1839,156 +1841,120 @@ export default function App() {
               </div>
             </div>
 
-            {/* Category Filter Tabs */}
-            <div className="w-full bg-[#101428] border-b border-white/10 px-4 sm:px-6 lg:px-8 py-3.5">
-              <div className="max-w-[1680px] mx-auto flex items-center gap-2 overflow-x-auto pb-1.5 custom-scroll">
-                <button
-                  onClick={() => setActiveCategoryFilter('all')}
-                  className={`px-4 py-2 rounded-full font-bold text-xs shrink-0 transition-all ${
-                    activeCategoryFilter === 'all' ? 'bg-[#D91E26] text-white shadow-md' : 'bg-white/10 text-slate-300 hover:bg-white/20'
-                  }`}
-                >
-                  All Categories ({masterDeals.length})
-                </button>
-                {categories.map(cat => {
-                  const count = masterDeals.filter(d => d.categoryId === cat.id).length;
-                  return (
-                    <button
-                      key={cat.id}
-                      onClick={() => setActiveCategoryFilter(cat.id)}
-                      className={`px-4 py-2 rounded-full font-bold text-xs shrink-0 transition-all flex items-center gap-1.5 ${
-                        activeCategoryFilter === cat.id ? 'bg-[#D91E26] text-white shadow-md' : 'bg-white/10 text-slate-300 hover:bg-white/20'
-                      }`}
-                    >
-                      <span>{cat.icon}</span>
-                      <span>{cat.name} ({count})</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Price Filter Categories & Sorting Bar (Red, Blue, Milky White Theme) */}
-            <div className="w-full bg-[#0D1020] border-b border-white/10 px-4 sm:px-6 lg:px-8 py-3">
-              <div className="max-w-[1680px] mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+            {/* Category & Price Dropdowns Bar (No scrolling, clean dropdown selectors with live item counts in brackets) */}
+            <div className="w-full bg-[#101428] border-b border-white/10 px-4 sm:px-6 lg:px-8 py-4">
+              <div className="max-w-[1680px] mx-auto flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
                 
-                {/* 1. Price Filter Buttons */}
-                <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 custom-scroll">
-                  <span className="text-[11px] font-black uppercase text-amber-300 tracking-wider shrink-0 flex items-center gap-1 mr-1">
-                    <span>💰 Price:</span>
-                  </span>
+                {/* Left: Category & Price Dropdowns */}
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 flex-1">
+                  
+                  {/* Category Dropdown */}
+                  <div className="flex items-center gap-2.5">
+                    <label htmlFor="category-select" className="text-xs font-black uppercase text-amber-300 tracking-wider flex items-center gap-1.5 shrink-0">
+                      <span>🏷️</span>
+                      <span>Category:</span>
+                    </label>
+                    <div className="relative flex-1 sm:w-72">
+                      <select
+                        id="category-select"
+                        value={activeCategoryFilter}
+                        onChange={(e) => setActiveCategoryFilter(e.target.value)}
+                        className="w-full appearance-none px-4 py-2.5 pr-10 rounded-xl font-bold text-xs bg-[#070b13] text-white border border-slate-700 hover:border-red-500 focus:outline-none focus:border-red-500 transition shadow-inner cursor-pointer"
+                      >
+                        <option value="all">
+                          All Categories ({allCombinedDeals.length})
+                        </option>
+                        {categories.map(cat => {
+                          const count = allCombinedDeals.filter(d => 
+                            d.categoryId === cat.id || d.category.toLowerCase() === cat.name.toLowerCase()
+                          ).length;
+                          return (
+                            <option key={cat.id} value={cat.id}>
+                              {cat.icon} {cat.name} ({count})
+                            </option>
+                          );
+                        })}
+                      </select>
+                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
 
-                  {/* All Prices */}
-                  <button
-                    onClick={() => setActivePriceFilter('all')}
-                    className={`px-3.5 py-1.5 rounded-xl font-extrabold text-xs shrink-0 transition-all duration-200 border ${
-                      activePriceFilter === 'all'
-                        ? 'bg-[#E50914] text-white border-[#E50914] shadow-md scale-105'
-                        : 'bg-white/10 text-slate-300 border-white/15 hover:bg-white/20 hover:text-white'
-                    }`}
-                  >
-                    All Prices
-                  </button>
+                  {/* Price Filter Dropdown */}
+                  <div className="flex items-center gap-2.5">
+                    <label htmlFor="price-select" className="text-xs font-black uppercase text-amber-300 tracking-wider flex items-center gap-1.5 shrink-0">
+                      <span>💰</span>
+                      <span>Price:</span>
+                    </label>
+                    <div className="relative flex-1 sm:w-60">
+                      <select
+                        id="price-select"
+                        value={activePriceFilter}
+                        onChange={(e) => setActivePriceFilter(e.target.value as PriceFilter)}
+                        className="w-full appearance-none px-4 py-2.5 pr-10 rounded-xl font-bold text-xs bg-[#070b13] text-amber-400 border border-slate-700 hover:border-red-500 focus:outline-none focus:border-red-500 transition shadow-inner cursor-pointer"
+                      >
+                        <option value="all">
+                          All Prices ({allCombinedDeals.length})
+                        </option>
+                        <option value="99">
+                          Under ₹99 ({allCombinedDeals.filter(d => d.numeric_price <= 99).length})
+                        </option>
+                        <option value="199">
+                          Under ₹199 ({allCombinedDeals.filter(d => d.numeric_price > 99 && d.numeric_price <= 199).length})
+                        </option>
+                        <option value="299">
+                          Under ₹299 ({allCombinedDeals.filter(d => d.numeric_price > 199 && d.numeric_price <= 299).length})
+                        </option>
+                        <option value="399">
+                          Under ₹399 ({allCombinedDeals.filter(d => d.numeric_price > 299 && d.numeric_price <= 399).length})
+                        </option>
+                        <option value="499">
+                          Under ₹499 ({allCombinedDeals.filter(d => d.numeric_price > 399 && d.numeric_price <= 499).length})
+                        </option>
+                        <option value="599">
+                          Under ₹599 ({allCombinedDeals.filter(d => d.numeric_price > 499 && d.numeric_price <= 599).length})
+                        </option>
+                        <option value="1000plus">
+                          More than ₹599 ({allCombinedDeals.filter(d => d.numeric_price > 599).length})
+                        </option>
+                      </select>
+                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
 
-                  {/* ₹99 */}
-                  <button
-                    onClick={() => setActivePriceFilter('99')}
-                    className={`px-3.5 py-1.5 rounded-xl font-extrabold text-xs shrink-0 transition-all duration-200 border ${
-                      activePriceFilter === '99'
-                        ? 'bg-[#E50914] text-white border-[#E50914] shadow-md scale-105'
-                        : 'bg-white/10 text-slate-300 border-white/15 hover:bg-white/20 hover:text-white'
-                    }`}
-                  >
-                    ₹99
-                  </button>
-
-                  {/* ₹199 */}
-                  <button
-                    onClick={() => setActivePriceFilter('199')}
-                    className={`px-3.5 py-1.5 rounded-xl font-extrabold text-xs shrink-0 transition-all duration-200 border ${
-                      activePriceFilter === '199'
-                        ? 'bg-[#E50914] text-white border-[#E50914] shadow-md scale-105'
-                        : 'bg-white/10 text-slate-300 border-white/15 hover:bg-white/20 hover:text-white'
-                    }`}
-                  >
-                    ₹199
-                  </button>
-
-                  {/* ₹299 */}
-                  <button
-                    onClick={() => setActivePriceFilter('299')}
-                    className={`px-3.5 py-1.5 rounded-xl font-extrabold text-xs shrink-0 transition-all duration-200 border ${
-                      activePriceFilter === '299'
-                        ? 'bg-[#E50914] text-white border-[#E50914] shadow-md scale-105'
-                        : 'bg-white/10 text-slate-300 border-white/15 hover:bg-white/20 hover:text-white'
-                    }`}
-                  >
-                    ₹299
-                  </button>
-
-                  {/* ₹399 */}
-                  <button
-                    onClick={() => setActivePriceFilter('399')}
-                    className={`px-3.5 py-1.5 rounded-xl font-extrabold text-xs shrink-0 transition-all duration-200 border ${
-                      activePriceFilter === '399'
-                        ? 'bg-[#E50914] text-white border-[#E50914] shadow-md scale-105'
-                        : 'bg-white/10 text-slate-300 border-white/15 hover:bg-white/20 hover:text-white'
-                    }`}
-                  >
-                    ₹399
-                  </button>
-
-                  {/* ₹499 */}
-                  <button
-                    onClick={() => setActivePriceFilter('499')}
-                    className={`px-3.5 py-1.5 rounded-xl font-extrabold text-xs shrink-0 transition-all duration-200 border ${
-                      activePriceFilter === '499'
-                        ? 'bg-[#E50914] text-white border-[#E50914] shadow-md scale-105'
-                        : 'bg-white/10 text-slate-300 border-white/15 hover:bg-white/20 hover:text-white'
-                    }`}
-                  >
-                    ₹499
-                  </button>
-
-                  {/* ₹599 */}
-                  <button
-                    onClick={() => setActivePriceFilter('599')}
-                    className={`px-3.5 py-1.5 rounded-xl font-extrabold text-xs shrink-0 transition-all duration-200 border ${
-                      activePriceFilter === '599'
-                        ? 'bg-[#E50914] text-white border-[#E50914] shadow-md scale-105'
-                        : 'bg-white/10 text-slate-300 border-white/15 hover:bg-white/20 hover:text-white'
-                    }`}
-                  >
-                    ₹599
-                  </button>
-
-                  {/* ₹1,000 & Above */}
-                  <button
-                    onClick={() => setActivePriceFilter('1000plus')}
-                    className={`px-3.5 py-1.5 rounded-xl font-extrabold text-xs shrink-0 transition-all duration-200 border ${
-                      activePriceFilter === '1000plus'
-                        ? 'bg-[#E50914] text-white border-[#E50914] shadow-md scale-105'
-                        : 'bg-white/10 text-slate-300 border-white/15 hover:bg-white/20 hover:text-white'
-                    }`}
-                  >
-                    ₹1,000+
-                  </button>
                 </div>
 
-                {/* 2. Sorting Dropdown */}
-                <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto justify-end">
-                  <span className="text-[11px] font-bold text-slate-400">Sort By:</span>
+                {/* Right: Sort By & Reset */}
+                <div className="flex items-center gap-3 shrink-0">
+                  <span className="text-xs font-bold text-slate-400">Sort By:</span>
                   <select
                     value={activeSortOption}
                     onChange={(e) => setActiveSortOption(e.target.value as SortOption)}
                     aria-label="Sort Deals"
-                    className="bg-[#101428] border border-white/20 rounded-xl px-3 py-1.5 text-xs text-white font-bold focus:outline-none focus:border-[#E50914]"
+                    className="bg-[#070b13] border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-bold focus:outline-none focus:border-[#E50914] cursor-pointer"
                   >
-                    <option value="latest" className="bg-[#101428]">Latest Deals</option>
-                    <option value="price-asc" className="bg-[#101428]">Price: Low to High</option>
-                    <option value="price-desc" className="bg-[#101428]">Price: High to Low</option>
-                    <option value="discount-desc" className="bg-[#101428]">Biggest Discount (%)</option>
+                    <option value="latest">Latest Deals</option>
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                    <option value="discount-desc">Biggest Discount (%)</option>
                   </select>
+
+                  {(activeCategoryFilter !== 'all' || activePriceFilter !== 'all' || searchQuery) && (
+                    <button
+                      onClick={() => { setActiveCategoryFilter('all'); setActivePriceFilter('all'); setSearchQuery(''); }}
+                      className="px-3 py-2 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/30 text-xs font-bold transition flex items-center gap-1"
+                    >
+                      <span>✕</span>
+                      <span>Clear</span>
+                    </button>
+                  )}
                 </div>
 
               </div>
@@ -2022,12 +1988,12 @@ export default function App() {
                               <span className="text-[10px] font-black px-2 py-0.5 rounded bg-red-100 text-[#E50914]">{deal.discount}</span>
                             </div>
 
-                            <div className="w-full h-36 rounded-xl bg-[#F5F6FA] flex items-center justify-center relative overflow-hidden border border-slate-100 group-hover:scale-[1.02] transition-transform">
+                            <div className="w-full h-44 rounded-xl bg-white flex items-center justify-center relative overflow-hidden border border-slate-100 p-2 group-hover:scale-[1.02] transition-transform">
                               {deal.imageUrl || deal.image_path ? (
                                 <img
                                   src={deal.imageUrl || deal.image_path}
                                   alt={deal.title}
-                                  className="w-full h-full object-cover"
+                                  className="w-full h-full object-contain"
                                   onError={(e) => {
                                     e.currentTarget.style.display = 'none';
                                     if (e.currentTarget.parentElement) {
