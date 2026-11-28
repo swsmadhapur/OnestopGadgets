@@ -1,0 +1,21 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Handle static files directly if they exist
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Route /admin and /admin/ to admin.html
+  RewriteRule ^admin/?$ admin.html [L,QSA]
+
+  # Route /superadmin and /superadmin/ to superadmin.html
+  RewriteRule ^superadmin/?$ superadmin.html [L,QSA]
+
+  # Route all API calls to api.php
+  RewriteRule ^api/(.*)$ api.php [L,QSA]
+
+  # Route all other frontend SPA paths to index.html
+  RewriteRule ^ index.html [L]
+</IfModule>

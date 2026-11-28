@@ -1,0 +1,22 @@
+[
+  {
+    "membershipId": "VIP-01ACFB1F",
+    "orderId": "order_osg_92625312",
+    "paymentId": "pay_rzp_56717333",
+    "paymentStatus": "captured",
+    "paymentMethod": "UPI (GPay / PhonePe)",
+    "user": {
+      "name": "Venkata Jagadeesh",
+      "email": "jagadeesh@example.com",
+      "phone": "+91 9876543210"
+    },
+    "plan": "1 Month Pass",
+    "planId": "one-month",
+    "amountPaid": 99,
+    "activatedAt": "2026-11-28T06:15:17.403Z",
+    "expiresAt": "2026-12-28T06:15:17.403Z",
+    "status": "active",
+    "luckyDipTicketsAllocated": 1,
+    "verificationHash": "33866571692e575a7791b302bcfc3fcf4391b0c012be2172a240ea1592e57bd0"
+  }
+]

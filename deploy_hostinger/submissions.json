@@ -1,0 +1,19 @@
+[
+  {
+    "id": 2,
+    "image_path": "/uploads/products/asset_1795763251808_kh8h8i.webp",
+    "affiliate_url": "https://dl.flipkart.com/s/zbBZ_1uuuN",
+    "status": "approved",
+    "created_at": "2026-11-27T07:07:31.841Z",
+    "reviewed_at": "2026-11-27T09:24:27.377Z"
+  },
+  {
+    "id": 1,
+    "image_path": "/uploads/products/sample.jpg",
+    "affiliate_url": "https://amzn.to/demo-sample",
+    "status": "approved",
+    "created_at": "2026-11-27T06:35:04.124Z",
+    "removed_at": "2026-11-27T07:07:10.524Z",
+    "reviewed_at": "2026-11-27T09:29:02.952Z"
+  }
+]
