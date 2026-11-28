@@ -20,6 +20,8 @@ interface Deal {
   original: string;
   discount: string;
   icon: string;
+  imageUrl?: string;
+  image_path?: string;
   rating: number;
   description: string;
   merchantUrl: string;
@@ -1073,8 +1075,25 @@ export default function App() {
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
           <div className="bg-[#FAF8F5] text-slate-900 rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl relative space-y-4">
             <button onClick={() => setSelectedProduct(null)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-800 text-xl font-bold">✕</button>
-            <div className="w-24 h-24 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-5xl mx-auto shadow-sm">
-              {selectedProduct.icon}
+            <div className="w-24 h-24 rounded-2xl bg-white border border-slate-200 flex items-center justify-center overflow-hidden mx-auto shadow-sm relative">
+              {selectedProduct.imageUrl || selectedProduct.image_path ? (
+                <img
+                  src={selectedProduct.imageUrl || selectedProduct.image_path}
+                  alt={selectedProduct.title}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    if (e.currentTarget.parentElement) {
+                      const span = document.createElement('span');
+                      span.className = 'text-5xl';
+                      span.innerText = selectedProduct.icon || '🎁';
+                      e.currentTarget.parentElement.appendChild(span);
+                    }
+                  }}
+                />
+              ) : (
+                <span className="text-5xl">{selectedProduct.icon}</span>
+              )}
             </div>
             <div className="text-center space-y-1">
               <span className="text-[10px] font-black uppercase tracking-wider bg-red-100 text-[#E50914] px-2 py-0.5 rounded">{selectedProduct.category}</span>
@@ -1452,10 +1471,27 @@ export default function App() {
                         onClick={() => setSelectedProduct(deal)}
                         className="min-w-[280px] sm:min-w-[320px] md:min-w-[360px] max-w-[380px] shrink-0 bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 hover:border-[#1645C4] shadow-sm hover:shadow-xl transition-all duration-300 flex items-center justify-between gap-4 cursor-pointer relative overflow-hidden group"
                       >
-                        <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-xl bg-[#F5F6FA] flex items-center justify-center text-4xl shrink-0 border border-slate-100 relative group-hover:scale-105 transition-transform">
-                          {deal.icon}
+                        <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-xl bg-[#F5F6FA] flex items-center justify-center shrink-0 border border-slate-100 relative overflow-hidden group-hover:scale-105 transition-transform">
+                          {deal.imageUrl || deal.image_path ? (
+                            <img
+                              src={deal.imageUrl || deal.image_path}
+                              alt={deal.title}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                                if (e.currentTarget.parentElement) {
+                                  const span = document.createElement('span');
+                                  span.className = 'text-4xl';
+                                  span.innerText = deal.icon || '🎁';
+                                  e.currentTarget.parentElement.appendChild(span);
+                                }
+                              }}
+                            />
+                          ) : (
+                            <span className="text-4xl">{deal.icon}</span>
+                          )}
                           {locked && (
-                            <div className="absolute inset-0 bg-black/65 backdrop-blur-[1px] rounded-xl flex items-center justify-center text-amber-300 text-xs font-black shadow-inner">
+                            <div className="absolute inset-0 bg-black/65 backdrop-blur-[1px] rounded-xl flex items-center justify-center text-amber-300 text-xs font-black shadow-inner z-10">
                               🔒 VIP
                             </div>
                           )}
@@ -1986,10 +2022,27 @@ export default function App() {
                               <span className="text-[10px] font-black px-2 py-0.5 rounded bg-red-100 text-[#E50914]">{deal.discount}</span>
                             </div>
 
-                            <div className="w-full h-32 rounded-xl bg-[#F5F6FA] flex items-center justify-center text-5xl relative border border-slate-100 group-hover:scale-105 transition-transform">
-                              {deal.icon}
+                            <div className="w-full h-36 rounded-xl bg-[#F5F6FA] flex items-center justify-center relative overflow-hidden border border-slate-100 group-hover:scale-[1.02] transition-transform">
+                              {deal.imageUrl || deal.image_path ? (
+                                <img
+                                  src={deal.imageUrl || deal.image_path}
+                                  alt={deal.title}
+                                  className="w-full h-full object-cover"
+                                  onError={(e) => {
+                                    e.currentTarget.style.display = 'none';
+                                    if (e.currentTarget.parentElement) {
+                                      const span = document.createElement('span');
+                                      span.className = 'text-5xl';
+                                      span.innerText = deal.icon || '🎁';
+                                      e.currentTarget.parentElement.appendChild(span);
+                                    }
+                                  }}
+                                />
+                              ) : (
+                                <span className="text-5xl">{deal.icon}</span>
+                              )}
                               {locked && (
-                                <div className="absolute inset-0 bg-black/60 backdrop-blur-xs rounded-xl flex flex-col items-center justify-center text-white p-2 text-center">
+                                <div className="absolute inset-0 bg-black/60 backdrop-blur-xs rounded-xl flex flex-col items-center justify-center text-white p-2 text-center z-10">
                                   <span className="text-lg">🔒</span>
                                   <span className="text-[10px] font-black text-amber-300 uppercase">VIP Access (≥ ₹50K)</span>
                                 </div>
