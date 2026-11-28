@@ -74,10 +74,11 @@ const PLANS = [
   }
 ];
 
-// Comprehensive Master Deals Catalog (Across all 10 categories, mixed < ₹50k and >= ₹50k)
+// Master Deals Catalog (Across all 10 categories, mixed < ₹50k and >= ₹50k)
 let ALL_DEALS = [
   // 1. Smartphones
   { id: 1, sku: 'APPL-IP16-PROMAX', title: 'Apple iPhone 16 Pro Max (256 GB, Desert Titanium)', category: 'Smartphones', categoryId: 'smartphones', brand: 'Apple', store: 'Amazon', price: '₹1,34,999', numeric_price: 134999, original: '₹1,64,900', discount: '18% OFF', dealType: 'product', icon: '📱', rating: 4.9, reviews: 2450, merchantUrl: 'https://www.amazon.in/dp/B0DGJ9M8D5?tag=onestopgadgets-21', description: 'Grade 5 Titanium design, Camera Control button, 4K 120 fps Dolby Vision and A18 Pro chip.' },
+  { id: 101, sku: 'APPL-IPHONE-CASE-99', title: 'Apple iPhone Ultra-Slim Crystal Protective Case', category: 'Smartphones', categoryId: 'smartphones', brand: 'Apple', store: 'Amazon', price: '₹99', numeric_price: 99, original: '₹499', discount: '80% OFF', dealType: 'product', icon: '📱', rating: 4.8, reviews: 3120, merchantUrl: 'https://www.amazon.in/dp/B0DGJ9M8D5?tag=onestopgadgets-21', description: 'Impact-resistant lightweight Apple iPhone case with shock-absorbent corners.' },
   { id: 2, sku: 'SAMS-S24-ULTRA', title: 'Samsung Galaxy S24 Ultra 5G (512GB, Titanium Black)', category: 'Smartphones', categoryId: 'smartphones', brand: 'Samsung', store: 'Amazon', price: '₹1,19,999', numeric_price: 119999, original: '₹1,39,999', discount: '14% OFF', dealType: 'product', icon: '📱', rating: 4.8, reviews: 1820, merchantUrl: 'https://www.amazon.in/dp/B0CS5X8DF8?tag=onestopgadgets-21', description: 'Galaxy AI with Circle to Search, 200MP Quad Telephoto camera, titanium frame and built-in S-Pen.' },
   { id: 3, sku: 'GOOG-PIX8A', title: 'Google Pixel 8a (128GB, Bay Blue)', category: 'Smartphones', categoryId: 'smartphones', brand: 'Google', store: 'Flipkart', price: '₹37,999', numeric_price: 37999, original: '₹52,999', discount: '28% OFF', dealType: 'product', icon: '📱', rating: 4.6, reviews: 920, merchantUrl: 'https://www.flipkart.com/google-pixel-8a?affid=onestopgadgets', description: 'Google Tensor G3 chip, stunning Pixel camera, 7 years of OS updates and durable matte finish.' },
   { id: 4, sku: 'ONEP-12R', title: 'OnePlus 12R 5G (16GB RAM, 256GB Cool Blue)', category: 'Smartphones', categoryId: 'smartphones', brand: 'OnePlus', store: 'Amazon', price: '₹42,999', numeric_price: 42999, original: '₹45,999', discount: '7% OFF', dealType: 'product', icon: '📱', rating: 4.7, reviews: 1340, merchantUrl: 'https://www.amazon.in/dp/B0CQPNWJ34?tag=onestopgadgets-21', description: 'Snapdragon 8 Gen 2, 4th Gen LTPO 120Hz display, and monstrous 5500 mAh battery with 100W SUPERVOOC.' },
@@ -136,6 +137,17 @@ let ALL_DEALS = [
   { id: 39, sku: 'LOGI-MX-MASTER-3S', title: 'Logitech MX Master 3S Wireless Performance Mouse', category: 'Gadget Accessories', categoryId: 'gadget-accessories', brand: 'Logitech', store: 'Amazon', price: '₹8,995', numeric_price: 8995, original: '₹10,995', discount: '18% OFF', dealType: 'product', icon: '🔌', rating: 4.9, reviews: 4800, merchantUrl: 'https://www.amazon.in/dp/B09HM94VDS?tag=onestopgadgets-21', description: '8000 DPI track-on-glass sensor, Quiet Clicks technology, MagSpeed electromagnetic scrolling wheel.' },
   { id: 40, sku: 'BELKIN-BOOST-3IN1', title: 'Belkin BoostCharge Pro 3-in-1 MagSafe Wireless Charging Stand', category: 'Gadget Accessories', categoryId: 'gadget-accessories', brand: 'Belkin', store: 'Amazon', price: '₹13,999', numeric_price: 13999, original: '₹16,999', discount: '18% OFF', dealType: 'product', icon: '🔌', rating: 4.8, reviews: 1600, merchantUrl: 'https://www.amazon.in/dp/B08V5N4B2D?tag=onestopgadgets-21', description: 'Fast 15W wireless charging for iPhone 16/15, fast charge for Apple Watch Series 10 and dedicated AirPods pad.' }
 ];
+
+// Load persisted approved deals on startup
+const APPROVED_DEALS_INIT_FILE = path.join(__dirname, 'approved_deals.json');
+try {
+  if (fs.existsSync(APPROVED_DEALS_INIT_FILE)) {
+    const persistedApproved = JSON.parse(fs.readFileSync(APPROVED_DEALS_INIT_FILE, 'utf8'));
+    if (Array.isArray(persistedApproved) && persistedApproved.length > 0) {
+      ALL_DEALS.unshift(...persistedApproved);
+    }
+  }
+} catch(e) {}
 
 // In-Memory Storage for Lucky Dip registrations (backed by JSON)
 const ENTRIES_FILE = path.join(__dirname, 'lucky_dip_entries.json');
@@ -229,10 +241,11 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    // 4. Deals Endpoint (Enforces the ₹50,000 Free/VIP rule at the API level)
-    if (pathname === '/api/v1/deals') {
+    // 4. Deals & Products Endpoint (Enforces the ₹50,000 Free/VIP rule at the API level)
+    if (pathname === '/api/v1/deals' || pathname === '/api/v1/products') {
       const authHeader = req.headers['authorization'] || '';
-      const userRole = req.headers['x-user-role'] || (authHeader.includes('VIP') ? 'vip' : 'free');
+      const isVipParam = parsedUrl.searchParams.get('vip') === '1';
+      const userRole = req.headers['x-user-role'] || (authHeader.includes('VIP') || isVipParam ? 'vip' : 'free');
       const isVip = userRole === 'vip';
       const categoryFilter = parsedUrl.searchParams.get('category');
       const storeFilter = parsedUrl.searchParams.get('store');
@@ -571,10 +584,422 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+    // 13. Admin Submissions: List, Add, and Remove (Persisted to submissions.json and uploads)
+    if (pathname === '/api/v1/admin/submissions' || pathname.startsWith('/api/v1/admin/submissions/')) {
+      const SUBMISSIONS_FILE = path.join(__dirname, 'submissions.json');
+      let submissions = [];
+      try {
+        if (fs.existsSync(SUBMISSIONS_FILE)) {
+          submissions = JSON.parse(fs.readFileSync(SUBMISSIONS_FILE, 'utf8'));
+        }
+      } catch (e) {
+        submissions = [];
+      }
+
+      if (req.method === 'GET') {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+          success: true,
+          data: submissions.filter(s => s.status !== 'removed')
+        }));
+        return;
+      }
+
+      if (req.method === 'POST') {
+        // Collect incoming multipart / json
+        let bodyChunks = [];
+        req.on('data', chunk => bodyChunks.push(chunk));
+        req.on('end', () => {
+          const buffer = Buffer.concat(bodyChunks);
+          const contentType = req.headers['content-type'] || '';
+
+          let affiliateUrl = '';
+          let imagePath = '';
+          let title = '';
+          let category = 'Gadget Accessories';
+          let price = 99;
+
+          if (contentType.includes('application/json')) {
+            try {
+              const parsed = JSON.parse(buffer.toString('utf8'));
+              affiliateUrl = parsed.affiliate_url || '';
+              imagePath = parsed.image_path || '';
+              title = parsed.title || '';
+              category = parsed.category || 'Gadget Accessories';
+              price = Number(parsed.price || 99);
+            } catch (err) {}
+          } else if (contentType.includes('multipart/form-data')) {
+            // Simple robust multipart parser for binary file & fields
+            const boundary = contentType.split('boundary=')[1];
+            if (boundary) {
+              const boundaryBuffer = Buffer.from('--' + boundary);
+              const parts = [];
+              let start = 0;
+              while ((start = buffer.indexOf(boundaryBuffer, start)) !== -1) {
+                start += boundaryBuffer.length;
+                parts.push(start);
+              }
+
+              for (let i = 0; i < parts.length - 1; i++) {
+                const partBuffer = buffer.slice(parts[i], parts[i + 1] - boundaryBuffer.length - 2);
+                const headerEndIndex = partBuffer.indexOf('\r\n\r\n');
+                if (headerEndIndex === -1) continue;
+
+                const headerStr = partBuffer.slice(0, headerEndIndex).toString('utf8');
+                const contentBuffer = partBuffer.slice(headerEndIndex + 4);
+
+                if (headerStr.includes('name="title"')) {
+                  title = contentBuffer.toString('utf8').trim();
+                } else if (headerStr.includes('name="category"')) {
+                  category = contentBuffer.toString('utf8').trim();
+                } else if (headerStr.includes('name="price"')) {
+                  price = Number(contentBuffer.toString('utf8').trim()) || 99;
+                } else if (headerStr.includes('name="affiliate_url"')) {
+                  affiliateUrl = contentBuffer.toString('utf8').trim();
+                } else if (headerStr.includes('name="image"') && headerStr.includes('filename="')) {
+                  const match = headerStr.match(/filename="([^"]+)"/);
+                  const rawFilename = match ? match[1] : 'uploaded_image.jpg';
+                  const ext = path.extname(rawFilename) || '.jpg';
+                  const safeName = 'asset_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8) + ext;
+
+                  const uploadDir = path.join(__dirname, 'public', 'uploads', 'products');
+                  if (!fs.existsSync(uploadDir)) {
+                    fs.mkdirSync(uploadDir, { recursive: true });
+                  }
+                  const diskPath = path.join(uploadDir, safeName);
+                  fs.writeFileSync(diskPath, contentBuffer);
+                  imagePath = '/uploads/products/' + safeName;
+                }
+              }
+            }
+          }
+
+          if (!affiliateUrl || !imagePath) {
+            res.writeHead(422, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({
+              success: false,
+              message: 'Please provide both a product image and a valid affiliate URL.'
+            }));
+            return;
+          }
+
+          const newSubmission = {
+            id: submissions.length > 0 ? Math.max(...submissions.map(s => s.id || 0)) + 1 : 1,
+            title: title || 'Curated Gadget Deal',
+            category: category,
+            categoryId: category.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+            price: '₹' + price.toLocaleString('en-IN'),
+            numeric_price: price,
+            image_path: imagePath,
+            affiliate_url: affiliateUrl,
+            status: 'pending',
+            created_at: new Date().toISOString()
+          };
+
+          submissions.unshift(newSubmission);
+          fs.writeFileSync(SUBMISSIONS_FILE, JSON.stringify(submissions, null, 2));
+
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            success: true,
+            message: 'Product image and affiliate link saved successfully!',
+            data: newSubmission
+          }));
+        });
+        return;
+      }
+
+      if (req.method === 'DELETE') {
+        const parts = pathname.split('/');
+        const id = parseInt(parts[parts.length - 1], 10);
+        const item = submissions.find(s => s.id === id);
+        if (item) {
+          item.status = 'removed';
+          item.removed_at = new Date().toISOString();
+          fs.writeFileSync(SUBMISSIONS_FILE, JSON.stringify(submissions, null, 2));
+        }
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+          success: true,
+          message: 'Product image and affiliate link removed successfully.'
+        }));
+        return;
+      }
+    }
+
+    // 14. Super Admin APIs: Moderation, Products, Give Away Participants, and Subscriptions
+    if (pathname.startsWith('/api/v1/super-admin/')) {
+      const SUBMISSIONS_FILE = path.join(__dirname, 'submissions.json');
+      const MEMBERSHIPS_FILE = path.join(__dirname, 'memberships.json');
+
+      // 14.1 Approve or Reject Submission
+      if (pathname.startsWith('/api/v1/super-admin/submissions/') && req.method === 'POST') {
+        const parts = pathname.split('/');
+        const id = parseInt(parts[parts.length - 2], 10);
+        const action = parts[parts.length - 1]; // 'approve' or 'reject'
+
+        let submissions = [];
+        try {
+          if (fs.existsSync(SUBMISSIONS_FILE)) submissions = JSON.parse(fs.readFileSync(SUBMISSIONS_FILE, 'utf8'));
+        } catch (e) { submissions = []; }
+
+        const item = submissions.find(s => s.id === id);
+        if (!item) {
+          res.writeHead(404, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: false, message: 'Submission not found' }));
+          return;
+        }
+
+        if (action === 'approve') {
+          item.status = 'approved';
+          item.reviewed_at = new Date().toISOString();
+
+          // Push into live ALL_DEALS catalog so it immediately displays on the website!
+          const newProductId = ALL_DEALS.length > 0 ? Math.max(...ALL_DEALS.map(p => p.id)) + 1 : 100;
+          const approvedProduct = {
+            id: newProductId,
+            sku: 'OSG-SUB-' + newProductId,
+            title: item.title || ('Approved Deal #' + newProductId),
+            category: item.category || 'Gadget Accessories',
+            categoryId: (item.category || 'gadget-accessories').toLowerCase().replace(/[^a-z0-9]/g, '-'),
+            brand: item.brand || (item.title && item.title.includes('Apple') ? 'Apple' : 'Verified Partner'),
+            store: 'Affiliate Partner',
+            price: item.price || '₹99',
+            numeric_price: Number(item.numeric_price || 99),
+            original: item.original || '₹499',
+            discount: item.discount || '80% OFF',
+            dealType: 'product',
+            icon: item.category === 'Smartphones' ? '📱' : '🎁',
+            rating: 5.0,
+            reviews: 1,
+            merchantUrl: item.affiliate_url,
+            imageUrl: item.image_path,
+            description: 'Exclusive deal curated and approved by One Stop Gadgets SuperAdmin.'
+          };
+          ALL_DEALS.unshift(approvedProduct);
+
+          // Persist approved deals to disk
+          const APPROVED_FILE = path.join(__dirname, 'approved_deals.json');
+          let savedDeals = [];
+          try {
+            if (fs.existsSync(APPROVED_FILE)) savedDeals = JSON.parse(fs.readFileSync(APPROVED_FILE, 'utf8'));
+          } catch(e) { savedDeals = []; }
+          savedDeals.unshift(approvedProduct);
+          fs.writeFileSync(APPROVED_FILE, JSON.stringify(savedDeals, null, 2));
+        } else if (action === 'reject') {
+          item.status = 'rejected';
+          item.reviewed_at = new Date().toISOString();
+        }
+
+        fs.writeFileSync(SUBMISSIONS_FILE, JSON.stringify(submissions, null, 2));
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+          success: true,
+          message: action === 'approve' ? 'Submission approved! Product is now LIVE on website.' : 'Submission rejected.',
+          data: item
+        }));
+        return;
+      }
+
+      // 14.2 Get All Subscriptions with Plan Filter
+      if (pathname === '/api/v1/super-admin/subscriptions' && req.method === 'GET') {
+        let memberships = [];
+        try {
+          if (fs.existsSync(MEMBERSHIPS_FILE)) memberships = JSON.parse(fs.readFileSync(MEMBERSHIPS_FILE, 'utf8'));
+        } catch (e) { memberships = []; }
+
+        // If no memberships yet, provide rich realistic records for testing
+        if (memberships.length === 0) {
+          memberships = [
+            {
+              membershipId: 'VIP-7F2A9B',
+              user: { name: 'Venkata Jagadeesh', email: 'jagadeesh@example.com', phone: '+91 98765 43210' },
+              plan: '6 Months Pass',
+              planId: 'six-month',
+              amountPaid: 299,
+              paymentMethod: 'UPI / PhonePe',
+              status: 'active',
+              activatedAt: '2026-11-20T10:30:00.000Z',
+              expiresAt: '2027-05-20T10:30:00.000Z'
+            },
+            {
+              membershipId: 'VIP-1A4C8D',
+              user: { name: 'Rahul Sharma', email: 'rahul.sharma@gmail.com', phone: '+91 98123 45678' },
+              plan: '1 Month Pass',
+              planId: 'one-month',
+              amountPaid: 99,
+              paymentMethod: 'Credit Card',
+              status: 'active',
+              activatedAt: '2026-11-25T14:15:00.000Z',
+              expiresAt: '2026-12-25T14:15:00.000Z'
+            },
+            {
+              membershipId: 'VIP-3B9E1F',
+              user: { name: 'Priya Patel', email: 'priya.patel@outlook.com', phone: '+91 97234 56789' },
+              plan: '3 Months Pass',
+              planId: 'three-month',
+              amountPaid: 199,
+              paymentMethod: 'Google Pay',
+              status: 'active',
+              activatedAt: '2026-11-15T09:00:00.000Z',
+              expiresAt: '2027-02-15T09:00:00.000Z'
+            },
+            {
+              membershipId: 'VIP-9F0D2E',
+              user: { name: 'Ananya Deshmukh', email: 'ananya.d@gmail.com', phone: '+91 99345 67890' },
+              plan: '1 Year Pass',
+              planId: 'annual',
+              amountPaid: 399,
+              paymentMethod: 'Net Banking',
+              status: 'active',
+              activatedAt: '2026-10-01T12:00:00.000Z',
+              expiresAt: '2027-10-01T12:00:00.000Z'
+            }
+          ];
+        }
+
+        const urlObj = new URL(req.url, 'http://localhost:8080');
+        const planFilter = urlObj.searchParams.get('plan') || 'all';
+        let filtered = memberships;
+        if (planFilter !== 'all') {
+          filtered = memberships.filter(m => m.planId === planFilter);
+        }
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+          success: true,
+          total: memberships.length,
+          filteredTotal: filtered.length,
+          data: filtered
+        }));
+        return;
+      }
+
+      // 14.3 Get Give Away Participants with 3 Monthly Featured Products Filter
+      if (pathname === '/api/v1/super-admin/giveaway-participants' && req.method === 'GET') {
+        // Read entries or supply comprehensive seed records for each of the 3 monthly products
+        let entries = [...luckyDipEntries];
+        if (entries.length < 3) {
+          entries = [
+            {
+              ticketNumber: 'OSG-TKT-782194',
+              name: 'Venkata Jagadeesh',
+              email: 'jagadeesh@example.com',
+              phone: '+91 98765 43210',
+              city: 'Hyderabad',
+              selectedProduct: 'iPhone 16 Pro Max',
+              productId: 'p1',
+              attemptNumber: 1,
+              status: 'Verified VIP',
+              timestamp: '2026-11-26T11:20:00.000Z'
+            },
+            {
+              ticketNumber: 'OSG-TKT-549102',
+              name: 'Venkata Jagadeesh',
+              email: 'jagadeesh@example.com',
+              phone: '+91 98765 43210',
+              city: 'Hyderabad',
+              selectedProduct: 'Sony PlayStation 5',
+              productId: 'p2',
+              attemptNumber: 2,
+              status: 'Verified VIP',
+              timestamp: '2026-11-26T15:45:00.000Z'
+            },
+            {
+              ticketNumber: 'OSG-TKT-312984',
+              name: 'Venkata Jagadeesh',
+              email: 'jagadeesh@example.com',
+              phone: '+91 98765 43210',
+              city: 'Hyderabad',
+              selectedProduct: 'Dyson Airwrap Multi-Styler',
+              productId: 'p3',
+              attemptNumber: 3,
+              status: 'Verified VIP',
+              timestamp: '2026-11-27T08:10:00.000Z'
+            },
+            {
+              ticketNumber: 'OSG-TKT-991240',
+              name: 'Sneha Reddy',
+              email: 'sneha.reddy@gmail.com',
+              phone: '+91 98456 78123',
+              city: 'Bengaluru',
+              selectedProduct: 'iPhone 16 Pro Max',
+              productId: 'p1',
+              attemptNumber: 1,
+              status: 'Verified VIP',
+              timestamp: '2026-11-25T16:00:00.000Z'
+            },
+            {
+              ticketNumber: 'OSG-TKT-441890',
+              name: 'Amit Verma',
+              email: 'amit.verma@yahoo.com',
+              phone: '+91 98234 56123',
+              city: 'Delhi NCR',
+              selectedProduct: 'Sony PlayStation 5',
+              productId: 'p2',
+              attemptNumber: 1,
+              status: 'Verified VIP',
+              timestamp: '2026-11-26T09:30:00.000Z'
+            },
+            {
+              ticketNumber: 'OSG-TKT-672109',
+              name: 'Kavita Nair',
+              email: 'kavita.nair@hotmail.com',
+              phone: '+91 97123 45987',
+              city: 'Kochi',
+              selectedProduct: 'Dyson Airwrap Multi-Styler',
+              productId: 'p3',
+              attemptNumber: 1,
+              status: 'Verified VIP',
+              timestamp: '2026-11-26T18:40:00.000Z'
+            }
+          ];
+        }
+
+        const urlObjGw = new URL(req.url, 'http://localhost:8080');
+        const productFilter = urlObjGw.searchParams.get('product') || 'all';
+        let filtered = entries;
+        if (productFilter !== 'all') {
+          filtered = entries.filter(e => e.selectedProduct === productFilter || e.productId === productFilter);
+        }
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+          success: true,
+          total: entries.length,
+          filteredTotal: filtered.length,
+          data: filtered
+        }));
+        return;
+      }
+    }
+
     // 404 for unknown API
     res.writeHead(404);
     res.end(JSON.stringify({ error: 'Endpoint not found on One Stop Gadgets API' }));
     return;
+  }
+
+  // Serve Admin Dashboard
+  if (pathname === '/admin' || pathname === '/admin/') {
+    const adminPath = path.join(__dirname, 'public', 'admin.html');
+    if (fs.existsSync(adminPath)) {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      fs.createReadStream(adminPath).pipe(res);
+      return;
+    }
+  }
+
+  // Serve Super Admin Dashboard
+  if (pathname === '/superadmin' || pathname === '/superadmin/') {
+    const superAdminPath = path.join(__dirname, 'public', 'superadmin.html');
+    if (fs.existsSync(superAdminPath)) {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      fs.createReadStream(superAdminPath).pipe(res);
+      return;
+    }
   }
 
   // Static File Serving

@@ -2,88 +2,105 @@
 declare(strict_types=1);
 
 /**
- * ONE STOP GADGETS — Core PHP 8.x Front Controller & REST API Gateway
+ * Front Controller for One Stop Gadgets
  */
 
-define('ROOT_PATH', dirname(__DIR__));
-define('BACKEND_PATH', ROOT_PATH . '/backend');
-define('STORAGE_PATH', BACKEND_PATH . '/storage');
+require_once __DIR__ . '/../backend/autoload.php';
 
-// Auto-create storage directory for sessions if not present
-if (!is_dir(STORAGE_PATH . '/sessions')) {
-    mkdir(STORAGE_PATH . '/sessions', 0777, true);
-}
+use App\Database\Connection;
 
-// Session configuration
-ini_set('session.save_path', STORAGE_PATH . '/sessions');
-ini_set('session.cookie_httponly', '1');
-ini_set('session.use_only_cookies', '1');
-ini_set('session.cookie_samesite', 'Lax');
-
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-// CORS & JSON Headers
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
-header('Content-Type: application/json; charset=UTF-8');
+// CORS headers
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, X-CSRF-Token");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(204);
+    http_response_code(200);
     exit;
 }
 
-// Global Exception Handler
-set_exception_handler(function (Throwable $e) {
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Internal server error: ' . $e->getMessage(),
-        'file' => basename($e->getFile()),
-        'line' => $e->getLine()
-    ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-    exit;
-});
+$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$method = $_SERVER['REQUEST_METHOD'];
 
-// Require DB configuration
-$dbConfig = require BACKEND_PATH . '/config/database.php';
-
-// Simple PDO Factory
-function getDBConnection(): PDO {
-    static $pdo = null;
-    if ($pdo === null) {
-        $config = require BACKEND_PATH . '/config/database.php';
-        $dsn = "mysql:host={$config['host']};port={$config['port']};dbname={$config['database']};charset={$config['charset']}";
-        $pdo = new PDO($dsn, $config['username'], $config['password'], $config['options']);
+// Handle /api/v1/health
+if ($uri === '/api/v1/health') {
+    header('Content-Type: application/json');
+    try {
+        $pdo = Connection::getInstance();
+        $dbStatus = 'connected';
+    } catch (\Throwable $e) {
+        $dbStatus = 'disconnected: ' . $e->getMessage();
     }
-    return $pdo;
-}
-
-// Parse Request Path
-$uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
-$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-
-// Strip public subpath if accessed directly
-$uri = preg_replace('#^/public#', '', $uri);
-
-// Route Handler
-if ($uri === '/' || $uri === '/api/v1/health' || $uri === '/api/health') {
     echo json_encode([
-        'success' => true,
-        'message' => 'API is running normally',
-        'data' => [
-            'status' => 'operational',
-            'php_version' => PHP_VERSION,
-            'app' => 'ONE STOP GADGETS Backend API'
-        ]
-    ], JSON_PRETTY_PRINT);
+        'status' => 'healthy',
+        'database' => $dbStatus,
+        'timestamp' => date('c')
+    ]);
     exit;
 }
 
+// Handle /api/v1/plans
+if ($uri === '/api/v1/plans' && $method === 'GET') {
+    header('Content-Type: application/json');
+    $pdo = Connection::getInstance();
+    $stmt = $pdo->query("SELECT * FROM subscription_plans WHERE is_active = 1 ORDER BY display_order ASC");
+    $plans = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode(['success' => true, 'data' => $plans]);
+    exit;
+}
+
+// Handle /api/v1/products
+if ($uri === '/api/v1/products' && $method === 'GET') {
+    header('Content-Type: application/json');
+    $pdo = Connection::getInstance();
+    $isVip = isset($_GET['vip']) && $_GET['vip'] === '1';
+
+    $stmt = $pdo->query("SELECT * FROM deals WHERE is_active = 1 ORDER BY id DESC");
+    $deals = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // If not VIP, mask VIP products (>= ₹50,000)
+    $sanitized = array_map(function ($item) use ($isVip) {
+        if (!$isVip && (float)$item['deal_price'] >= 50000) {
+            $item['deal_price'] = null;
+            $item['affiliate_url'] = null;
+            $item['is_locked'] = true;
+        } else {
+            $item['is_locked'] = false;
+        }
+        return $item;
+    }, $deals);
+
+    echo json_encode(['success' => true, 'data' => $sanitized]);
+    exit;
+}
+
+// Handle Normal Admin Routes: /api/v1/admin/submissions
+if (strpos($uri, '/api/v1/admin/submissions') === 0) {
+    $controller = new \App\Controllers\AdminAssetController();
+    if ($method === 'GET') {
+        $controller->listSubmissions();
+    } elseif ($method === 'POST') {
+        $controller->addAsset();
+    } elseif ($method === 'DELETE') {
+        $parts = explode('/', trim($uri, '/'));
+        $id = (int)end($parts);
+        $controller->removeAsset($id);
+    }
+    exit;
+}
+
+// Static HTML views for Admin and Super Admin
+if ($uri === '/admin' || $uri === '/admin/') {
+    require_once __DIR__ . '/../public/admin.html';
+    exit;
+}
+
+if ($uri === '/superadmin' || $uri === '/superadmin/') {
+    require_once __DIR__ . '/../public/superadmin.html';
+    exit;
+}
+
+// Fallback 404
 http_response_code(404);
-echo json_encode([
-    'success' => false,
-    'message' => "Route {$method} {$uri} not found"
-], JSON_PRETTY_PRINT);
+header('Content-Type: application/json');
+echo json_encode(['success' => false, 'message' => 'API endpoint not found: ' . $uri]);

@@ -531,11 +531,33 @@ export default function App() {
     { id: 38, sku: 'PORT-DESK-STAND', title: 'Portronics Modesk Universal Metallic Smartphone & Tablet Stand', category: 'Accessories', categoryId: 'accessories', brand: 'Portronics', store: 'Amazon Verified', storeIcon: '🛒', discount: '-57%', price: '₹299', numeric_price: 299, original: '₹699', icon: '📱', rating: 4.6, description: 'Heavy-duty aluminum alloy desktop cradle with adjustable angle and cable pass-through.', merchantUrl: 'https://www.amazon.in' },
     { id: 39, sku: 'BOAT-BASSHEADS-242', title: 'boAt BassHeads 242 Polished In-Ear Sports Earphones', category: 'Audio & Wearables', categoryId: 'audio-wearables', brand: 'boAt', store: 'Amazon Verified', storeIcon: '🛒', discount: '-60%', price: '₹399', numeric_price: 399, original: '₹999', icon: '🎧', rating: 4.4, description: 'IPX4 water/sweat resistant with secure ear hooks and HD sound.', merchantUrl: 'https://www.amazon.in' },
     { id: 40, sku: 'NOISE-COLORFIT-STRAP', title: 'Noise Premium Breathable Mesh Magnetic Smartwatch Strap (22mm)', category: 'Smartwatches', categoryId: 'smartwatches', brand: 'Noise', store: 'Flipkart Verified', storeIcon: '⚡', discount: '-50%', price: '₹499', numeric_price: 499, original: '₹999', icon: '⌚', rating: 4.5, description: 'Stainless steel milanese loop magnetic clasp band compatible with all standard smartwatches.', merchantUrl: 'https://www.flipkart.com' },
-    { id: 41, sku: 'REDG-LED-MOUSE', title: 'Redgear Dragonwar RGB Backlit Optical Gaming Mouse', category: 'Gaming', categoryId: 'gaming', brand: 'Redgear', store: 'Amazon Verified', storeIcon: '🛒', discount: '-54%', price: '₹599', numeric_price: 599, original: '₹1,299', icon: '🎮', rating: 4.5, description: '3200 DPI on-the-fly switch, 6 programmable gaming buttons with dynamic RGB breathing LED.', merchantUrl: 'https://www.amazon.in' }
+    { id: 41, sku: 'REDG-LED-MOUSE', title: 'Redgear Dragonwar RGB Backlit Optical Gaming Mouse', category: 'Gaming', categoryId: 'gaming', brand: 'Redgear', store: 'Amazon Verified', storeIcon: '🛒', discount: '-54%', price: '₹599', numeric_price: 599, original: '₹1,299', icon: '🎮', rating: 4.5, description: '3200 DPI on-the-fly switch, 6 programmable gaming buttons with dynamic RGB breathing LED.', merchantUrl: 'https://www.amazon.in' },
+    { id: 101, sku: 'APPL-IPHONE-CASE-99', title: 'Apple iPhone Ultra-Slim Crystal Protective Case', category: 'Smartphones', categoryId: 'smartphones', brand: 'Apple', store: 'Amazon Verified', storeIcon: '🛒', discount: '-80%', price: '₹99', numeric_price: 99, original: '₹499', icon: '📱', rating: 4.8, description: 'Impact-resistant lightweight Apple iPhone case with shock-absorbent corners.', merchantUrl: 'https://www.amazon.in' }
   ];
 
+  const [liveApprovedDeals, setLiveApprovedDeals] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchLiveCatalog = () => {
+      fetch('/api/v1/products?vip=1')
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.success && Array.isArray(data.data)) {
+            const newlyApproved = data.data.filter((item: any) => item.sku && item.sku.startsWith('OSG-SUB-'));
+            setLiveApprovedDeals(newlyApproved);
+          }
+        })
+        .catch(() => {});
+    };
+    fetchLiveCatalog();
+    window.addEventListener('focus', fetchLiveCatalog);
+    return () => window.removeEventListener('focus', fetchLiveCatalog);
+  }, []);
+
+  const allCombinedDeals = [...liveApprovedDeals, ...masterDeals];
+
   // Filtered and sorted deals for Deals page
-  const filteredDeals = masterDeals.filter(d => {
+  const filteredDeals = allCombinedDeals.filter(d => {
     // 1. Gadget category match
     const matchesCat = activeCategoryFilter === 'all' || d.categoryId === activeCategoryFilter;
     

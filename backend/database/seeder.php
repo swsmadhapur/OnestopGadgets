@@ -57,9 +57,9 @@ $users = [
     ]
 ];
 $stmtUser = $pdo->prepare("
-    INSERT INTO users (role_id, full_name, email, phone, password_hash, current_role, city, email_verified_at)
+    INSERT INTO users (role_id, full_name, email, phone, password_hash, `current_role`, city, email_verified_at)
     VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
-    ON DUPLICATE KEY UPDATE full_name=VALUES(full_name), current_role=VALUES(current_role)
+    ON DUPLICATE KEY UPDATE full_name=VALUES(full_name), `current_role`=VALUES(`current_role`)
 ");
 foreach ($users as $u) {
     $hash = password_hash($u['password'], PASSWORD_BCRYPT, ['cost' => 10]);

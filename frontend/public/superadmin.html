@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Super Admin Dashboard — One Stop Gadgets</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+  </style>
+</head>
+<body class="bg-[#070b13] text-slate-100 min-h-screen">
+
+  <!-- ================= SUPERADMIN AUTHENTICATION / LOGIN VIEW ================= -->
+  <div id="sa-login-view" class="min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-md w-full">
+      <!-- Brand Header -->
+      <div class="text-center mb-8">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-red-600 to-blue-600 flex items-center justify-center font-black text-2xl text-white shadow-xl shadow-blue-500/20 mx-auto mb-4">
+          OSG
+        </div>
+        <h1 class="text-2xl font-black text-white">Super Admin Console</h1>
+        <p class="text-xs text-blue-400 font-semibold tracking-wider uppercase mt-1">Master Executive Management Portal</p>
+      </div>
+
+      <!-- Demo Credentials Banner -->
+      <div class="mb-6 p-4 rounded-2xl bg-gradient-to-r from-blue-950/40 via-red-950/40 to-slate-900 border border-slate-800 shadow-xl">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+            🔑 <span>Demo Master Credentials</span>
+          </span>
+          <button onclick="fillSuperAdminDemo()" class="px-2.5 py-1 rounded-lg bg-blue-600/20 hover:bg-blue-600 text-blue-400 hover:text-white text-[11px] font-bold border border-blue-500/30 transition">
+            Auto-Fill
+          </button>
+        </div>
+        <div class="space-y-1 font-mono text-xs text-slate-300">
+          <div class="flex justify-between">
+            <span class="text-slate-500">SuperAdmin Email:</span>
+            <span class="text-white font-semibold selection:bg-blue-500">superadmin@onestopgadgets.com</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">Master Password:</span>
+            <span class="text-white font-semibold selection:bg-blue-500">SuperAdmin@123</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Login Form Card -->
+      <div class="bg-[#0c1220] border border-slate-800/80 rounded-2xl p-8 shadow-2xl">
+        <form onsubmit="handleSuperAdminLogin(event)" class="space-y-5">
+          <div>
+            <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Executive Email</label>
+            <input type="email" id="sa-login-email" required placeholder="superadmin@onestopgadgets.com"
+              class="w-full px-4 py-3 bg-[#070b13] border border-slate-800 rounded-xl text-white placeholder-slate-600 text-sm focus:outline-none focus:border-blue-500 transition">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Password</label>
+            <input type="password" id="sa-login-password" required placeholder="••••••••"
+              class="w-full px-4 py-3 bg-[#070b13] border border-slate-800 rounded-xl text-white placeholder-slate-600 text-sm focus:outline-none focus:border-blue-500 transition">
+          </div>
+
+          <div id="sa-login-error" class="hidden p-3 rounded-xl text-xs font-semibold bg-red-500/10 border border-red-500/30 text-red-400"></div>
+
+          <button type="submit" id="btn-sa-login-submit" class="w-full py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-blue-600/30 transition text-sm flex items-center justify-center gap-2">
+            <span>Access Super Admin Console</span>
+          </button>
+        </form>
+
+        <div class="mt-6 pt-6 border-t border-slate-800/80 text-center">
+          <a href="/" class="text-xs text-slate-400 hover:text-white transition">← Back to Customer Website</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SUPERADMIN DASHBOARD (AFTER LOGIN) ================= -->
+  <div id="sa-dashboard-view" class="hidden min-h-screen flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-[#0c1220] border-r border-slate-800/80 flex flex-col justify-between shrink-0 min-h-screen sticky top-0 shadow-2xl">
+      <div>
+        <div class="p-6 border-b border-slate-800/80 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-blue-600 flex items-center justify-center font-black text-xl text-white shadow-lg shadow-red-500/20">
+            OSG
+          </div>
+          <div>
+            <h1 class="text-sm font-bold text-white leading-tight">One Stop Gadgets</h1>
+            <p class="text-[10px] text-blue-400 font-semibold tracking-wider uppercase">Super Admin Portal</p>
+          </div>
+        </div>
+
+        <nav class="p-4 space-y-1.5 text-sm font-semibold">
+          <button onclick="switchTab('overview')" id="nav-overview" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-red-500 text-white font-bold shadow-md shadow-red-600/20 text-left transition">
+            <span>📊</span> Dashboard Overview
+          </button>
+          <button onclick="switchTab('submissions')" id="nav-submissions" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition text-left">
+            <span class="flex items-center gap-3"><span>📥</span> Admin Submissions</span>
+            <span id="badge-pending-count" class="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 text-xs font-mono">0</span>
+          </button>
+          <button onclick="switchTab('products')" id="nav-products" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition text-left">
+            <span>🏷️</span> Manage Products
+          </button>
+          <button onclick="switchTab('subscriptions')" id="nav-subscriptions" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition text-left">
+            <span>👑</span> VIP Subscriptions
+          </button>
+          <button onclick="switchTab('giveaway')" id="nav-giveaway" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition text-left">
+            <span>🎁</span> Give Away Participants
+          </button>
+        </nav>
+      </div>
+
+      <div class="p-4 border-t border-slate-800/80 bg-[#090e18]">
+        <div class="mb-3 px-3 py-2 bg-slate-900/80 rounded-xl border border-slate-800 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-xs text-slate-400 font-medium">Master SuperAdmin</span>
+        </div>
+        <button onclick="handleSuperAdminLogout()" class="w-full px-4 py-2 bg-slate-800 hover:bg-red-600/20 text-slate-400 hover:text-red-400 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
+          Logout
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-8 sm:p-10 overflow-y-auto">
+      <!-- Header -->
+      <header class="flex items-center justify-between pb-6 mb-8 border-b border-slate-800/80">
+        <div>
+          <h2 id="page-title" class="text-2xl font-black text-white">Super Admin Command Center</h2>
+          <p class="text-xs text-slate-400 mt-1">Approve catalog submissions, inspect full products with price filters, track VIP users, and audit Give Away participants</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold">● System Live</span>
+          <button onclick="refreshCurrentTab()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl text-xs font-bold text-slate-300 transition">
+            🔄 Refresh Data
+          </button>
+        </div>
+      </header>
+
+      <!-- SECTION 1: OVERVIEW -->
+      <section id="tab-overview" class="space-y-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="p-6 rounded-2xl bg-[#0c1220] border border-slate-800/80 shadow-xl">
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Live Catalog Deals</div>
+            <div class="text-3xl font-black text-white" id="stat-products-count">35</div>
+            <div class="text-xs text-emerald-400 mt-2 font-semibold">Ready & Published</div>
+          </div>
+          <div class="p-6 rounded-2xl bg-[#0c1220] border border-slate-800/80 shadow-xl">
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Pending Submissions</div>
+            <div class="text-3xl font-black text-amber-400" id="stat-pending-count">0</div>
+            <div class="text-xs text-slate-400 mt-2">Needs SuperAdmin Approval</div>
+          </div>
+          <div class="p-6 rounded-2xl bg-[#0c1220] border border-slate-800/80 shadow-xl">
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">VIP Subscriptions</div>
+            <div class="text-3xl font-black text-blue-400" id="stat-subs-count">4 Active</div>
+            <div class="text-xs text-slate-400 mt-2">Across 4 Tiers (₹99 - ₹399)</div>
+          </div>
+          <div class="p-6 rounded-2xl bg-[#0c1220] border border-slate-800/80 shadow-xl">
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Give Away Participants</div>
+            <div class="text-3xl font-black text-purple-400" id="stat-giveaway-count">6 Users</div>
+            <div class="text-xs text-slate-400 mt-2">Max 3 entries/month enforced</div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div class="p-6 rounded-2xl bg-[#0c1220] border border-slate-800/80 shadow-xl">
+            <h3 class="text-base font-bold text-white mb-4">Catalog Pricing Distribution</h3>
+            <div class="h-64 flex items-center justify-center">
+              <canvas id="dealsChart"></canvas>
+            </div>
+          </div>
+          <div class="p-6 rounded-2xl bg-[#0c1220] border border-slate-800/80 shadow-xl">
+            <h3 class="text-base font-bold text-white mb-4">VIP Package Revenue Breakdown</h3>
+            <div class="h-64 flex items-center justify-center">
+              <canvas id="revenueChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2: ADMIN SUBMISSIONS -->
+      <section id="tab-submissions" class="hidden space-y-6">
+        <div class="p-4 rounded-xl bg-blue-950/40 border border-blue-800/40 text-blue-200 text-sm flex items-center justify-between">
+          <span>🛡️ <strong>Approval Workflow:</strong> Products submitted by Catalog Admins are held in this pending queue. Once you click <strong>"Approve & Publish"</strong>, they immediately go live on the customer website catalog!</span>
+        </div>
+
+        <div class="bg-[#0c1220] border border-slate-800/80 rounded-2xl p-6 shadow-2xl">
+          <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+            <div>
+              <h3 class="text-lg font-bold text-white">Pending Catalog Submissions</h3>
+              <p class="text-xs text-slate-400">Review images and affiliate destination links before publication</p>
+            </div>
+          </div>
+
+          <div id="submissions-table-container">
+            <div class="text-center py-12 text-slate-500">Loading submissions...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: MANAGE PRODUCTS (FULL CATALOG + PRICE & CATEGORY FILTERS) -->
+      <section id="tab-products" class="hidden space-y-6">
+        <div class="bg-[#0c1220] border border-slate-800/80 rounded-2xl p-6 shadow-2xl">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800">
+            <div>
+              <h3 class="text-lg font-bold text-white">Full Product Catalog</h3>
+              <p class="text-xs text-slate-400">Manage all live deals, filter by category or specific price points</p>
+            </div>
+            <div class="text-xs text-slate-400 font-mono">
+              Showing: <span id="products-count-badge" class="text-white font-bold">0</span> products
+            </div>
+          </div>
+
+          <!-- Add-on Filters: Specific Price Buttons + Category Dropdown -->
+          <div class="space-y-4 mb-6">
+            <div>
+              <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Filter by Price Point:</div>
+              <div class="flex flex-wrap gap-2" id="price-filter-buttons">
+                <button onclick="setProductPriceFilter('all')" class="price-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-red-600 text-white shadow-md shadow-red-600/30" data-price="all">All Prices</button>
+                <button onclick="setProductPriceFilter('99')" class="price-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800" data-price="99">Under 99</button>
+                <button onclick="setProductPriceFilter('199')" class="price-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800" data-price="199">Under 199</button>
+                <button onclick="setProductPriceFilter('299')" class="price-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800" data-price="299">Under 299</button>
+                <button onclick="setProductPriceFilter('399')" class="price-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800" data-price="399">Under 399</button>
+                <button onclick="setProductPriceFilter('499')" class="price-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800" data-price="499">Under 499</button>
+                <button onclick="setProductPriceFilter('599')" class="price-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800" data-price="599">Under 599</button>
+                <button onclick="setProductPriceFilter('more_599')" class="price-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800" data-price="more_599">More than 599</button>
+                <button onclick="setProductPriceFilter('vip')" class="price-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800" data-price="vip">VIP (≥ ₹50,000)</button>
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <select id="category-filter-select" onchange="filterProducts()" class="px-4 py-2.5 bg-[#070b13] border border-slate-800 rounded-xl text-xs font-semibold text-slate-300 focus:outline-none focus:border-red-500">
+                <option value="all">All Categories</option>
+                <option value="Smartphones">Smartphones</option>
+                <option value="Laptops & Computers">Laptops & Computers</option>
+                <option value="Smartwatches">Smartwatches</option>
+                <option value="Headphones & Earbuds">Headphones & Earbuds</option>
+                <option value="Gaming & Consoles">Gaming & Consoles</option>
+                <option value="Tablets">Tablets</option>
+                <option value="Cameras & Accessories">Cameras & Accessories</option>
+                <option value="Smart TVs">Smart TVs</option>
+                <option value="Home Appliances">Home Appliances</option>
+                <option value="Gadget Accessories">Gadget Accessories</option>
+              </select>
+              <input type="text" id="product-search-input" oninput="filterProducts()" placeholder="Search product title, brand or store..." class="flex-1 px-4 py-2.5 bg-[#070b13] border border-slate-800 rounded-xl text-xs text-white placeholder-slate-600 focus:outline-none focus:border-red-500">
+            </div>
+          </div>
+
+          <div id="products-table-container">
+            <div class="text-center py-12 text-slate-500">Loading catalog products...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4: VIP SUBSCRIPTIONS -->
+      <section id="tab-subscriptions" class="hidden space-y-6">
+        <div class="bg-[#0c1220] border border-slate-800/80 rounded-2xl p-6 shadow-2xl">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800">
+            <div>
+              <h3 class="text-lg font-bold text-white">VIP Subscribed Customers</h3>
+              <p class="text-xs text-slate-400">View users who purchased VIP memberships and filter by their active plan tier</p>
+            </div>
+            <div class="text-xs text-slate-400 font-mono">
+              Total Subscribers: <span id="subs-count-badge" class="text-amber-400 font-bold">0</span>
+            </div>
+          </div>
+
+          <!-- Plan Filter Buttons -->
+          <div class="mb-6">
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Filter by VIP Plan:</div>
+            <div class="flex flex-wrap gap-2" id="plan-filter-buttons">
+              <button onclick="setPlanFilter('all')" class="plan-btn px-4 py-2 rounded-xl text-xs font-bold bg-red-600 text-white shadow-md shadow-red-600/30" data-plan="all">All Plans</button>
+              <button onclick="setPlanFilter('one-month')" class="plan-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800" data-plan="one-month">1 Month (₹99)</button>
+              <button onclick="setPlanFilter('three-month')" class="plan-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800" data-plan="three-month">3 Months (₹199)</button>
+              <button onclick="setPlanFilter('six-month')" class="plan-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800" data-plan="six-month">6 Months (₹299)</button>
+              <button onclick="setPlanFilter('annual')" class="plan-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800" data-plan="annual">1 Year (₹399)</button>
+            </div>
+          </div>
+
+          <div id="subscriptions-table-container">
+            <div class="text-center py-12 text-slate-500">Loading VIP subscription records...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5: GIVE AWAY PARTICIPANTS -->
+      <section id="tab-giveaway" class="hidden space-y-6">
+        <div class="bg-[#0c1220] border border-slate-800/80 rounded-2xl p-6 shadow-2xl">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800">
+            <div>
+              <h3 class="text-lg font-bold text-white">Give Away Contest Participants</h3>
+              <p class="text-xs text-slate-400">Audit user participation details (Name, Phone Number, Email) and filter by the 3 monthly giveaway products</p>
+            </div>
+            <div class="text-xs text-slate-400 font-mono">
+              Total Entries: <span id="giveaway-count-badge" class="text-purple-400 font-bold">0</span>
+            </div>
+          </div>
+
+          <!-- 3 Monthly Featured Product Filter Buttons -->
+          <div class="mb-6">
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Filter by Monthly Give Away Product (3 Products / Month):</div>
+            <div class="flex flex-wrap gap-2" id="giveaway-filter-buttons">
+              <button onclick="setGiveawayProductFilter('all')" class="gw-btn px-4 py-2 rounded-xl text-xs font-bold bg-red-600 text-white shadow-md shadow-red-600/30" data-gw="all">
+                All Give Away Products (All 3)
+              </button>
+              <button onclick="setGiveawayProductFilter('iPhone 16 Pro Max')" class="gw-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800" data-gw="iPhone 16 Pro Max">
+                📱 Give Away #1: iPhone 16 Pro Max
+              </button>
+              <button onclick="setGiveawayProductFilter('Sony PlayStation 5')" class="gw-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800" data-gw="Sony PlayStation 5">
+                🎮 Give Away #2: Sony PlayStation 5
+              </button>
+              <button onclick="setGiveawayProductFilter('Dyson Airwrap Multi-Styler')" class="gw-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800" data-gw="Dyson Airwrap Multi-Styler">
+                💨 Give Away #3: Dyson Airwrap Multi-Styler
+              </button>
+            </div>
+          </div>
+
+          <div id="giveaway-table-container">
+            <div class="text-center py-12 text-slate-500">Loading participant records...</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    let currentTab = 'overview';
+    let allProducts = [];
+    let currentPriceFilter = 'all';
+    let currentPlanFilter = 'all';
+    let currentGwFilter = 'all';
+
+    // SuperAdmin Authentication Check on Load
+    window.addEventListener('load', () => {
+      const isAuth = sessionStorage.getItem('osg_superadmin_logged_in');
+      if (isAuth === 'true') {
+        showSuperAdminDashboard();
+      } else {
+        showSuperAdminLogin();
+      }
+    });
+
+    function fillSuperAdminDemo() {
+      document.getElementById('sa-login-email').value = 'superadmin@onestopgadgets.com';
+      document.getElementById('sa-login-password').value = 'SuperAdmin@123';
+    }
+
+    function handleSuperAdminLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('sa-login-email').value.trim();
+      const pass = document.getElementById('sa-login-password').value.trim();
+      const err = document.getElementById('sa-login-error');
+
+      // Validating SuperAdmin demo credentials
+      if ((email === 'superadmin@onestopgadgets.com' || email === 'superadmin') && pass === 'SuperAdmin@123') {
+        sessionStorage.setItem('osg_superadmin_logged_in', 'true');
+        err.classList.add('hidden');
+        showSuperAdminDashboard();
+      } else {
+        err.classList.remove('hidden');
+        err.innerText = 'Invalid credentials. Please use the demo credentials provided above.';
+      }
+    }
+
+    function showSuperAdminDashboard() {
+      document.getElementById('sa-login-view').classList.add('hidden');
+      document.getElementById('sa-dashboard-view').classList.remove('hidden');
+      loadSubmissions();
+      initCharts();
+    }
+
+    function showSuperAdminLogin() {
+      document.getElementById('sa-dashboard-view').classList.add('hidden');
+      document.getElementById('sa-login-view').classList.remove('hidden');
+    }
+
+    function handleSuperAdminLogout() {
+      if (confirm('Are you sure you want to log out of Super Admin?')) {
+        sessionStorage.removeItem('osg_superadmin_logged_in');
+        showSuperAdminLogin();
+      }
+    }
+
+    function switchTab(tabId) {
+      currentTab = tabId;
+      const tabs = ['overview', 'submissions', 'products', 'subscriptions', 'giveaway'];
+      tabs.forEach(t => {
+        const el = document.getElementById('tab-' + t);
+        const nav = document.getElementById('nav-' + t);
+        if (t === tabId) {
+          el.classList.remove('hidden');
+          nav.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-red-500 text-white font-bold shadow-md shadow-red-600/20 text-left transition';
+        } else {
+          el.classList.add('hidden');
+          nav.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition text-left';
+        }
+      });
+
+      if (tabId === 'submissions') loadSubmissions();
+      if (tabId === 'products') loadProducts();
+      if (tabId === 'subscriptions') loadSubscriptions();
+      if (tabId === 'giveaway') loadGiveawayParticipants();
+    }
+
+    function refreshCurrentTab() {
+      switchTab(currentTab);
+    }
+
+    // --- 1. SUBMISSIONS & APPROVAL WORKFLOW ---
+    async function loadSubmissions() {
+      const container = document.getElementById('submissions-table-container');
+      try {
+        const res = await fetch('/api/v1/admin/submissions');
+        const data = await res.json();
+        const pending = (data.data || []).filter(s => s.status === 'pending');
+        document.getElementById('badge-pending-count').innerText = pending.length;
+        document.getElementById('stat-pending-count').innerText = pending.length;
+
+        if (pending.length > 0) {
+          container.innerHTML = `
+            <table class="w-full text-left text-sm text-slate-300">
+              <thead class="text-xs uppercase text-slate-500 border-b border-slate-800">
+                <tr>
+                  <th class="py-3 px-4">Image Preview</th>
+                  <th class="py-3 px-4">Affiliate Destination Link</th>
+                  <th class="py-3 px-4">Submission Date</th>
+                  <th class="py-3 px-4">Status</th>
+                  <th class="py-3 px-4 text-right">Approval Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800">
+                ${pending.map(item => `
+                  <tr>
+                    <td class="py-3 px-4">
+                      <img src="${item.image_path}" class="w-14 h-14 rounded-xl object-cover bg-slate-900 border border-slate-800">
+                    </td>
+                    <td class="py-3 px-4 max-w-xs">
+                      <a href="${item.affiliate_url}" target="_blank" class="text-blue-400 hover:underline font-mono text-xs truncate block">${item.affiliate_url}</a>
+                    </td>
+                    <td class="py-3 px-4 text-xs text-slate-400">${new Date(item.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+                    <td class="py-3 px-4">
+                      <span class="px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold">Pending Review</span>
+                    </td>
+                    <td class="py-3 px-4 text-right space-x-2">
+                      <button onclick="approveSubmission(${item.id})" class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-xl text-xs font-bold shadow-md shadow-emerald-600/20 transition">
+                        ✓ Approve & Publish
+                      </button>
+                      <button onclick="rejectSubmission(${item.id})" class="px-3 py-2 bg-red-600/10 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/20 rounded-xl text-xs font-bold transition">
+                        Reject
+                      </button>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          `;
+        } else {
+          container.innerHTML = `
+            <div class="text-center py-16">
+              <div class="text-4xl mb-3">✅</div>
+              <div class="text-base font-bold text-white">No Pending Submissions</div>
+              <div class="text-xs text-slate-500 mt-1">All catalog submissions from admins have been reviewed and approved!</div>
+            </div>
+          `;
+        }
+      } catch (err) {
+        container.innerHTML = '<div class="text-center py-12 text-red-400">Failed to load submissions.</div>';
+      }
+    }
+
+    async function approveSubmission(id) {
+      if (!confirm('Approve this submission? The product will immediately become LIVE on the customer website.')) return;
+      try {
+        const res = await fetch('/api/v1/super-admin/submissions/' + id + '/approve', { method: 'POST' });
+        const data = await res.json();
+        alert(data.message || 'Approved!');
+        loadSubmissions();
+      } catch (err) {
+        alert('Failed to approve submission.');
+      }
+    }
+
+    async function rejectSubmission(id) {
+      if (!confirm('Are you sure you want to reject this submission?')) return;
+      try {
+        const res = await fetch('/api/v1/super-admin/submissions/' + id + '/reject', { method: 'POST' });
+        const data = await res.json();
+        alert(data.message || 'Rejected.');
+        loadSubmissions();
+      } catch (err) {
+        alert('Failed to reject submission.');
+      }
+    }
+
+    // --- 2. MANAGE PRODUCTS ---
+    async function loadProducts() {
+      try {
+        const res = await fetch('/api/v1/products?vip=1');
+        const data = await res.json();
+        // Support both direct array and object with data property
+        if (Array.isArray(data)) {
+          allProducts = data;
+        } else if (data && Array.isArray(data.data)) {
+          allProducts = data.data;
+        } else {
+          allProducts = [];
+        }
+        document.getElementById('stat-products-count').innerText = allProducts.length;
+        filterProducts();
+      } catch (err) {
+        document.getElementById('products-table-container').innerHTML = '<div class="text-center py-12 text-red-400">Failed to load catalog.</div>';
+      }
+    }
+
+    function setProductPriceFilter(price) {
+      currentPriceFilter = price;
+      document.querySelectorAll('.price-btn').forEach(b => {
+        if (b.getAttribute('data-price') === price) {
+          b.className = 'price-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-red-600 text-white shadow-md shadow-red-600/30';
+        } else {
+          b.className = 'price-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800';
+        }
+      });
+      filterProducts();
+    }
+
+    function filterProducts() {
+      const cat = document.getElementById('category-filter-select').value;
+      const search = (document.getElementById('product-search-input').value || '').toLowerCase();
+
+      let filtered = allProducts.filter(p => {
+        const pPrice = Number(p.numeric_price || p.deal_price || 0);
+        if (currentPriceFilter === '99' && pPrice > 99) return false;
+        if (currentPriceFilter === '199' && pPrice > 199) return false;
+        if (currentPriceFilter === '299' && pPrice > 299) return false;
+        if (currentPriceFilter === '399' && pPrice > 399) return false;
+        if (currentPriceFilter === '499' && pPrice > 499) return false;
+        if (currentPriceFilter === '599' && pPrice > 599) return false;
+        if (currentPriceFilter === 'more_599' && pPrice <= 599) return false;
+        if (currentPriceFilter === 'vip' && pPrice < 50000) return false;
+
+        if (cat !== 'all' && (p.category !== cat && p.categoryId !== cat)) return false;
+
+        if (search) {
+          const matchTitle = (p.title || '').toLowerCase().includes(search);
+          const matchBrand = (p.brand || '').toLowerCase().includes(search);
+          const matchStore = (p.store || '').toLowerCase().includes(search);
+          if (!matchTitle && !matchBrand && !matchStore) return false;
+        }
+
+        return true;
+      });
+
+      renderProductsTable(filtered);
+    }
+
+    function renderProductsTable(products) {
+      const container = document.getElementById('products-table-container');
+      document.getElementById('products-count-badge').innerText = products.length;
+
+      if (products.length === 0) {
+        container.innerHTML = '<div class="text-center py-12 text-slate-500">No products match your selected filters.</div>';
+        return;
+      }
+
+      container.innerHTML = `
+        <table class="w-full text-left text-sm text-slate-300">
+          <thead class="text-xs uppercase text-slate-500 border-b border-slate-800">
+            <tr>
+              <th class="py-3 px-4">Deal Title</th>
+              <th class="py-3 px-4">Category</th>
+              <th class="py-3 px-4">Offer Price</th>
+              <th class="py-3 px-4">Tier</th>
+              <th class="py-3 px-4">Store</th>
+              <th class="py-3 px-4 text-right">Affiliate Link</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800">
+            ${products.map(p => {
+              const price = Number(p.numeric_price || p.deal_price || 0);
+              const isVip = price >= 50000;
+              return `
+                <tr>
+                  <td class="py-3.5 px-4 font-semibold text-white max-w-xs truncate">
+                    <div class="flex items-center gap-3">
+                      <span class="text-lg">${p.icon || '📱'}</span>
+                      <span class="truncate">${p.title}</span>
+                    </div>
+                  </td>
+                  <td class="py-3.5 px-4 text-xs text-slate-400">${p.category}</td>
+                  <td class="py-3.5 px-4 font-mono font-bold text-emerald-400">₹${price.toLocaleString('en-IN')}</td>
+                  <td class="py-3.5 px-4">
+                    ${isVip 
+                      ? '<span class="px-2 py-0.5 rounded bg-red-500/20 text-red-400 text-xs font-bold">VIP (≥ ₹50k)</span>' 
+                      : '<span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 text-xs font-bold">Free Deal</span>'}
+                  </td>
+                  <td class="py-3.5 px-4 text-xs text-slate-400">${p.store || 'Online'}</td>
+                  <td class="py-3.5 px-4 text-right">
+                    <a href="${p.merchantUrl || p.affiliate_url || '#'}" target="_blank" class="px-3 py-1.5 bg-blue-600/10 hover:bg-blue-600 text-blue-400 hover:text-white rounded-lg text-xs font-bold transition">
+                      View Deal ↗
+                    </a>
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    // --- 3. VIP SUBSCRIPTIONS ---
+    async function loadSubscriptions() {
+      const container = document.getElementById('subscriptions-table-container');
+      try {
+        const url = '/api/v1/super-admin/subscriptions' + (currentPlanFilter !== 'all' ? '?plan=' + currentPlanFilter : '');
+        const res = await fetch(url);
+        const data = await res.json();
+        const subs = data.data || [];
+        document.getElementById('subs-count-badge').innerText = subs.length;
+        document.getElementById('stat-subs-count').innerText = subs.length + ' Active';
+
+        if (subs.length === 0) {
+          container.innerHTML = '<div class="text-center py-12 text-slate-500">No subscribers found for this VIP plan.</div>';
+          return;
+        }
+
+        container.innerHTML = `
+          <table class="w-full text-left text-sm text-slate-300">
+            <thead class="text-xs uppercase text-slate-500 border-b border-slate-800">
+              <tr>
+                <th class="py-3 px-4">Subscriber Name</th>
+                <th class="py-3 px-4">Email ID</th>
+                <th class="py-3 px-4">Phone Number</th>
+                <th class="py-3 px-4">Purchased Plan</th>
+                <th class="py-3 px-4">Amount Paid</th>
+                <th class="py-3 px-4">Payment Method</th>
+                <th class="py-3 px-4">Expiry Date</th>
+                <th class="py-3 px-4">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800">
+              ${subs.map(s => `
+                <tr>
+                  <td class="py-3.5 px-4 font-bold text-white">${s.user.name}</td>
+                  <td class="py-3.5 px-4 text-xs font-mono text-slate-400">${s.user.email}</td>
+                  <td class="py-3.5 px-4 text-xs font-mono text-slate-300">${s.user.phone}</td>
+                  <td class="py-3.5 px-4">
+                    <span class="px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold">
+                      ${s.plan}
+                    </span>
+                  </td>
+                  <td class="py-3.5 px-4 font-mono font-bold text-emerald-400">₹${s.amountPaid}</td>
+                  <td class="py-3.5 px-4 text-xs text-slate-400">${s.paymentMethod || 'UPI / Card'}</td>
+                  <td class="py-3.5 px-4 text-xs text-slate-400">${new Date(s.expiresAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+                  <td class="py-3.5 px-4">
+                    <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-xs font-bold">Active VIP</span>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      } catch (err) {
+        container.innerHTML = '<div class="text-center py-12 text-red-400">Failed to load VIP subscriptions.</div>';
+      }
+    }
+
+    function setPlanFilter(plan) {
+      currentPlanFilter = plan;
+      document.querySelectorAll('.plan-btn').forEach(b => {
+        if (b.getAttribute('data-plan') === plan) {
+          b.className = 'plan-btn px-4 py-2 rounded-xl text-xs font-bold bg-red-600 text-white shadow-md shadow-red-600/30';
+        } else {
+          b.className = 'plan-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800';
+        }
+      });
+      loadSubscriptions();
+    }
+
+    // --- 4. GIVE AWAY PARTICIPANTS ---
+    async function loadGiveawayParticipants() {
+      const container = document.getElementById('giveaway-table-container');
+      try {
+        const url = '/api/v1/super-admin/giveaway-participants' + (currentGwFilter !== 'all' ? '?product=' + encodeURIComponent(currentGwFilter) : '');
+        const res = await fetch(url);
+        const data = await res.json();
+        const entries = data.data || [];
+        document.getElementById('giveaway-count-badge').innerText = entries.length;
+        document.getElementById('stat-giveaway-count').innerText = entries.length + ' Entries';
+
+        if (entries.length === 0) {
+          container.innerHTML = '<div class="text-center py-12 text-slate-500">No participants registered for this giveaway product.</div>';
+          return;
+        }
+
+        container.innerHTML = `
+          <table class="w-full text-left text-sm text-slate-300">
+            <thead class="text-xs uppercase text-slate-500 border-b border-slate-800">
+              <tr>
+                <th class="py-3 px-4">Ticket ID</th>
+                <th class="py-3 px-4">Participant Name</th>
+                <th class="py-3 px-4">Phone Number</th>
+                <th class="py-3 px-4">Email ID</th>
+                <th class="py-3 px-4">Selected Give Away Product</th>
+                <th class="py-3 px-4">Monthly Attempt (Max 3)</th>
+                <th class="py-3 px-4">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800">
+              ${entries.map(e => `
+                <tr>
+                  <td class="py-3.5 px-4 font-mono font-bold text-amber-400 text-xs">${e.ticketNumber}</td>
+                  <td class="py-3.5 px-4 font-bold text-white">${e.name}</td>
+                  <td class="py-3.5 px-4 text-xs font-mono text-emerald-400">${e.phone}</td>
+                  <td class="py-3.5 px-4 text-xs font-mono text-slate-400">${e.email}</td>
+                  <td class="py-3.5 px-4">
+                    <span class="px-2.5 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-bold">
+                      🎁 ${e.selectedProduct || 'Featured Monthly Giveaway'}
+                    </span>
+                  </td>
+                  <td class="py-3.5 px-4">
+                    <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 text-xs font-bold">
+                      Attempt ${e.attemptNumber || 1} of 3
+                    </span>
+                  </td>
+                  <td class="py-3.5 px-4">
+                    <span class="text-emerald-400 font-semibold text-xs">✓ ${e.status || 'Verified VIP'}</span>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      } catch (err) {
+        container.innerHTML = '<div class="text-center py-12 text-red-400">Failed to load giveaway participants.</div>';
+      }
+    }
+
+    function setGiveawayProductFilter(product) {
+      currentGwFilter = product;
+      document.querySelectorAll('.gw-btn').forEach(b => {
+        if (b.getAttribute('data-gw') === product) {
+          b.className = 'gw-btn px-4 py-2 rounded-xl text-xs font-bold bg-red-600 text-white shadow-md shadow-red-600/30';
+        } else {
+          b.className = 'gw-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800';
+        }
+      });
+      loadGiveawayParticipants();
+    }
+
+    // Initialize Charts on Load
+    function initCharts() {
+      const c1 = document.getElementById('dealsChart');
+      if (c1 && !c1.dataset.rendered) {
+        c1.dataset.rendered = "true";
+        const ctx1 = c1.getContext('2d');
+        new Chart(ctx1, {
+          type: 'doughnut',
+          data: {
+            labels: ['Free Deals (< ₹50,000)', 'VIP Secret Deals (≥ ₹50,000)'],
+            datasets: [{
+              data: [22, 13],
+              backgroundColor: ['#2563EB', '#E6192D'],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { labels: { color: '#94A3B8' } } }
+          }
+        });
+      }
+
+      const c2 = document.getElementById('revenueChart');
+      if (c2 && !c2.dataset.rendered) {
+        c2.dataset.rendered = "true";
+        const ctx2 = c2.getContext('2d');
+        new Chart(ctx2, {
+          type: 'bar',
+          data: {
+            labels: ['1M (₹99)', '3M (₹199)', '6M (₹299)', '1Y (₹399)'],
+            datasets: [{
+              label: 'Active Subscriptions',
+              data: [42, 68, 125, 39],
+              backgroundColor: '#E6192D',
+              borderRadius: 8
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { ticks: { color: '#94A3B8' }, grid: { display: false } },
+              y: { ticks: { color: '#94A3B8' }, grid: { color: '#1E293B' } }
+            }
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>
