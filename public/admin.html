@@ -230,7 +230,7 @@
               </div>
             </div>
 
-            <!-- Product Image File Input with custom Choose File button -->
+            <!-- Product Image File Input with custom Choose File button & Live Preview -->
             <div>
               <label class="block text-sm font-semibold text-slate-300 mb-2">
                 Product Image <span class="text-red-500">*</span>
@@ -246,6 +246,20 @@
                 <span id="file-chosen-text" class="ml-4 text-sm text-slate-400 truncate">No file chosen</span>
               </div>
               <p class="text-xs text-slate-500 mt-2">Accepted formats: JPG, PNG, WEBP (Max: 5MB)</p>
+              
+              <!-- Image Preview Box -->
+              <div id="add-image-preview-wrapper" class="hidden mt-3 p-3 bg-[#070b13] border border-slate-800 rounded-xl flex items-center gap-4">
+                <div class="relative w-20 h-20 rounded-lg overflow-hidden border border-slate-700 bg-slate-900 shrink-0">
+                  <img id="add-image-preview-img" src="" alt="Preview" class="w-full h-full object-cover">
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-white flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Image Selected Preview
+                  </div>
+                  <div id="add-image-preview-meta" class="text-[11px] text-slate-400 mt-1">Ready to upload</div>
+                  <button type="button" onclick="clearAddImagePreview()" class="text-xs text-red-400 hover:text-red-300 mt-1 font-semibold underline">Remove / Change</button>
+                </div>
+              </div>
             </div>
 
             <!-- Affiliate Destination Link -->
@@ -283,6 +297,96 @@
         </div>
       </div>
     </main>
+  </div>
+
+  <!-- EDIT PRODUCT MODAL POPUP WITH LIVE IMAGE PREVIEW -->
+  <div id="edit-product-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div class="bg-[#0d1527] border border-slate-800 rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <span class="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 font-bold text-sm">✏️</span>
+          <div>
+            <h3 class="text-base font-bold text-white">Edit Product Submission</h3>
+            <p class="text-xs text-slate-400">Update product information and replace image if needed</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeEditModal()" class="w-8 h-8 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">✕</button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 overflow-y-auto space-y-5">
+        <input type="hidden" id="edit-sub-id">
+
+        <!-- Image Preview & Replacement Section -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-2">Product Image & Live Preview</label>
+          <div class="flex items-center gap-4 p-3 bg-[#070b13] border border-slate-800 rounded-xl">
+            <div class="relative w-20 h-20 rounded-lg overflow-hidden border border-slate-700 bg-slate-900 shrink-0">
+              <img id="edit-image-preview" src="/logo.jpg" alt="Preview" class="w-full h-full object-cover">
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-xs font-bold text-white flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-blue-500"></span> Current / Selected Preview
+              </div>
+              <p class="text-[11px] text-slate-400 mt-0.5">Click below to choose a replacement image</p>
+              <div class="mt-2 flex items-center gap-2">
+                <label for="edit-image-file" class="cursor-pointer px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg transition border border-slate-700">
+                  Replace Image
+                </label>
+                <input type="file" id="edit-image-file" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="previewEditImage(this)">
+                <span id="edit-image-chosen" class="text-xs text-slate-400 truncate">No new image selected</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Title -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">Product Title / Name <span class="text-red-500">*</span></label>
+          <input type="text" id="edit-title" required class="w-full px-4 py-2.5 bg-[#070b13] border border-slate-800 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm">
+        </div>
+
+        <!-- Category & Price in 2 Columns -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Category <span class="text-red-500">*</span></label>
+            <select id="edit-category" class="w-full px-4 py-2.5 bg-[#070b13] border border-slate-800 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm">
+              <option value="Smartphones">Smartphones</option>
+              <option value="Laptops & Computers">Laptops & Computers</option>
+              <option value="Smartwatches">Smartwatches</option>
+              <option value="Headphones & Earbuds">Headphones & Earbuds</option>
+              <option value="Gaming & Consoles">Gaming & Consoles</option>
+              <option value="Tablets">Tablets</option>
+              <option value="Cameras & Accessories">Cameras & Accessories</option>
+              <option value="Smart TVs">Smart TVs</option>
+              <option value="Home Appliances">Home Appliances</option>
+              <option value="Gadget Accessories">Gadget Accessories</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Exact Price (₹) <span class="text-red-500">*</span></label>
+            <input type="number" id="edit-price" min="1" required class="w-full px-4 py-2.5 bg-[#070b13] border border-slate-800 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm font-semibold text-amber-400">
+          </div>
+        </div>
+
+        <!-- Affiliate URL -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">Affiliate Destination Link <span class="text-red-500">*</span></label>
+          <input type="url" id="edit-affiliate-url" required class="w-full px-4 py-2.5 bg-[#070b13] border border-slate-800 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm font-mono">
+        </div>
+
+        <div id="edit-error-msg" class="hidden p-3 rounded-xl text-xs bg-red-500/10 border border-red-500/30 text-red-400"></div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-4 border-t border-slate-800 flex items-center justify-end gap-3 bg-[#0a0f1d]">
+        <button type="button" onclick="closeEditModal()" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition">Cancel</button>
+        <button type="button" id="save-edit-btn" onclick="saveEditedSubmission()" class="px-5 py-2 rounded-xl text-sm font-bold bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/30 transition flex items-center gap-2">
+          <span>Save Changes</span>
+        </button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -387,15 +491,40 @@
 
     function updateFileLabel(input) {
       const label = document.getElementById('file-chosen-text');
+      const previewWrapper = document.getElementById('add-image-preview-wrapper');
+      const previewImg = document.getElementById('add-image-preview-img');
+      const previewMeta = document.getElementById('add-image-preview-meta');
+
       if (input.files && input.files[0]) {
-        label.innerText = input.files[0].name;
+        const file = input.files[0];
+        label.innerText = file.name;
         label.classList.remove('text-slate-400');
         label.classList.add('text-white', 'font-medium');
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          previewImg.src = e.target.result;
+          previewMeta.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+          previewWrapper.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
       } else {
-        label.innerText = 'No file chosen';
-        label.classList.remove('text-white', 'font-medium');
-        label.classList.add('text-slate-400');
+        clearAddImagePreview();
       }
+    }
+
+    function clearAddImagePreview() {
+      const input = document.getElementById('image-input');
+      const label = document.getElementById('file-chosen-text');
+      const previewWrapper = document.getElementById('add-image-preview-wrapper');
+      const previewImg = document.getElementById('add-image-preview-img');
+      
+      input.value = '';
+      label.innerText = 'No file chosen';
+      label.classList.remove('text-white', 'font-medium');
+      label.classList.add('text-slate-400');
+      previewImg.src = '';
+      previewWrapper.classList.add('hidden');
     }
 
     function switchView(view) {
@@ -509,8 +638,7 @@
           msg.className = 'p-3.5 rounded-xl text-sm font-medium bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 block';
           msg.innerText = '✓ ' + (data.message || 'Product image and affiliate link saved successfully!');
           form.reset();
-          document.getElementById('file-chosen-text').innerText = 'No file chosen';
-          document.getElementById('file-chosen-text').className = 'ml-4 text-sm text-slate-400 truncate';
+          clearAddImagePreview();
         } else {
           msg.className = 'p-3.5 rounded-xl text-sm font-medium bg-red-500/10 border border-red-500/30 text-red-400 block';
           msg.innerText = data.message || 'Error saving asset.';
@@ -524,12 +652,15 @@
       }
     }
 
+    let currentSubmissions = [];
+
     async function fetchSubmissions() {
       const container = document.getElementById('submissions-list');
       try {
         const res = await fetch('/api/v1/admin/submissions');
         const data = await res.json();
         if (data.success && data.data && data.data.length > 0) {
+          currentSubmissions = data.data;
           container.innerHTML = data.data.map(item => `
             <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl bg-[#070b13] border border-slate-800 gap-4">
               <div class="flex items-center gap-4 min-w-0">
@@ -543,7 +674,7 @@
                 </div>
               </div>
               <div class="flex items-center gap-2 self-end sm:self-center shrink-0">
-                <button onclick="editSubmission(${item.id}, '${escapeHtml(item.title || '')}', '${escapeHtml(item.category || '')}', '${item.numeric_price || ''}', '${escapeHtml(item.affiliate_url || '')}')" class="px-3.5 py-2 bg-blue-600/10 hover:bg-blue-600 text-blue-400 hover:text-white rounded-xl text-xs font-bold transition border border-blue-500/20">
+                <button onclick="openEditModal(${item.id})" class="px-3.5 py-2 bg-blue-600/10 hover:bg-blue-600 text-blue-400 hover:text-white rounded-xl text-xs font-bold transition border border-blue-500/20">
                   ✏️ Edit
                 </button>
                 <button onclick="deleteSubmission(${item.id})" class="px-3.5 py-2 bg-red-600/10 hover:bg-red-600 text-red-400 hover:text-white rounded-xl text-xs font-bold transition border border-red-500/20">
@@ -553,6 +684,7 @@
             </div>
           `).join('');
         } else {
+          currentSubmissions = [];
           container.innerHTML = '<div class="text-center py-12 text-slate-500">No active products found.</div>';
         }
       } catch (err) {
@@ -564,34 +696,100 @@
       return (str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
     }
 
-    async function editSubmission(id, oldTitle, oldCategory, oldPrice, oldUrl) {
-      const newTitle = prompt('Edit Product Title:', oldTitle);
-      if (newTitle === null) return;
-      const newPrice = prompt('Edit Numeric Price (₹):', oldPrice);
-      if (newPrice === null) return;
-      const newUrl = prompt('Edit Affiliate Destination URL:', oldUrl);
-      if (newUrl === null) return;
+    // Modal Edit with Image Preview & Replacement
+    function openEditModal(id) {
+      const item = currentSubmissions.find(s => s.id == id);
+      if (!item) return;
+
+      document.getElementById('edit-sub-id').value = item.id;
+      document.getElementById('edit-title').value = item.title || '';
+      document.getElementById('edit-category').value = item.category || 'Smartphones';
+      document.getElementById('edit-price').value = item.numeric_price || 99;
+      document.getElementById('edit-affiliate-url').value = item.affiliate_url || '';
+      
+      // Setup image preview
+      const imgPreview = document.getElementById('edit-image-preview');
+      imgPreview.src = item.image_path || '/logo.jpg';
+      imgPreview.onerror = () => { imgPreview.src = '/logo.jpg'; };
+
+      // Reset file input
+      document.getElementById('edit-image-file').value = '';
+      document.getElementById('edit-image-chosen').innerText = 'No new image selected';
+      document.getElementById('edit-error-msg').classList.add('hidden');
+
+      document.getElementById('edit-product-modal').classList.remove('hidden');
+    }
+
+    function closeEditModal() {
+      document.getElementById('edit-product-modal').classList.add('hidden');
+    }
+
+    function previewEditImage(input) {
+      const chosenLabel = document.getElementById('edit-image-chosen');
+      const imgPreview = document.getElementById('edit-image-preview');
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        chosenLabel.innerText = file.name;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          imgPreview.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        chosenLabel.innerText = 'No new image selected';
+      }
+    }
+
+    async function saveEditedSubmission() {
+      const id = document.getElementById('edit-sub-id').value;
+      const title = document.getElementById('edit-title').value.trim();
+      const category = document.getElementById('edit-category').value;
+      const price = document.getElementById('edit-price').value;
+      const affiliateUrl = document.getElementById('edit-affiliate-url').value.trim();
+      const fileInput = document.getElementById('edit-image-file');
+      const errMsg = document.getElementById('edit-error-msg');
+      const btn = document.getElementById('save-edit-btn');
+
+      if (!title || !price || !affiliateUrl) {
+        errMsg.innerText = 'Please fill in all required fields (Title, Price, Affiliate Link).';
+        errMsg.classList.remove('hidden');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span>Saving...</span>';
+      errMsg.classList.add('hidden');
+
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('category', category);
+      formData.append('price', price);
+      formData.append('affiliate_url', affiliateUrl);
+
+      if (fileInput.files && fileInput.files[0]) {
+        formData.append('image', fileInput.files[0]);
+      }
 
       try {
         const res = await fetch('/api/v1/admin/submissions/' + id, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            title: newTitle.trim(),
-            category: oldCategory,
-            price: Number(newPrice.trim()),
-            affiliate_url: newUrl.trim()
-          })
+          body: formData
         });
         const data = await res.json();
         if (data.success) {
-          alert('✓ ' + data.message);
+          closeEditModal();
+          alert('✓ ' + (data.message || 'Product updated successfully!'));
           fetchSubmissions();
         } else {
-          alert(data.message || 'Error updating product.');
+          errMsg.innerText = data.message || 'Failed to update product.';
+          errMsg.classList.remove('hidden');
         }
       } catch (err) {
-        alert('Failed to update product.');
+        errMsg.innerText = 'Failed to connect to server.';
+        errMsg.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Save Changes</span>';
       }
     }
 

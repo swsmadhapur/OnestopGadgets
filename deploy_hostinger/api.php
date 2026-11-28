@@ -460,14 +460,39 @@ if (strpos($requestUri, '/api/v1/admin/submissions') === 0) {
         $priceNum = isset($body['price']) ? (float)$body['price'] : null;
         $affiliateUrl = trim($body['affiliate_url'] ?? '');
 
+        // Handle optional new image upload in edit
+        $newImagePath = null;
+        if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+            $uploadDir = __DIR__ . '/uploads/products/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION) ?: 'jpg';
+            $filename = 'asset_' . time() . '_' . substr(md5(uniqid()), 0, 6) . '.' . $ext;
+            $dest = $uploadDir . $filename;
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $dest)) {
+                $newImagePath = '/uploads/products/' . $filename;
+            }
+        }
+
         if ($pdo && $title) {
             $categoryId = strtolower(preg_replace('/[^a-z0-9]/i', '-', $category));
             $priceStr = '₹' . number_format($priceNum ?: 99, 0, '.', ',');
-            $stmt = $pdo->prepare("
-                UPDATE `submissions` SET `title` = ?, `category` = ?, `categoryId` = ?, `price` = ?, `numeric_price` = ?, `affiliate_url` = ?
-                WHERE `id` = ?
-            ");
-            $stmt->execute([$title, $category, $categoryId, $priceStr, $priceNum, $affiliateUrl, $id]);
+            
+            if ($newImagePath) {
+                $stmt = $pdo->prepare("
+                    UPDATE `submissions` SET `title` = ?, `category` = ?, `categoryId` = ?, `price` = ?, `numeric_price` = ?, `affiliate_url` = ?, `image_path` = ?
+                    WHERE `id` = ?
+                ");
+                $stmt->execute([$title, $category, $categoryId, $priceStr, $priceNum, $affiliateUrl, $newImagePath, $id]);
+            } else {
+                $stmt = $pdo->prepare("
+                    UPDATE `submissions` SET `title` = ?, `category` = ?, `categoryId` = ?, `price` = ?, `numeric_price` = ?, `affiliate_url` = ?
+                    WHERE `id` = ?
+                ");
+                $stmt->execute([$title, $category, $categoryId, $priceStr, $priceNum, $affiliateUrl, $id]);
+            }
+
             echo json_encode(['success' => true, 'message' => 'Submission updated successfully!']);
             exit;
         }
