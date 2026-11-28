@@ -1,19 +1,54 @@
 [
   {
+    "id": 4,
+    "title": "Garnier Men  face wash",
+    "category": "cosmotics",
+    "categoryId": "cosmotics",
+    "price": "₹349",
+    "numeric_price": "349.00",
+    "image_path": "/uploads/products/asset_1795856410_dcb095.webp",
+    "affiliate_url": "https://fkrt.co/xn9KHK",
+    "status": "pending",
+    "created_at": "2026-11-28 09:00:10",
+    "reviewed_at": null
+  },
+  {
+    "id": 3,
+    "title": "Garnier Men Acno Fight, Salicylic Acid, Repairs Skin & Balances Oils, Anti-Pimple",
+    "category": "Cameras & Accessories",
+    "categoryId": "cameras---accessories",
+    "price": "₹333",
+    "numeric_price": "333.00",
+    "image_path": "/uploads/products/asset_1795855672_3da175.png",
+    "affiliate_url": "https://fkrt.co/xn9KHK",
+    "status": "pending",
+    "created_at": "2026-11-28 08:47:52",
+    "reviewed_at": null
+  },
+  {
     "id": 2,
-    "image_path": "/uploads/products/asset_1795763251808_kh8h8i.webp",
-    "affiliate_url": "https://dl.flipkart.com/s/zbBZ_1uuuN",
-    "status": "approved",
-    "created_at": "2026-11-27T07:07:31.841Z",
-    "reviewed_at": "2026-11-27T09:24:27.377Z"
+    "title": "Garnier Men Acno Fight, Salicylic Acid, Repairs Skin & Balances Oils, Anti-Pimple",
+    "category": "Smartphones",
+    "categoryId": "smartphones",
+    "price": "₹250",
+    "numeric_price": "250.00",
+    "image_path": "/uploads/products/asset_1795855578_f05bd9.webp",
+    "affiliate_url": "https://fkrt.co/xn9KHK",
+    "status": "pending",
+    "created_at": "2026-11-28 08:46:18",
+    "reviewed_at": null
   },
   {
     "id": 1,
-    "image_path": "/uploads/products/sample.jpg",
-    "affiliate_url": "https://amzn.to/demo-sample",
+    "title": "OnePlus Nord Buds 3 Pro Active Noise Cancellation",
+    "category": "Headphones & Earbuds",
+    "categoryId": "headphones---earbuds",
+    "price": "₹2,799",
+    "numeric_price": "2799.00",
+    "image_path": "/uploads/products/asset_1795850586_3d0aea.jpg",
+    "affiliate_url": "https://www.amazon.in/dp/B0D9345ABC?tag=onestopgadgets-21",
     "status": "approved",
-    "created_at": "2026-11-27T06:35:04.124Z",
-    "removed_at": "2026-11-27T07:07:10.524Z",
-    "reviewed_at": "2026-11-27T09:29:02.952Z"
+    "created_at": "2026-11-28 07:23:06",
+    "reviewed_at": "2026-11-28 07:23:06"
   }
 ]
