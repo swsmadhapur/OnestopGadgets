@@ -341,7 +341,51 @@
           </div>
         </div>
       </section>
-    </main>
+    <!-- SUPERADMIN PRODUCT PREVIEW MODAL POPUP -->
+  <div id="sa-preview-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div class="bg-[#0d1527] border border-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 font-bold text-sm">👁️</span>
+          <h3 class="text-base font-bold text-white">Product Catalog Preview</h3>
+        </div>
+        <button type="button" onclick="closeSaPreviewModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">✕</button>
+      </div>
+
+      <div class="p-6 space-y-4 overflow-y-auto">
+        <div class="w-full h-52 rounded-xl bg-white flex items-center justify-center overflow-hidden border border-slate-200 p-2 shadow-inner">
+          <img id="sa-preview-img" src="/logo.jpg" alt="Product" class="w-full h-full object-contain">
+        </div>
+        <div>
+          <span id="sa-preview-cat" class="px-2.5 py-1 rounded-md text-xs font-bold bg-blue-500/15 text-blue-400 border border-blue-500/30">
+            Category
+          </span>
+          <h4 id="sa-preview-title" class="text-lg font-black text-white mt-2 leading-tight">Product Title</h4>
+          <div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-800">
+            <div>
+              <span class="text-xs text-slate-400">Live Offer Price</span>
+              <div id="sa-preview-price" class="text-2xl font-black text-emerald-400">₹99</div>
+            </div>
+            <div>
+              <span class="text-xs text-slate-400">SKU / ID</span>
+              <div id="sa-preview-sku" class="text-xs font-mono font-bold text-slate-300">OSG-01</div>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800">
+            <span class="text-xs text-slate-400 block mb-1">Affiliate Destination Link:</span>
+            <a id="sa-preview-link" href="#" target="_blank" class="text-xs text-blue-400 hover:underline break-all font-mono block">
+              https://...
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="px-6 py-3.5 border-t border-slate-800 bg-[#090e18] flex items-center justify-end">
+        <button type="button" onclick="closeSaPreviewModal()" class="px-5 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-white transition">
+          Close Preview
+        </button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -534,6 +578,9 @@
                         </td>
                         <td class="py-3.5 px-4 text-center whitespace-nowrap">
                           <div class="flex items-center justify-center gap-2">
+                            <button onclick="openSaSubPreviewModal(${item.id})" class="px-3 py-2 bg-blue-600/15 hover:bg-blue-600 text-blue-400 hover:text-white border border-blue-500/30 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1">
+                              <span>👁️</span> <span>Preview</span>
+                            </button>
                             <button onclick="approveSubmission(${item.id})" class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-xl text-xs font-bold shadow-lg shadow-emerald-600/30 transition cursor-pointer">
                               ✓ Approve
                             </button>
@@ -709,6 +756,9 @@
                     </td>
                     <td class="py-3.5 px-4 text-center whitespace-nowrap">
                       <div class="flex items-center justify-center gap-1.5">
+                        <button onclick="openSaPreviewModal(${p.id})" class="px-2.5 py-1.5 bg-emerald-600/15 hover:bg-emerald-600 text-emerald-400 hover:text-white rounded-lg text-xs font-bold transition border border-emerald-500/30 flex items-center gap-1">
+                          <span>👁️</span> <span>Preview</span>
+                        </button>
                         <a href="${p.merchantUrl || p.affiliate_url || '#'}" target="_blank" class="px-2.5 py-1.5 bg-blue-600/10 hover:bg-blue-600 text-blue-400 hover:text-white rounded-lg text-xs font-bold transition">
                           View ↗
                         </a>
@@ -776,6 +826,51 @@
       }
     }
 
+
+    // SUPERADMIN PREVIEW MODAL FUNCTIONS
+    function openSaPreviewModal(id) {
+      const p = allProducts.find(item => item.id == id);
+      if (!p) return;
+
+      const img = document.getElementById('sa-preview-img');
+      img.src = p.imageUrl || p.image_path || '/logo.jpg';
+      img.onerror = () => { img.src = '/logo.jpg'; };
+
+      document.getElementById('sa-preview-title').innerText = p.title || 'Product Deal';
+      document.getElementById('sa-preview-cat').innerText = p.category || 'Gadgets';
+      document.getElementById('sa-preview-price').innerText = p.price || ('₹' + (p.numeric_price || '99'));
+      document.getElementById('sa-preview-sku').innerText = p.sku || ('ID #' + p.id);
+
+      const linkEl = document.getElementById('sa-preview-link');
+      linkEl.href = p.merchantUrl || p.affiliate_url || '#';
+      linkEl.innerText = p.merchantUrl || p.affiliate_url || 'No URL available';
+
+      document.getElementById('sa-preview-modal').classList.remove('hidden');
+    }
+
+    function openSaSubPreviewModal(id) {
+      const sub = pendingSubmissions.find(item => item.id == id);
+      if (!sub) return;
+
+      const img = document.getElementById('sa-preview-img');
+      img.src = sub.image_path || '/logo.jpg';
+      img.onerror = () => { img.src = '/logo.jpg'; };
+
+      document.getElementById('sa-preview-title').innerText = sub.title || 'Pending Submission';
+      document.getElementById('sa-preview-cat').innerText = sub.category || 'Gadgets';
+      document.getElementById('sa-preview-price').innerText = sub.price || ('₹' + (sub.numeric_price || '99'));
+      document.getElementById('sa-preview-sku').innerText = 'SUBMISSION #' + sub.id;
+
+      const linkEl = document.getElementById('sa-preview-link');
+      linkEl.href = sub.affiliate_url || '#';
+      linkEl.innerText = sub.affiliate_url || 'No URL available';
+
+      document.getElementById('sa-preview-modal').classList.remove('hidden');
+    }
+
+    function closeSaPreviewModal() {
+      document.getElementById('sa-preview-modal').classList.add('hidden');
+    }
 
     // --- 3. VIP SUBSCRIPTIONS ---
     async function loadSubscriptions() {
