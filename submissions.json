@@ -8,9 +8,9 @@
     "numeric_price": "349.00",
     "image_path": "/uploads/products/asset_1795856410_dcb095.webp",
     "affiliate_url": "https://fkrt.co/xn9KHK",
-    "status": "pending",
+    "status": "approved",
     "created_at": "2026-11-28 09:00:10",
-    "reviewed_at": null
+    "reviewed_at": "2026-11-28T09:12:29.241Z"
   },
   {
     "id": 3,
@@ -21,9 +21,9 @@
     "numeric_price": "333.00",
     "image_path": "/uploads/products/asset_1795855672_3da175.png",
     "affiliate_url": "https://fkrt.co/xn9KHK",
-    "status": "pending",
+    "status": "approved",
     "created_at": "2026-11-28 08:47:52",
-    "reviewed_at": null
+    "reviewed_at": "2026-11-28T09:12:33.203Z"
   },
   {
     "id": 2,
@@ -34,9 +34,9 @@
     "numeric_price": "250.00",
     "image_path": "/uploads/products/asset_1795855578_f05bd9.webp",
     "affiliate_url": "https://fkrt.co/xn9KHK",
-    "status": "pending",
+    "status": "approved",
     "created_at": "2026-11-28 08:46:18",
-    "reviewed_at": null
+    "reviewed_at": "2026-11-28T09:12:38.166Z"
   },
   {
     "id": 1,

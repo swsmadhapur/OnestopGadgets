@@ -20,16 +20,13 @@
   <!-- ================= AUTHENTICATION / LOGIN VIEW ================= -->
   <div id="login-view" class="min-h-screen flex items-center justify-center p-4">
     <div class="max-w-md w-full">
-      <!-- Brand Header -->
-      <div class="text-center mb-8">
-        <div
-          class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-red-600 to-blue-600 flex items-center justify-center font-black text-2xl text-white shadow-xl shadow-red-500/20 mx-auto mb-4">
-          OSG
+        <!-- Brand Header with Logo -->
+        <div class="text-center mb-8">
+          <img src="/logo.jpg" alt="One Stop Gadgets" class="w-20 h-20 rounded-2xl mx-auto mb-3 object-contain border border-slate-700 shadow-xl shadow-red-500/20 bg-slate-900" onerror="this.outerHTML='<div class=\'w-16 h-16 rounded-2xl bg-gradient-to-tr from-red-600 to-blue-600 flex items-center justify-center font-black text-2xl text-white mx-auto mb-4\'>OSG</div>'">
+          <h1 class="text-2xl font-black text-white">Catalog Admin Login</h1>
+          <p class="text-xs text-red-500 font-semibold tracking-wider uppercase mt-1">One Stop Gadgets Management Portal</p>
         </div>
-        <h1 class="text-2xl font-black text-white">Catalog Admin Login</h1>
-        <p class="text-xs text-red-500 font-semibold tracking-wider uppercase mt-1">One Stop Gadgets Management Portal
-        </p>
-      </div>
+
 
       <!-- Demo Credentials Banner -->
       <div
@@ -88,22 +85,20 @@
   </div>
 
   <!-- ================= MAIN ADMIN DASHBOARD (AFTER LOGIN) ================= -->
-  <div id="dashboard-view" class="hidden min-h-screen flex">
+  <div id="dashboard-view" class="hidden min-h-screen flex flex-col md:flex-row">
     <!-- Left Sidebar (Strictly 3 Options: Add Product, Remove, Logout down) -->
     <aside
-      class="w-72 bg-[#0c1220] border-r border-slate-800/80 flex flex-col justify-between shrink-0 min-h-screen sticky top-0 shadow-2xl">
+      class="w-full md:w-72 bg-[#0c1220] border-b md:border-b-0 md:border-r border-slate-800/80 flex flex-col justify-between shrink-0 md:min-h-screen md:sticky top-0 shadow-2xl">
       <div>
-        <!-- Brand Header -->
-        <div class="p-6 border-b border-slate-800/80 flex items-center gap-3">
-          <div
-            class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-blue-600 flex items-center justify-center font-black text-xl text-white shadow-lg shadow-red-500/20">
-            OSG
-          </div>
+        <!-- Brand Header with Logo -->
+        <div class="p-5 border-b border-slate-800/80 flex items-center gap-3">
+          <img src="/logo.jpg" alt="Logo" class="w-11 h-11 rounded-xl object-contain border border-slate-700 bg-slate-900 shadow-md shrink-0" onerror="this.outerHTML='<div class=\'w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-blue-600 flex items-center justify-center font-black text-xl text-white\'>OSG</div>'">
           <div>
             <h1 class="text-base font-bold text-white leading-tight">One Stop Gadgets</h1>
             <p class="text-[11px] text-red-500 font-semibold tracking-wider uppercase">Catalog Admin Portal</p>
           </div>
         </div>
+
 
         <!-- Navigation Menu: Option 1 & Option 2 -->
         <div class="p-4 space-y-2">
@@ -150,16 +145,17 @@
     <!-- Main Content Area -->
     <main class="flex-1 p-8 sm:p-12 overflow-y-auto">
       <!-- Top Pill Bar matching the screenshot -->
-      <div class="flex gap-3 mb-8">
+      <div class="flex flex-wrap gap-3 mb-8">
         <button id="pill-add" onclick="switchView('add')"
           class="px-5 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg shadow-red-600/30">
           1. Add Product Image & Affiliate Link
         </button>
         <button id="pill-remove" onclick="switchView('remove')"
           class="px-5 py-2.5 rounded-xl font-bold text-sm bg-slate-900/90 text-slate-400 hover:text-white border border-slate-800 transition">
-          2. Remove Product Image & Affiliate Link
+          2. Manage & Edit / Remove Products
         </button>
       </div>
+
 
       <!-- VIEW 1: Add Product Image & Affiliate Link -->
       <div id="view-add" class="max-w-3xl">
@@ -535,26 +531,70 @@
         const data = await res.json();
         if (data.success && data.data && data.data.length > 0) {
           container.innerHTML = data.data.map(item => `
-            <div class="flex items-center justify-between p-4 rounded-xl bg-[#070b13] border border-slate-800 gap-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl bg-[#070b13] border border-slate-800 gap-4">
               <div class="flex items-center gap-4 min-w-0">
-                <img src="${item.image_path}" alt="Product" class="w-16 h-16 rounded-xl object-cover bg-slate-900 border border-slate-800 shrink-0">
+                <img src="${item.image_path}" alt="Product" class="w-16 h-16 rounded-xl object-cover bg-slate-900 border border-slate-800 shrink-0" onerror="this.src='/logo.jpg'">
                 <div class="min-w-0">
-                  <div class="text-[11px] font-mono text-slate-400 mb-1">ID #${item.id} · Status: <span class="text-amber-400 font-bold">${item.status}</span></div>
-                  <a href="${item.affiliate_url}" target="_blank" class="text-sm text-blue-400 hover:underline truncate block max-w-md font-mono">${item.affiliate_url}</a>
+                  <div class="font-bold text-white text-sm truncate max-w-md">${item.title || 'Product Deal'}</div>
+                  <div class="text-[11px] font-mono text-slate-400 mb-1">
+                    ID #${item.id} · <span class="text-blue-400 font-semibold">${item.category}</span> · <span class="text-emerald-400 font-bold">${item.price || ('₹' + (item.numeric_price || ''))}</span> · Status: <span class="${item.status === 'approved' ? 'text-emerald-400' : 'text-amber-400'} font-bold uppercase">${item.status}</span>
+                  </div>
+                  <a href="${item.affiliate_url}" target="_blank" class="text-xs text-blue-400 hover:underline truncate block max-w-md font-mono">${item.affiliate_url} ↗</a>
                 </div>
               </div>
-              <button onclick="deleteSubmission(${item.id})" class="px-4 py-2 bg-red-600/10 hover:bg-red-600 text-red-400 hover:text-white rounded-xl text-xs font-bold transition border border-red-500/20 shrink-0">
-                Remove
-              </button>
+              <div class="flex items-center gap-2 self-end sm:self-center shrink-0">
+                <button onclick="editSubmission(${item.id}, '${escapeHtml(item.title || '')}', '${escapeHtml(item.category || '')}', '${item.numeric_price || ''}', '${escapeHtml(item.affiliate_url || '')}')" class="px-3.5 py-2 bg-blue-600/10 hover:bg-blue-600 text-blue-400 hover:text-white rounded-xl text-xs font-bold transition border border-blue-500/20">
+                  ✏️ Edit
+                </button>
+                <button onclick="deleteSubmission(${item.id})" class="px-3.5 py-2 bg-red-600/10 hover:bg-red-600 text-red-400 hover:text-white rounded-xl text-xs font-bold transition border border-red-500/20">
+                  🗑️ Remove
+                </button>
+              </div>
             </div>
           `).join('');
         } else {
-          container.innerHTML = '<div class="text-center py-12 text-slate-500">No active image/link pairs found.</div>';
+          container.innerHTML = '<div class="text-center py-12 text-slate-500">No active products found.</div>';
         }
       } catch (err) {
         container.innerHTML = '<div class="text-center py-12 text-red-400">Failed to load catalog submissions.</div>';
       }
     }
+
+    function escapeHtml(str) {
+      return (str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    }
+
+    async function editSubmission(id, oldTitle, oldCategory, oldPrice, oldUrl) {
+      const newTitle = prompt('Edit Product Title:', oldTitle);
+      if (newTitle === null) return;
+      const newPrice = prompt('Edit Numeric Price (₹):', oldPrice);
+      if (newPrice === null) return;
+      const newUrl = prompt('Edit Affiliate Destination URL:', oldUrl);
+      if (newUrl === null) return;
+
+      try {
+        const res = await fetch('/api/v1/admin/submissions/' + id, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: newTitle.trim(),
+            category: oldCategory,
+            price: Number(newPrice.trim()),
+            affiliate_url: newUrl.trim()
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert('✓ ' + data.message);
+          fetchSubmissions();
+        } else {
+          alert(data.message || 'Error updating product.');
+        }
+      } catch (err) {
+        alert('Failed to update product.');
+      }
+    }
+
 
     async function deleteSubmission(id) {
       if (!confirm('Are you sure you want to remove this product image and affiliate link?')) return;

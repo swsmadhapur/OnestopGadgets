@@ -16,14 +16,13 @@
   <!-- ================= SUPERADMIN AUTHENTICATION / LOGIN VIEW ================= -->
   <div id="sa-login-view" class="min-h-screen flex items-center justify-center p-4">
     <div class="max-w-md w-full">
-      <!-- Brand Header -->
+      <!-- Brand Header with Logo -->
       <div class="text-center mb-8">
-        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-red-600 to-blue-600 flex items-center justify-center font-black text-2xl text-white shadow-xl shadow-blue-500/20 mx-auto mb-4">
-          OSG
-        </div>
+        <img src="/logo.jpg" alt="One Stop Gadgets" class="w-20 h-20 rounded-2xl mx-auto mb-3 object-contain border border-slate-700 shadow-xl shadow-blue-500/20 bg-slate-900" onerror="this.outerHTML='<div class=\'w-16 h-16 rounded-2xl bg-gradient-to-tr from-red-600 to-blue-600 flex items-center justify-center font-black text-2xl text-white mx-auto mb-4\'>OSG</div>'">
         <h1 class="text-2xl font-black text-white">Super Admin Console</h1>
         <p class="text-xs text-blue-400 font-semibold tracking-wider uppercase mt-1">Master Executive Management Portal</p>
       </div>
+
 
       <!-- Demo Credentials Banner -->
       <div class="mb-6 p-4 rounded-2xl bg-gradient-to-r from-blue-950/40 via-red-950/40 to-slate-900 border border-slate-800 shadow-xl">
@@ -77,19 +76,18 @@
   </div>
 
   <!-- ================= SUPERADMIN DASHBOARD (AFTER LOGIN) ================= -->
-  <div id="sa-dashboard-view" class="hidden min-h-screen flex">
+  <div id="sa-dashboard-view" class="hidden min-h-screen flex flex-col md:flex-row">
     <!-- Sidebar -->
-    <aside class="w-64 bg-[#0c1220] border-r border-slate-800/80 flex flex-col justify-between shrink-0 min-h-screen sticky top-0 shadow-2xl">
+    <aside class="w-full md:w-64 bg-[#0c1220] border-b md:border-b-0 md:border-r border-slate-800/80 flex flex-col justify-between shrink-0 md:min-h-screen md:sticky top-0 shadow-2xl">
       <div>
-        <div class="p-6 border-b border-slate-800/80 flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-blue-600 flex items-center justify-center font-black text-xl text-white shadow-lg shadow-red-500/20">
-            OSG
-          </div>
+        <div class="p-5 border-b border-slate-800/80 flex items-center gap-3">
+          <img src="/logo.jpg" alt="Logo" class="w-11 h-11 rounded-xl object-contain border border-slate-700 bg-slate-900 shadow-md shrink-0" onerror="this.outerHTML='<div class=\'w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-blue-600 flex items-center justify-center font-black text-xl text-white\'>OSG</div>'">
           <div>
             <h1 class="text-sm font-bold text-white leading-tight">One Stop Gadgets</h1>
             <p class="text-[10px] text-blue-400 font-semibold tracking-wider uppercase">Super Admin Portal</p>
           </div>
         </div>
+
 
         <nav class="p-4 space-y-1.5 text-sm font-semibold">
           <button onclick="switchTab('overview')" id="nav-overview" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-red-500 text-white font-bold shadow-md shadow-red-600/20 text-left transition">
@@ -230,8 +228,8 @@
               </div>
             </div>
 
-            <div class="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
-              <div class="flex gap-2 items-center">
+            <div class="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
+              <div class="flex flex-wrap gap-2 items-center">
                 <select id="category-filter-select" onchange="filterProducts()" class="px-4 py-2.5 bg-[#070b13] border border-slate-800 rounded-xl text-xs font-semibold text-slate-300 focus:outline-none focus:border-red-500">
                   <option value="all">All Categories</option>
                   <option value="Smartphones">Smartphones</option>
@@ -249,8 +247,17 @@
                   + Add Category
                 </button>
               </div>
+
+              <!-- Date-Wise Filter -->
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-semibold text-slate-400 whitespace-nowrap">📅 Filter by Date:</span>
+                <input type="date" id="date-filter-input" onchange="filterProducts()" class="px-3 py-2 bg-[#070b13] border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-red-500">
+                <button type="button" onclick="document.getElementById('date-filter-input').value=''; filterProducts();" class="text-[11px] text-slate-500 hover:text-slate-300 underline">Clear Date</button>
+              </div>
+
               <input type="text" id="product-search-input" oninput="filterProducts()" placeholder="Search product title, brand or store..." class="flex-1 px-4 py-2.5 bg-[#070b13] border border-slate-800 rounded-xl text-xs text-white placeholder-slate-600 focus:outline-none focus:border-red-500">
             </div>
+
 
           </div>
 
@@ -611,6 +618,7 @@
     function filterProducts() {
       const cat = document.getElementById('category-filter-select').value;
       const search = (document.getElementById('product-search-input').value || '').toLowerCase();
+      const dateVal = document.getElementById('date-filter-input').value; // YYYY-MM-DD
 
       let filtered = allProducts.filter(p => {
         const pPrice = Number(p.numeric_price || p.deal_price || 0);
@@ -624,6 +632,12 @@
         if (currentPriceFilter === 'vip' && pPrice < 50000) return false;
 
         if (cat !== 'all' && (p.category !== cat && p.categoryId !== cat)) return false;
+
+        // Date-wise filter
+        if (dateVal && p.created_at) {
+          const pDate = p.created_at.split('T')[0].split(' ')[0];
+          if (pDate !== dateVal) return false;
+        }
 
         if (search) {
           const matchTitle = (p.title || '').toLowerCase().includes(search);
@@ -648,49 +662,114 @@
       }
 
       container.innerHTML = `
-        <table class="w-full text-left text-sm text-slate-300">
-          <thead class="text-xs uppercase text-slate-500 border-b border-slate-800">
-            <tr>
-              <th class="py-3 px-4">Deal Title</th>
-              <th class="py-3 px-4">Category</th>
-              <th class="py-3 px-4">Offer Price</th>
-              <th class="py-3 px-4">Tier</th>
-              <th class="py-3 px-4">Store</th>
-              <th class="py-3 px-4 text-right">Affiliate Link</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-800">
-            ${products.map(p => {
-              const price = Number(p.numeric_price || p.deal_price || 0);
-              const isVip = price >= 50000;
-              return `
-                <tr>
-                  <td class="py-3.5 px-4 font-semibold text-white max-w-xs truncate">
-                    <div class="flex items-center gap-3">
-                      <span class="text-lg">${p.icon || '📱'}</span>
-                      <span class="truncate">${p.title}</span>
-                    </div>
-                  </td>
-                  <td class="py-3.5 px-4 text-xs text-slate-400">${p.category}</td>
-                  <td class="py-3.5 px-4 font-mono font-bold text-emerald-400">₹${price.toLocaleString('en-IN')}</td>
-                  <td class="py-3.5 px-4">
-                    ${isVip 
-                      ? '<span class="px-2 py-0.5 rounded bg-red-500/20 text-red-400 text-xs font-bold">VIP (≥ ₹50k)</span>' 
-                      : '<span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 text-xs font-bold">Free Deal</span>'}
-                  </td>
-                  <td class="py-3.5 px-4 text-xs text-slate-400">${p.store || 'Online'}</td>
-                  <td class="py-3.5 px-4 text-right">
-                    <a href="${p.merchantUrl || p.affiliate_url || '#'}" target="_blank" class="px-3 py-1.5 bg-blue-600/10 hover:bg-blue-600 text-blue-400 hover:text-white rounded-lg text-xs font-bold transition">
-                      View Deal ↗
-                    </a>
-                  </td>
-                </tr>
-              `;
-            }).join('')}
-          </tbody>
-        </table>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm text-slate-300 min-w-[800px]">
+            <thead class="text-xs uppercase text-slate-400 border-b border-slate-800 bg-[#070b13]">
+              <tr>
+                <th class="py-3.5 px-4">Deal Details</th>
+                <th class="py-3.5 px-4">Category</th>
+                <th class="py-3.5 px-4">Price</th>
+                <th class="py-3.5 px-4">Date Added</th>
+                <th class="py-3.5 px-4">Tier</th>
+                <th class="py-3.5 px-4 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800">
+              ${products.map(p => {
+                const price = Number(p.numeric_price || p.deal_price || 0);
+                const isVip = price >= 50000;
+                const dateStr = p.created_at ? new Date(p.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Recently';
+                const imgSrc = p.imageUrl || p.image_path || '/logo.jpg';
+                return `
+                  <tr class="hover:bg-slate-800/30 transition">
+                    <td class="py-3.5 px-4 font-semibold text-white max-w-xs">
+                      <div class="flex items-center gap-3">
+                        <img src="${imgSrc}" class="w-12 h-12 rounded-xl object-cover bg-slate-900 border border-slate-700 shrink-0" onerror="this.src='/logo.jpg'">
+                        <div class="min-w-0">
+                          <div class="truncate font-bold text-white">${p.title}</div>
+                          <div class="text-xs text-slate-400 font-mono">${p.sku || ('ID #' + p.id)}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="py-3.5 px-4 text-xs">
+                      <span class="px-2 py-0.5 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-300 font-semibold">${p.category}</span>
+                    </td>
+                    <td class="py-3.5 px-4 font-mono font-bold text-emerald-400 text-base">₹${price.toLocaleString('en-IN')}</td>
+                    <td class="py-3.5 px-4 text-xs text-slate-400 font-mono">${dateStr}</td>
+                    <td class="py-3.5 px-4">
+                      ${isVip 
+                        ? '<span class="px-2 py-0.5 rounded bg-red-500/20 text-red-400 text-xs font-bold">VIP (≥ ₹50k)</span>' 
+                        : '<span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 text-xs font-bold">Free Deal</span>'}
+                    </td>
+                    <td class="py-3.5 px-4 text-center whitespace-nowrap">
+                      <div class="flex items-center justify-center gap-1.5">
+                        <a href="${p.merchantUrl || p.affiliate_url || '#'}" target="_blank" class="px-2.5 py-1.5 bg-blue-600/10 hover:bg-blue-600 text-blue-400 hover:text-white rounded-lg text-xs font-bold transition">
+                          View ↗
+                        </a>
+                        <button onclick="editProductDeal(${p.id}, '${escapeHtml(p.title || '')}', '${escapeHtml(p.category || '')}', '${p.numeric_price || ''}', '${escapeHtml(p.merchantUrl || p.affiliate_url || '')}')" class="px-2.5 py-1.5 bg-amber-600/15 hover:bg-amber-600 text-amber-400 hover:text-white rounded-lg text-xs font-bold transition border border-amber-500/30">
+                          ✏️ Edit
+                        </button>
+                        <button onclick="deleteProductDeal(${p.id})" class="px-2.5 py-1.5 bg-red-600/15 hover:bg-red-600 text-red-400 hover:text-white rounded-lg text-xs font-bold transition border border-red-500/30">
+                          🗑️ Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
       `;
     }
+
+    function escapeHtml(str) {
+      return (str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    }
+
+    async function editProductDeal(id, oldTitle, oldCategory, oldPrice, oldUrl) {
+      const newTitle = prompt('Edit Product Deal Title:', oldTitle);
+      if (newTitle === null) return;
+      const newPrice = prompt('Edit Numeric Price (₹):', oldPrice);
+      if (newPrice === null) return;
+      const newUrl = prompt('Edit Affiliate Link URL:', oldUrl);
+      if (newUrl === null) return;
+
+      try {
+        const res = await fetch('/api/v1/products/' + id, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: newTitle.trim(),
+            category: oldCategory,
+            price: Number(newPrice.trim()),
+            affiliate_url: newUrl.trim()
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert('✓ ' + data.message);
+          loadProducts();
+        } else {
+          alert(data.message || 'Error updating product.');
+        }
+      } catch (err) {
+        alert('Failed to update product.');
+      }
+    }
+
+    async function deleteProductDeal(id) {
+      if (!confirm('Are you sure you want to delete this product from the live catalog?')) return;
+      try {
+        const res = await fetch('/api/v1/products/' + id, { method: 'DELETE' });
+        const data = await res.json();
+        alert(data.message || 'Deleted successfully');
+        loadProducts();
+      } catch (err) {
+        alert('Failed to delete product.');
+      }
+    }
+
 
     // --- 3. VIP SUBSCRIPTIONS ---
     async function loadSubscriptions() {

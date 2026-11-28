@@ -231,36 +231,84 @@ if ($requestUri === '/api/v1/health') {
 }
 
 // 2. PRODUCT CATALOG: /api/v1/products
-if ($requestUri === '/api/v1/products' && $method === 'GET') {
+if (strpos($requestUri, '/api/v1/products') === 0) {
     header('Content-Type: application/json');
-    $isVip = isset($_GET['vip']) && $_GET['vip'] === '1';
 
-    $deals = [];
-    if ($pdo) {
-        try {
-            $stmt = $pdo->query("SELECT * FROM `deals` WHERE `is_active` = 1 ORDER BY `id` DESC");
-            $deals = $stmt->fetchAll();
-        } catch (\Throwable $e) {}
+    // 2.A EDIT PRODUCT: POST or PUT /api/v1/products/{id}
+    if (($method === 'POST' || $method === 'PUT') && preg_match('#^/api/v1/products/(\d+)$#', $requestUri, $matches)) {
+        $id = (int)$matches[1];
+        $body = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+        
+        $title = trim($body['title'] ?? '');
+        $category = trim($body['category'] ?? '');
+        $priceNum = isset($body['price']) ? (float)$body['price'] : null;
+        $affiliateUrl = trim($body['affiliate_url'] ?? $body['merchantUrl'] ?? '');
+
+        if ($pdo && $title) {
+            $categoryId = strtolower(preg_replace('/[^a-z0-9]/i', '-', $category));
+            $priceStr = '₹' . number_format($priceNum ?: 99, 0, '.', ',');
+            $stmt = $pdo->prepare("
+                UPDATE `deals` SET `title` = ?, `category` = ?, `categoryId` = ?, `price` = ?, `numeric_price` = ?, `merchantUrl` = ?
+                WHERE `id` = ?
+            ");
+            $stmt->execute([$title, $category, $categoryId, $priceStr, $priceNum, $affiliateUrl, $id]);
+            echo json_encode(['success' => true, 'message' => 'Product updated successfully!']);
+            exit;
+        }
+        echo json_encode(['success' => false, 'message' => 'Failed to update product.']);
+        exit;
     }
 
-    $sanitized = array_map(function ($p) use ($isVip) {
-        $price = (float)($p['numeric_price'] ?? 0);
-        if (!$isVip && $price >= 50000) {
-            $p['price'] = '🔒 VIP Exclusive Deal';
-            $p['merchantUrl'] = '#vip-pass-required';
-            $p['isVipLocked'] = true;
-        } else {
-            $p['isVipLocked'] = false;
+    // 2.B DELETE PRODUCT: DELETE /api/v1/products/{id}
+    if ($method === 'DELETE' && preg_match('#^/api/v1/products/(\d+)$#', $requestUri, $matches)) {
+        $id = (int)$matches[1];
+        if ($pdo) {
+            $pdo->prepare("DELETE FROM `deals` WHERE `id` = ?")->execute([$id]);
+            echo json_encode(['success' => true, 'message' => 'Product deleted successfully!']);
+            exit;
         }
-        return $p;
-    }, $deals);
+        echo json_encode(['success' => false, 'message' => 'Failed to delete product.']);
+        exit;
+    }
 
-    echo json_encode([
-        'success' => true,
-        'data' => $sanitized
-    ]);
-    exit;
+    // 2.C GET PRODUCTS LIST with optional date filter: ?vip=1&date=YYYY-MM-DD
+    if ($method === 'GET') {
+        $isVip = isset($_GET['vip']) && $_GET['vip'] === '1';
+        $dateFilter = $_GET['date'] ?? '';
+
+        $deals = [];
+        if ($pdo) {
+            try {
+                $sql = "SELECT * FROM `deals` WHERE `is_active` = 1";
+                if (!empty($dateFilter)) {
+                    $sql .= " AND DATE(`created_at`) = " . $pdo->quote($dateFilter);
+                }
+                $sql .= " ORDER BY `created_at` DESC, `id` DESC";
+                $stmt = $pdo->query($sql);
+                $deals = $stmt->fetchAll();
+            } catch (\Throwable $e) {}
+        }
+
+        $sanitized = array_map(function ($p) use ($isVip) {
+            $price = (float)($p['numeric_price'] ?? 0);
+            if (!$isVip && $price >= 50000) {
+                $p['price'] = '🔒 VIP Exclusive Deal';
+                $p['merchantUrl'] = '#vip-pass-required';
+                $p['isVipLocked'] = true;
+            } else {
+                $p['isVipLocked'] = false;
+            }
+            return $p;
+        }, $deals);
+
+        echo json_encode([
+            'success' => true,
+            'data' => $sanitized
+        ]);
+        exit;
+    }
 }
+
 
 // 2.1 CATEGORIES API: GET /api/v1/categories and POST /api/v1/categories (Add new category)
 if ($requestUri === '/api/v1/categories') {
@@ -401,6 +449,32 @@ if (strpos($requestUri, '/api/v1/admin/submissions') === 0) {
         echo json_encode(['success' => true, 'message' => 'Submission removed successfully.']);
         exit;
     }
+
+    // 3.B EDIT SUBMISSION: POST or PUT /api/v1/admin/submissions/{id}
+    if (($method === 'POST' || $method === 'PUT') && preg_match('#^/api/v1/admin/submissions/(\d+)$#', $requestUri, $matches)) {
+        $id = (int)$matches[1];
+        $body = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+
+        $title = trim($body['title'] ?? '');
+        $category = trim($body['category'] ?? '');
+        $priceNum = isset($body['price']) ? (float)$body['price'] : null;
+        $affiliateUrl = trim($body['affiliate_url'] ?? '');
+
+        if ($pdo && $title) {
+            $categoryId = strtolower(preg_replace('/[^a-z0-9]/i', '-', $category));
+            $priceStr = '₹' . number_format($priceNum ?: 99, 0, '.', ',');
+            $stmt = $pdo->prepare("
+                UPDATE `submissions` SET `title` = ?, `category` = ?, `categoryId` = ?, `price` = ?, `numeric_price` = ?, `affiliate_url` = ?
+                WHERE `id` = ?
+            ");
+            $stmt->execute([$title, $category, $categoryId, $priceStr, $priceNum, $affiliateUrl, $id]);
+            echo json_encode(['success' => true, 'message' => 'Submission updated successfully!']);
+            exit;
+        }
+        echo json_encode(['success' => false, 'message' => 'Failed to update submission.']);
+        exit;
+    }
+
 }
 
 // 4. SUPER ADMIN SUBMISSION APPROVAL: POST /api/v1/super-admin/submissions/{id}/approve
